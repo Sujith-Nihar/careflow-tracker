@@ -99,7 +99,9 @@ def main() -> int:
             "agentType": "CUSTOM_FLOW",
             "name": flow["version_name"],
             "flowDefinition": definition,
-            "modelOptionValues": [{"optionId": "temperature", "value": "0.2"}],
+            # No modelOptionValues. A temperature of 0.2 is accepted at publish time
+            # and then produces an agent that never speaks; the model's own default
+            # is the only setting that works. See INVESTIGATIONS.md INV-3.
         }
         created = client.post(f"/agents/{agent_id}/versioned_prompts", payload)
         ids[f"versioned_prompt.{version}"] = created["id"]

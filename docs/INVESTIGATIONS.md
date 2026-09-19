@@ -97,8 +97,13 @@ synthetic audio reached Vogent and its speech recognition worked. The mishearing
 **Change made.** Both flows now begin with a `freeform` greeting node that transitions to the existing
 question node. The change is identical in V1 and V2, so the comparison between them is unaffected.
 
-**Re-evaluation.** Republished as V1 `5f2c2d40-c2ae-47e3-8681-1e951c92c9c2` and
-V2 `251e150f-1b68-46f2-8d5e-7754c864dbcf`; re-run pending.
+**Re-evaluation: the fix did not work, and the diagnosis was wrong.** Run
+`301531c5-6a3a-4e97-9b66-10af3e40203c` on V2 `251e150f-1b68-46f2-8d5e-7754c864dbcf` was silent again.
+The dial record confirms the new version ran and the caller was heard. A three-way bisect then showed a
+one-node freeform flow, a freeform plus question flow, and a freeform plus question plus function flow
+all greeted the caller within one second, using the same long policy context. So the entry node type
+was never the cause. The real cause is INV-3. The greeting node is kept because it is better
+conversational design, but it fixed nothing.
 
 **Also found while diagnosing this.** A question node exposes its answer as `answer`, not `output`, so
 every `{{node.<id>.output}}` template in both flows referenced a field that does not exist. Function
@@ -107,3 +112,45 @@ nodes do expose `status` as expected, which is what the V2 outcome-conditioned t
 **What this says about the eval design.** Both INV-1 and INV-2 are failures that a transcript test or a
 structural check would have scored as a pass or not seen at all: in one case there was no transcript,
 in the other the flow graph was perfectly well-formed. Only placing a real call surfaced them.
+
+---
+
+## INV-3: A temperature setting made the agent mute
+
+**Observed.** Four consecutive voice runs produced an agent that never spoke, while isolated probe
+flows on the same agent, model and workspace spoke within one second every time.
+
+**Evidence.** A bisect that held the flow definition completely fixed at the real 22-node V2 graph and
+varied only what was published alongside it:
+
+| Published alongside the identical flow | Result |
+|----------------------------------------|--------|
+| nothing | spoke at 1s |
+| `modelOptionValues: [temperature 0.2]` | **silent** |
+| `modelOptionValues: [temperature 0.2, max_tokens 600]` | **silent** |
+| `modelOptionValues: [temperature 1.0]` (the model's own default) | spoke at 1s |
+
+**Assumption.** That a low temperature was a free win: this is a clinical routing flow, so less
+variance between runs is better, and the option is offered by the model's own metadata
+(`{"id": "temperature", "valueType": "FLOAT", "default": "1.0"}`).
+
+**Was it wrong.** Yes, and silently. `POST /agents/{id}/versioned_prompts` accepts the value and
+returns 200. The flow stores and exports cleanly. Every structural check passes. The agent then simply
+never produces an utterance, on every call, with no error surfaced anywhere: not in the dial record,
+not in `aiResult`, not in a webhook. The only symptom is silence, which costs money to observe.
+
+**Change made.** `vogent/scripts/sync_flows.py` no longer publishes `modelOptionValues`. Both versions
+run the model's default settings.
+
+**What it costs us.** Run-to-run variance is higher than I wanted. Since V1 and V2 now use identical
+model settings, the comparison between them is still sound, but a single call is weaker evidence than
+it would have been at a low temperature. This is recorded as a limitation of the suite rather than
+papered over.
+
+**Re-evaluation.** Republished as V1 `048c8db3-852c-4527-ba30-e94843ee46b0` and
+V2 `9cf208b3-14f6-4d34-9735-361877a2f566`.
+
+**Why this matters beyond Vogent.** It is the project's own thesis turned on the tooling: a
+configuration that is accepted, stored, and passes every structural check is not evidence that it
+works. Only running it and observing the result is. Four runs and about $0.18 were spent on a setting
+that looked correct in every artifact.

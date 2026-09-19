@@ -31,6 +31,7 @@ agent, its two versions, and the four functions are represented and reproduced.
 | `aiOpen` documented as deprecated | accepted and **ignored**; stays `false` | it is not the lever for who speaks first |
 | Nothing documented about which node types may open a call | a **`question` node cannot open a call**; a `freeform` node can | the agent sat silent for two runs (`INVESTIGATIONS.md` INV-2) |
 | `dial.created` webhook | exists, not in the documented event list | arrives before the runner registers the dial, which exposed a create race |
+| `modelOptionValues` offered by the model metadata | **temperature below the default makes the agent mute**; accepted with 200, no error anywhere | four silent runs (`INVESTIGATIONS.md` INV-3). We publish no model options. |
 
 Verified by building, not by reading. The probe versioned prompts used to establish the node type
 (`probe-freeform`, `probe-question`, `probe-function`) are left in the workspace; the API exposes no

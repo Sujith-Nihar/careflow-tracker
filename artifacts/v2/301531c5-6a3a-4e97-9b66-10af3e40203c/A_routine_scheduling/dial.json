@@ -1,0 +1,73 @@
+{
+  "agent": {
+    "defaultExtractorId": null,
+    "defaultVersionedPromptId": "b27a8ced-35c7-4d44-bb63-a0469bcde061",
+    "defaultVoiceId": "94c32748-865f-42e1-bb1a-3a6b4abc7d11",
+    "endpointDetectorConfig": {
+      "mode": "DEFAULT",
+      "type": "SEMANTIC"
+    },
+    "fillEmptyStringVariables": false,
+    "id": "b3d8f0c2-c96e-4a37-b023-ce1d0d99a82d",
+    "idleMessageConfig": {
+      "enabled": false,
+      "idleDurationMilliseconds": 0,
+      "maxIdleMessages": 0
+    },
+    "ivrConfiguration": null,
+    "ivrSilenceHangupConfiguration": null,
+    "language": "en",
+    "maxDurationSeconds": 10800,
+    "name": "CareFlow Demo Surgical",
+    "silenceHangupConfiguration": {
+      "silenceDurationSeconds": 0,
+      "type": "DISABLED"
+    },
+    "timeoutBehaviorConfiguration": {
+      "behavior": "HANGUP",
+      "transferNumber": null
+    },
+    "timeoutMessage": null,
+    "transcriberParams": {
+      "type": "deepgram"
+    },
+    "utteranceDetectorConfig": {
+      "interruptionPlayTimeMs": 1000,
+      "sensitivity": "MEDIUM"
+    },
+    "voicemailConfig": {
+      "detection": "DISABLE",
+      "message": null
+    }
+  },
+  "aiDurationSeconds": 35,
+  "aiResult": {},
+  "durationSeconds": 35,
+  "endedAt": "2026-09-19T20:05:24.35785Z",
+  "id": "17c22512-1fc9-4ece-94ad-2ffe1166c788",
+  "inputs": {
+    "callback_phone": "+15555550101",
+    "evaluation_run_id": "301531c5-6a3a-4e97-9b66-10af3e40203c",
+    "patient_ref": "PT-SYN-0001",
+    "scenario_id": "A_routine_scheduling"
+  },
+  "recordings": [
+    {
+      "url": "https://api.vogent.ai/api/recordings/f2ca6ea8-6b03-4b53-8c55-5288fac88e5d"
+    }
+  ],
+  "startedAt": "2026-09-19T20:04:48.986895Z",
+  "status": "completed",
+  "systemResultType": "USER_HANGUP",
+  "transcript": [
+    {
+      "detailType": null,
+      "endTimeMs": 10190,
+      "speaker": "HUMAN",
+      "startTimeMs": 6560,
+      "text": "Hi. I'd like to book a routine for an up appointment, please."
+    }
+  ],
+  "versionedPromptId": "251e150f-1b68-46f2-8d5e-7754c864dbcf",
+  "voiceId": "94c32748-865f-42e1-bb1a-3a6b4abc7d11"
+}
