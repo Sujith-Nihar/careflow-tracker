@@ -1,51 +1,125 @@
-# Asynchronous Evaluation Path and Infrastructure
+# Asynchronous evaluation path
 
-Owner of: queue → worker → persisted result design, its local demonstration, and the Terraform that
-represents it in AWS. Live deployment is not planned.
+Owner of: the queue → worker → persisted result design, how it is demonstrated locally,
+and the Terraform that defines the same shape in AWS.
 
-## Shape
+## The shape
 
 ```
-POST /api/evaluation-runs (mode=replay, async=true)  or  `make enqueue-eval`
-        │ SendMessage {job_id, evaluation_run_id, scenario_ids, mode}
+`make enqueue` or an API call
+        │  SendMessage {job_id, scenario_ids, mode, evaluation_run_id}
         ▼
-   SQS queue  ──(3 failed receives)──▶  dead-letter queue
+   eval-jobs queue ──(3 failed receives)──▶ eval-jobs-dlq ──▶ CloudWatch alarm
         │
         ▼
-   worker (Python, long-poll)  ──▶  evaluation runner (replay mode)  ──▶  Flask /api  ──▶  PostgreSQL
+   worker (long-poll)  ──▶  evaluation runner (replay)  ──▶  evidence API  ──▶  PostgreSQL
         │
-        └── JSON logs: worker.job.received / evaluation.run.completed / worker.job.failed
+        └── JSON logs carrying job_id, evaluation_run_id, scenario_id
 ```
 
-## Local demonstration (Phase 9)
+One job becomes one persisted `evaluation_runs` row with an `evaluation_cases` row per
+scenario. The queue message, the database row and every log line carry the same
+identifiers, so a failure can be traced from an alarm to the exact scenario that caused it.
 
-- Queue: `moto[server]` running locally as an SQS-compatible endpoint (pure Python, no Docker). Both
-  queues created by `worker/bootstrap.py` with a redrive policy `maxReceiveCount = 3`.
-- Worker: `worker/main.py`, boto3 with `endpoint_url = SQS_ENDPOINT_URL`, visibility timeout 60 s,
-  deletes the message only after the run row is `completed`; raises on failure so the message returns.
-- Success job: scenario `A` in replay mode → `evaluation_runs.status = completed`, cases written.
-- Poison job: `scenario_ids: ["Z_does_not_exist"]` → runner raises `UnknownScenario`; after three receives
-  the message lands in the DLQ; the worker marks the run `failed` with the error on the first failure so
-  the state is visible immediately, and a `dlq_inspect` command lists DLQ messages with their `job_id`.
-- Correlation: every log line carries `job_id` and `evaluation_run_id`; `make worker-logs RUN=<id>` filters.
-- Evidence saved to `artifacts/worker/`: worker log excerpt, queue attribute dumps before/after, DLQ message.
+## Why replay only
 
-Fallback if `moto` redrive proves unfaithful: ElasticMQ in Docker with the same worker code.
+A voice run needs a browser and a Vogent workspace. A headless container in a private
+subnet has neither, and pretending otherwise would produce a worker that fails in
+production for a reason that was obvious in advance. The worker rejects any job whose
+`mode` is not `replay`, and says so in the rejection.
 
-## AWS representation (`infra/terraform/`, validated with `terraform validate`, not applied)
+## Demonstrated locally
 
-| Resource | Purpose | Least-privilege note |
-|----------|---------|----------------------|
-| `aws_sqs_queue.eval_jobs` + `aws_sqs_queue.eval_jobs_dlq` with redrive `maxReceiveCount=3` | the path above | server-side encryption on |
-| `aws_ecs_task_definition.worker` (Fargate) + `aws_ecs_service` desired count 1 | the worker container | task role: `sqs:ReceiveMessage/DeleteMessage/ChangeMessageVisibility` on the one queue, `ssm:GetParameter` on the named parameters, `logs:PutLogEvents` on its group |
-| `aws_ssm_parameter` SecureString: `DATABASE_URL`, `VOGENT_API_KEY`, `BACKEND_URL` | configuration and secrets | values never in Terraform files; injected at apply time via variables marked `sensitive` |
-| `aws_cloudwatch_log_group` 14-day retention | logs | Logs Insights query documented: `fields @timestamp, event, job_id | filter evaluation_run_id = "<id>"` |
-| `aws_cloudwatch_metric_alarm` on DLQ `ApproximateNumberOfMessagesVisible > 0` | failure visibility | SNS topic optional |
+```bash
+make worker-demo
+```
 
-Deploy/teardown: `terraform init && terraform plan -var-file=env.tfvars`, `terraform apply`, `terraform destroy`.
-Voice-mode evaluations in AWS would need a browser-capable container image; the design notes this and
-keeps the worker in replay mode for the deployed path.
+Runs against a local SQS-compatible server. Evidence is written to `artifacts/worker/`.
 
-## Explicitly out of scope
+**A successful job.** Two scenarios replayed, both passed, one `evaluation_runs` row
+closed as `completed` with its wall time, two `evaluation_cases` rows recorded.
 
-Multi-AZ, autoscaling, VPC design beyond defaults, CI/CD pipeline, live apply.
+**A poisoned job.** A job naming a scenario that does not exist. Received three times,
+failed identically each time with `reason_code="unknown scenario: Z_does_not_exist"`,
+then moved to the dead-letter queue by the redrive policy:
+
+```
+dead-letter queue: 1 message(s)
+  job_id=job-b709bd5d1b  scenarios=Z_does_not_exist  receives=4
+    find the logs with: grep '"job_id": "job-b709bd5d1b"' <worker log>
+```
+
+**Finding the logs.** `python -m worker.dlq_inspect` prints the grep for the local log,
+and in AWS the equivalent is the Logs Insights query in the Terraform outputs:
+
+```
+fields @timestamp, event, job_id, scenario_id, passed
+| filter evaluation_run_id = '<run-id>'
+| sort @timestamp asc
+```
+
+### A bug the demonstration found
+
+The first run showed an empty dead-letter queue. The worker had concluded the queue was
+empty while the poisoned message was still invisible after its second failure, so it
+never reached a third receive. An empty poll is not an empty queue. The worker now waits
+past the visibility timeout before deciding there is no more work. Without running the
+demonstration I would have shipped a worker that stops short of the retry it exists to
+perform.
+
+## Design decisions worth defending
+
+**Delete only after the run row is closed.** If the worker dies mid-job the message
+becomes visible again and is retried. That is at-least-once delivery, stated plainly
+rather than claimed as exactly-once. Cases upsert on `(run_id, scenario_id)`, so a retry
+updates rather than duplicates.
+
+**A job that can never succeed is not retried differently.** An unknown scenario fails the
+same way three times and is dead-lettered. The alternative, failing it immediately and
+deleting it, loses the message. Keeping it costs two extra receives and leaves the
+evidence somewhere an operator can find it.
+
+**The run row is marked failed on the first failure**, not after the third. An operator
+sees the failure immediately instead of a minute later, while the message continues
+through its retries independently.
+
+**Two IAM roles, not one.** The execution role starts the task and reads the named SSM
+parameters. The task role is what the worker's own code can do: consume from exactly one
+queue, read-only on the dead-letter queue, write its own log stream. No `SendMessage` —
+this worker consumes jobs and should not be able to enqueue work for itself. Collapsing
+the roles is the common shortcut and gives application code the power to read every
+secret in the account.
+
+**Secrets are parameter names, never values.** `terraform.tfvars` carries the SSM
+SecureString *names*; the values are written out of band. Nothing sensitive reaches
+Terraform state, a plan output, or a pull request diff.
+
+## AWS definition
+
+`infra/terraform/`:
+
+| File | What it defines |
+|------|-----------------|
+| `sqs.tf` | Work queue and dead-letter queue, redrive after 3 receives, SSE, redrive-allow scoped to one source |
+| `iam.tf` | Separate execution and task roles, each scoped to named resources |
+| `ecs.tf` | Fargate task definition and service; secrets injected from SSM at start |
+| `logs.tf` | Log group with retention, and an alarm on the dead-letter queue being non-empty |
+| `outputs.tf` | Queue URLs, log group, and the Logs Insights query to trace a run |
+
+Deploy and tear down:
+
+```bash
+cd infra/terraform
+cp terraform.tfvars.example terraform.tfvars   # fill in subnets, image, parameter names
+terraform init
+terraform plan
+terraform apply
+terraform destroy      # removes every resource in this stack
+```
+
+## Not deployed
+
+No AWS account was used. The definition is written and validated; it has never been
+applied, and no claim is made that it works against real AWS beyond what validation
+proves. The worker behaviour it describes is demonstrated locally and that evidence is
+in `artifacts/worker/`.

@@ -40,3 +40,9 @@ vogent/ids.json
 # frontend
 frontend/.next/
 frontend/node_modules/
+
+# terraform
+infra/terraform/.terraform/
+infra/terraform/.terraform.lock.hcl
+infra/terraform/*.tfstate*
+infra/terraform/terraform.tfvars

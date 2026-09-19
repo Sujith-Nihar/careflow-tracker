@@ -88,7 +88,13 @@ structural: ## cheap flow lint, no calls, no cost
 	$(PY) -c "import sys; sys.path.insert(0,'evals'); from runner.structural import check; \
 		[print(f'{v}: {\"PASS\" if check(v).passed else \"FAIL\"} ({len(check(v).findings)} findings)') for v in ('v1','v2')]"
 
+tf-validate: ## check the AWS definition is valid (no account needed)
+	cd infra/terraform && terraform init -backend=false -input=false >/dev/null && terraform fmt -check && terraform validate
+
+worker-demo: ## async path end to end: success, poisoned job, DLQ, log correlation
+	@scripts/worker_demo.sh
+
 secret-scan: ## fail if anything that looks like a credential is tracked by git
 	@scripts/secret_scan.sh
 
-.PHONY: help setup lint format typecheck-ui test test-cov db-check vogent-check migrate migrate-test seed api api-restart tunnel replay eval structural ui ui-install secret-scan
+.PHONY: help setup lint format typecheck-ui test test-cov db-check vogent-check migrate migrate-test seed api api-restart tunnel replay eval structural ui ui-install worker-demo tf-validate secret-scan

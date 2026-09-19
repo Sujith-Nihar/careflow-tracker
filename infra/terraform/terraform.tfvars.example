@@ -1,0 +1,13 @@
+# Copy to terraform.tfvars and fill in. Secret *values* never appear here: the
+# parameter names point at SSM SecureStrings written out of band.
+region      = "us-east-1"
+environment = "dev"
+
+worker_image = "<account>.dkr.ecr.us-east-1.amazonaws.com/careflow/worker:latest"
+
+subnet_ids         = ["subnet-aaaa", "subnet-bbbb"]
+security_group_ids = ["sg-cccc"]
+
+database_url_parameter   = "/careflow/dev/database_url"
+backend_url_parameter    = "/careflow/dev/backend_url"
+function_token_parameter = "/careflow/dev/function_token"

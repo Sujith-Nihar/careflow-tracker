@@ -95,7 +95,10 @@ is the reported failure, reproduced.
 - Replay suite covering all five scenarios with no voice and no cost.
 - Both efficiency runs measured end to end.
 - Staff dashboard on persisted data, with a working "callback completed" action.
-- 90 backend tests against a real database.
+- Async evaluation path: queue → worker → persisted run, with a poisoned job reaching the
+  dead-letter queue and log correlation by `job_id`.
+- Evaluation runs persisted as rows, not only files, sharing one id with their artifacts.
+- 90 backend tests against a real database; `make lint` clean under a strict ruleset.
 
 **Simulated, deliberately**
 
@@ -106,8 +109,8 @@ and no real transfer; the boundary is `backend/app/simulators/`.
 
 **Not built**
 
-- **Async worker and Terraform** (`worker/`, `infra/terraform/` are empty). Designed in
-  `docs/ASYNC_INFRA_PLAN.md`, not implemented. See §7.
+- **A live AWS deployment.** The async path runs locally and its AWS definition
+  validates, but nothing has been applied to an account. See §7.
 - **A judgment-based evaluator.** Optional in the brief; not attempted.
 - **Authentication.** Organization isolation is enforced by shared-secret tokens and
   scoped queries; there is no user identity. See §9.
@@ -162,16 +165,39 @@ backend — where it is now enforced from persisted state rather than by a langu
 
 ## 7. AWS path
 
-**Designed, not implemented.** `docs/ASYNC_INFRA_PLAN.md` specifies the shape: command →
-SQS → worker → persisted result, with a dead-letter queue after three failed receives,
-CloudWatch logs correlated by `evaluation_run_id`, SSM SecureString parameters, and an
-IAM role scoped to one queue and named parameters. `worker/` and `infra/terraform/` are
-empty directories.
+Design and reasoning: `docs/ASYNC_INFRA_PLAN.md`. Evidence: `artifacts/worker/`.
 
-This is the one core expectation with no running code behind it. It was cut deliberately
-when the voice work overran: the brief marks live AWS deployment optional, and I judged
-real voice evidence on the high-risk path worth more than a queue demo. Stating that
-plainly is better than shipping a hollow version.
+```bash
+make worker-demo    # the whole path, locally, no AWS account
+make tf-validate    # the AWS definition
+```
+
+**Demonstrated locally.** A job becomes a persisted `evaluation_runs` row with a case per
+scenario. A poisoned job naming a scenario that does not exist is received three times,
+fails identically each time with a named reason, and is carried to the dead-letter queue
+by the redrive policy:
+
+```
+dead-letter queue: 1 message(s)
+  job_id=job-b709bd5d1b  scenarios=Z_does_not_exist  receives=4
+    find the logs with: grep '"job_id": "job-b709bd5d1b"' <worker log>
+```
+
+**Defined for AWS.** `infra/terraform/`: work queue and dead-letter queue with redrive
+after three receives and SSE; separate execution and task IAM roles each scoped to named
+resources; a Fargate task whose secrets are injected from SSM SecureStrings at start; a
+log group with retention; an alarm on the dead-letter queue being non-empty; and outputs
+including the Logs Insights query that traces one evaluation run. `terraform validate`
+passes and `terraform fmt -check` is clean; the output is saved in
+`artifacts/worker/terraform_validate.json`.
+
+**Not deployed.** No AWS account was used. Applying it is untested beyond validation, and
+no claim is made otherwise. Teardown is `terraform destroy`.
+
+**Boundary worth naming.** The worker runs replay jobs only. A voice run needs a browser
+and a Vogent workspace, which a headless container in a private subnet does not have.
+The worker rejects any other mode rather than failing in production for a reason that was
+predictable.
 
 ---
 
@@ -245,14 +271,13 @@ table. It is pure, fully covered, and every rule maps to a row in `docs/DATA_MOD
 
 ## 11. What I would do next
 
-1. **Build the async worker and Terraform.** The only core expectation with nothing running.
-2. **Isolate the V1 comparison.** V1's failures are over-determined. Moving its promise into
+1. **Isolate the V1 comparison.** V1's failures are over-determined. Moving its promise into
    the function's lifecycle message would test the design flaw alone.
-3. **Repeat runs per scenario.** Scenario D is flaky on one transcript metric. Three runs per
+2. **Repeat runs per scenario.** Scenario D is flaky on one transcript metric. Three runs per
    scenario with a reported pass rate would replace a coin-flip with a measurement.
-4. **Alerting on `escalation_failed`.** The worst state in the system currently waits to be
+3. **Alerting on `escalation_failed`.** The worst state in the system currently waits to be
    noticed on a screen.
-5. **Callback ageing.** The system knows a callback is owed, not that it has been owed for hours.
-6. **Widen the transcript rules or replace them.** They are regexes tuned to phrasings I
+4. **Callback ageing.** The system knows a callback is owed, not that it has been owed for hours.
+5. **Widen the transcript rules or replace them.** They are regexes tuned to phrasings I
    anticipated. A second model scoring truthfulness, checked against hand-labelled traces,
    would generalise better — and the brief's optional rubric-based evaluator is exactly that.
