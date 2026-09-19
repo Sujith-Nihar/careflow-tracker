@@ -14,6 +14,8 @@ Owner of: every HTTP contract the backend exposes. Three surfaces in one app: Vo
 | Validation | All Vogent `params` are strings from an LLM. Bounded lengths (≤ 200 chars, `reason` ≤ 500), phone → E.164 or `invalid_input`, dates parsed with an explicit format list or `invalid_input`, enums matched case-insensitively. Unknown keys ignored, never persisted. |
 | Idempotency | `sha256(dial_id + function + canonical_json(params))`. Duplicate → return the stored `response_payload`, log `duplicate=true`, insert a `vogent_events` row, set `duplicate_of_id`. In-flight duplicate (unique violation while the first is `requested`) → `{status: "unverified"}`. |
 | Timeouts | Simulator attempt budget 2 s; endpoint budget 6 s; on budget exhaustion outcome `unverified`. |
+| Duplicate evidence | A repeat is stored as its own execution linked by `duplicate_of_id`, so the vendor's retry stays visible while exactly one downstream record exists. This is de-duplication for identical params on one dial, not an exactly-once guarantee. |
+| Schema pinning | `search_path` is set per pooled connection, not via the `options` startup parameter, because connection poolers do not forward `options`. |
 | Logging | Events from `ARCHITECTURE.md §9`; never `params` values, phone, names, transcript. |
 
 ## 2. Endpoint summary
@@ -28,6 +30,7 @@ Owner of: every HTTP contract the backend exposes. Three surfaces in one app: Vo
 | POST | `/api/eval/dials` | Runner | Register `dial_id` + scenario + fault profile before the call |
 | POST | `/api/calls/<call_id>/sync-dial` | Runner | Force fetch of the Vogent dial record (fallback when the webhook is late) |
 | GET | `/api/calls?requires_staff_action=true&limit=` | UI | Attention list, sorted by severity then time |
+| GET | `/api/calls/by-dial/<dial_id>` | UI, runner | Resolve a Vogent dial to a call id |
 | GET | `/api/calls/<call_id>` | UI, runner | Full evidence bundle + derived status |
 | POST | `/api/calls/<call_id>/staff-actions` | UI | `callback_completed` or `reviewed` |
 | POST | `/api/evaluation-runs` · PATCH `/api/evaluation-runs/<id>` · POST `/api/evaluation-runs/<id>/cases` | Runner, worker | Persist run and case results |
@@ -40,7 +43,12 @@ Request envelope (from Vogent, verified in Phase 4): `{ "dial_id": "...", "dial"
 Handling, identical for all four: authenticate → find or create `calls` row for `dial_id` (lifecycle
 `in_progress`) → verify `dial.agent.id` registration → attach `fault_profiles` if registered → validate
 `params` → compute idempotency key → insert `action_executions(requested)` → run simulator → persist
-downstream row → update execution → respond → recompute derived status → emit events.
+downstream row → update execution → respond.
+
+The request is persisted **before** the simulated system is touched and the downstream record **before**
+the response is returned, so a mid-flight failure leaves an attempt with no result rather than a silent
+gap. Status is **not** derived on this path: the caller is on the phone, the response body carries no
+status, and derivation is a pure function of already-committed rows, so it is computed on read instead.
 
 ### schedule_appointment
 params: `patient_ref` (string ≤ 64), `preferred_date` (string), `reason` (string ≤ 500, routine only).

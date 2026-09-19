@@ -18,13 +18,13 @@ Assignment: `docs/ASSIGNMENT.md`. Limits: 16 active hours (`TIME_LOG.md`), 48-ho
 
 ## Current state
 
-Phase 0 done (tooling, Makefile, scripts). Phase 1 domain layer done: `app/domain/` holds the types,
-`derive_status()` and the transcript statement rules, with 55 passing tests and 100% coverage of the
-derivation. Schema written as `backend/migrations/0001_schema.sql` but **not yet applied** — that needs
-`DATABASE_URL`.
+Phases 0–2 done. Supabase and Vogent are both connected (`make db-check`, `make vogent-check`).
+Schema applied to `public` and `careflow_test`; organizations seeded. The backend runs the full
+Vogent boundary: four function endpoints, webhooks, simulators with fault injection, idempotency,
+organization scoping, validation, structured logs, and the evidence API the UI and evaluator read.
 
-**Next:** apply migrations (`make migrate`), then Phase 2 (Flask tool boundary and simulators) in
-`docs/PROJECT_PLAN.md §5`. Blocked on `docs/HUMAN_SETUP.md` sections B and C; section D is needed before Phase 4.
+**Next: Phase 3** (replay fixtures and `make replay`) in `docs/PROJECT_PLAN.md §5`, then Phase 4
+(Vogent functions and the V1/V2 flows), which needs `docs/HUMAN_SETUP.md` section D (ngrok).
 
 ## Priorities (non-negotiable; cut from the bottom)
 
