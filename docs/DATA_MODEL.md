@@ -109,32 +109,62 @@ Function response `status` values map onto these: `booked→succeeded`, `connect
 
 ## 5. Derived call status (decision table)
 
-`derive_status(call, executions, appointments, transfer_sessions, callback_requests, statements, staff_actions)`
-returns `{status, severity, requires_staff_action, reason, next_step, promise_mismatch, evidence_refs}`.
+`derive_status(evidence: CallEvidence) -> DerivedStatus` in `backend/app/domain/derive_status.py`.
+Pure, no I/O. It is deliberately not given the transcript text or `true_intent`: it must behave
+identically in production, where scenario truth does not exist. Returns `status`, `severity`,
+`requires_staff_action`, `reason`, `next_step`, `promise_mismatch`, `mismatch_details`, `evidence_refs`.
 
-Precedence: a `transfer_triage` execution anywhere in the call selects the post-operative rules even if
-scheduling also happened (safety first). Otherwise scheduling rules. Otherwise no-action rules.
+Two definitions the table depends on:
+- **Action kinds** are `schedule_appointment`, `transfer_triage`, `create_callback`. `report_disposition`
+  is excluded: it is the agent's claim about the call, and a claim is not an action.
+- **Attempted** means an execution row of that kind exists, whatever its outcome. A rejected or
+  unverified attempt is still an attempt, and still not a success.
+
+Rules are evaluated in order; the first match wins. Duplicate executions are collapsed onto the
+original before evaluation.
 
 | # | Condition | Status | Severity | Staff action |
 |---|-----------|--------|----------|--------------|
-| 1 | `lifecycle in (registered, in_progress)` | `in_progress` | 0 | no (not shown in attention list) |
-| 2 | staff action `callback_completed` exists and the referenced callback is `completed` | `closed_by_staff` | 0 | no |
-| 3 | any transfer session `connected` | `completed_transferred` | 0 | no |
-| 4 | transfer attempted, none connected, a callback `created` exists | `callback_pending` | 2 | yes — call the patient (urgent) |
-| 5 | transfer attempted, none connected, no callback `created` | `escalation_failed` | 4 | yes — call the patient immediately |
-| 6 | no transfer; appointment `booked` exists | `completed_scheduled` | 0 | no |
-| 7 | no transfer; scheduling attempted, no booked appointment | `scheduling_incomplete` | 1 | yes — schedule manually |
-| 8 | `agent_classified_intent = post_operative_concern` (from `report_disposition`) and no transfer attempted | `routing_gap` | 3 | yes — call the patient; review flow |
-| 9 | `lifecycle in (ended, ended_unconfirmed)` and no executions | `no_action_recorded` | 3 | yes — review transcript, call back |
+| 1 | `lifecycle in (registered, in_progress)` | `in_progress` | 0 | no (hidden from the attention list) |
+| 2 | a `callback_completed` staff action whose callback is `completed` | `closed_by_staff` | 0 | no |
+| 3a | transfer attempted, any session `connected` | `completed_transferred` | 0 | no |
+| 3b | transfer attempted, none connected, a callback `created` exists | `callback_pending` | 2 urgent / 1 normal | yes — call the patient |
+| 3c | transfer attempted, none connected, no callback `created` | `escalation_failed` | 4 | yes — call immediately |
+| 4 | `agent_classified_intent = post_operative_concern`, no transfer attempted | `routing_gap` | 3 | yes — call the patient, review the flow |
+| 5a | scheduling attempted, appointment `booked` | `completed_scheduled` | 0 | no |
+| 5b | scheduling attempted, no booked appointment | `scheduling_incomplete` | 1 | yes — book manually |
+| 6a | callback the only action, `created` | `callback_pending` | 2 urgent / 1 normal | yes |
+| 6b | callback the only action, not created | `callback_failed` | 3 | yes |
+| 7 | ended with no action executions | `no_action_recorded` | 3 | yes — review and call back |
+| 8 | anything else (defensive) | `needs_review` | 2 | yes — review manually |
 
-Overlay, evaluated after the table: `promise_mismatch = true` when any `promised_*` statement lacks the
-matching success (`promised_transfer` without `connected`, `promised_callback` without `created`,
-`promised_appointment` without `booked`) **or** a `reported_disposition` claims completion while rows
-1–9 produced `requires_staff_action = true`. A mismatch forces `requires_staff_action = true` and adds
-"agent's statement does not match recorded evidence" to `reason`.
+Two ordering choices carry the policy:
+- **Rule 3 outranks rule 5.** A caller with a surgical concern who was given an appointment instead of a
+  transfer is a policy failure, not a scheduled call.
+- **Rule 4 outranks rule 5.** Same reason, for the case where the transfer node was never reached at all.
+
+Rule 8 should be unreachable. It exists because the honest response to evidence the table cannot
+classify is to ask a human, never to assume the call is fine. A test forces it.
+
+### Mismatch overlay
+
+Applied after the table (and skipped for rules 1 and 2, where the call is not finished or is already
+closed). `promise_mismatch` is set when:
+- `promised_transfer` stands and no session is `connected`;
+- `promised_callback` stands and no callback is `created`;
+- `promised_appointment` stands and no appointment is `booked`;
+- a `reported_disposition` of `scheduled`, `transferred`, or `resolved` coexists with
+  `requires_staff_action = true`.
+
+A promise **stands** unless the agent retracted it: a later same-topic disclosure
+(`disclosed_transfer_failed`, `disclosed_callback_failed`) with a higher `sequence_no` cancels it. An
+agent that says "I'll arrange a callback" and then "I could not set up a callback" has told the truth.
+
+A mismatch can only make a call worse. It raises severity to at least 2, forces
+`requires_staff_action = true`, and appends an explanation to `reason`. It never upgrades a status.
 
 "Completion" is therefore defined, not asserted: `completed_*` requires a downstream row in a success
-state that references a `succeeded` execution. No transcript content can produce a `completed_*` status.
+state produced by an execution the backend handled. No transcript content can produce it.
 
 ## 6. Evidence reconstruction
 

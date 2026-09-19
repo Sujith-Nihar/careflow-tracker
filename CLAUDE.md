@@ -18,8 +18,13 @@ Assignment: `docs/ASSIGNMENT.md`. Limits: 16 active hours (`TIME_LOG.md`), 48-ho
 
 ## Current state
 
-Planning complete (design review passed 2026-09-18). **Next: Phase 0** in `docs/PROJECT_PLAN.md §5`,
-after `docs/HUMAN_SETUP.md` sections A–D and G are done by the candidate.
+Phase 0 done (tooling, Makefile, scripts). Phase 1 domain layer done: `app/domain/` holds the types,
+`derive_status()` and the transcript statement rules, with 55 passing tests and 100% coverage of the
+derivation. Schema written as `backend/migrations/0001_schema.sql` but **not yet applied** — that needs
+`DATABASE_URL`.
+
+**Next:** apply migrations (`make migrate`), then Phase 2 (Flask tool boundary and simulators) in
+`docs/PROJECT_PLAN.md §5`. Blocked on `docs/HUMAN_SETUP.md` sections B and C; section D is needed before Phase 4.
 
 ## Priorities (non-negotiable; cut from the bottom)
 
