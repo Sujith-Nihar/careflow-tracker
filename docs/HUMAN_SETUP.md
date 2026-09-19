@@ -13,9 +13,10 @@ Secrets go in `.env` (git-ignored); the names below match `.env.example`.
 | macOS `say` | `say -v '?' \| head` | macOS built-in |
 | Docker | only if choosing local Postgres or ElasticMQ fallback | installed, daemon not running (optional) |
 | Terraform CLI | only for `terraform validate` in Phase 9 (`brew install terraform`) | missing — REQUIRED LATER |
-| ngrok CLI | `brew install ngrok` | unknown — REQUIRED NOW |
+| Local API port | 5055, because macOS AirPlay Receiver occupies 5000 | set in `.env` |
+| ngrok CLI | `brew install ngrok` | installed 3.39, authtoken configured |
 
-## B. PostgreSQL — REQUIRED NOW
+## B. PostgreSQL — REQUIRED NOW  ✔ done (session pooler; direct connection is IPv6-only)
 
 Choice: **Supabase project used purely as managed Postgres** (no Supabase auth/storage/edge features).
 Alternative: `docker compose up -d db` (compose file provided for reviewers).
@@ -27,7 +28,7 @@ Alternative: `docker compose up -d db` (compose file provided for reviewers).
       same URL with `?options=-csearch_path%3Dcareflow_test` (created by `make migrate-test`).
 - [ ] Confirm connectivity: `make db-check`.
 
-## C. Vogent — REQUIRED NOW
+## C. Vogent — REQUIRED NOW  ✔ done (key verified with `make vogent-check`)
 
 - [ ] Access to the **isolated assignment workspace** confirmed (never a production workspace).
 - [ ] Secret API key created → `VOGENT_API_KEY`. Confirm with `make vogent-check` (lists agents).
@@ -38,13 +39,13 @@ Alternative: `docker compose up -d db` (compose file provided for reviewers).
 - [ ] Function header value: generate `CAREFLOW_DEMO_ORG_FUNCTION_TOKEN` (`openssl rand -hex 24`) and
       paste it as the `X-CareFlow-Token` header value when `sync.py` prints the instruction.
 
-## D. Public backend URL — REQUIRED NOW
+## D. Public backend URL — REQUIRED NOW  ✔ done (ngrok static domain, verified end to end)
 
 Vogent must reach Flask. Choice: **ngrok with a free static domain** so function URLs never change.
 - [ ] ngrok account, auth token → `NGROK_AUTHTOKEN`; claim the free static domain in the ngrok dashboard.
 - [ ] `BACKEND_PUBLIC_URL=https://<your-static-domain>.ngrok-free.app`.
 - [ ] `make tunnel` starts it; `curl $BACKEND_PUBLIC_URL/healthz` returns 200.
-Fallback: `cloudflared tunnel --url http://localhost:5000` (random URL; re-run `sync.py` after each restart).
+Fallback: `cloudflared tunnel --url http://localhost:5055` (random URL; re-run `sync.py` after each restart).
 
 ## E. Browser audio — REQUIRED for Phase 5
 
