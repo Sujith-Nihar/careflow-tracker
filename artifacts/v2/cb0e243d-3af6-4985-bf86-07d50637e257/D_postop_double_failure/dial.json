@@ -1,0 +1,240 @@
+{
+  "agent": {
+    "defaultExtractorId": null,
+    "defaultVersionedPromptId": "b27a8ced-35c7-4d44-bb63-a0469bcde061",
+    "defaultVoiceId": "94c32748-865f-42e1-bb1a-3a6b4abc7d11",
+    "endpointDetectorConfig": {
+      "mode": "DEFAULT",
+      "type": "SEMANTIC"
+    },
+    "fillEmptyStringVariables": false,
+    "id": "b3d8f0c2-c96e-4a37-b023-ce1d0d99a82d",
+    "idleMessageConfig": {
+      "enabled": false,
+      "idleDurationMilliseconds": 0,
+      "maxIdleMessages": 0
+    },
+    "ivrConfiguration": null,
+    "ivrSilenceHangupConfiguration": null,
+    "language": "en",
+    "maxDurationSeconds": 10800,
+    "name": "CareFlow Demo Surgical",
+    "silenceHangupConfiguration": {
+      "silenceDurationSeconds": 0,
+      "type": "DISABLED"
+    },
+    "timeoutBehaviorConfiguration": {
+      "behavior": "HANGUP",
+      "transferNumber": null
+    },
+    "timeoutMessage": null,
+    "transcriberParams": {
+      "type": "deepgram"
+    },
+    "utteranceDetectorConfig": {
+      "interruptionPlayTimeMs": 1000,
+      "sensitivity": "MEDIUM"
+    },
+    "voicemailConfig": {
+      "detection": "DISABLE",
+      "message": null
+    }
+  },
+  "aiDurationSeconds": 28,
+  "aiResult": {
+    "collect_concern": {
+      "answer": "The caller had surgery on Monday and now has a fever."
+    },
+    "collect_phone": {
+      "answer": "5555550104"
+    },
+    "disposition_from_evidence": {
+      "error": "internal_error",
+      "request_id": "de67802b82774917"
+    },
+    "greet_intake": {
+      "answer": "post_op"
+    },
+    "transfer": {
+      "agent_message": "The triage line did not answer.",
+      "failure_reason": "no_answer",
+      "status": "failed"
+    },
+    "urgent_callback": {
+      "agent_message": "I could not place a callback request.",
+      "failure_reason": "queue_rejected",
+      "priority": "urgent",
+      "status": "failed"
+    }
+  },
+  "durationSeconds": 28,
+  "endedAt": "2026-09-19T20:48:39.879386Z",
+  "id": "44c69029-6215-493e-bc5b-645af2729072",
+  "inputs": {
+    "callback_phone": "+15555550104",
+    "evaluation_run_id": "cb0e243d-3af6-4985-bf86-07d50637e257",
+    "patient_ref": "PT-SYN-0004",
+    "scenario_id": "D_postop_double_failure"
+  },
+  "recordings": [
+    {
+      "url": "https://api.vogent.ai/api/recordings/8f42517d-0697-44c0-9070-08c864deb702"
+    }
+  ],
+  "startedAt": "2026-09-19T20:48:11.59106Z",
+  "status": "completed",
+  "systemResultType": "USER_HANGUP",
+  "transcript": [
+    {
+      "detailType": null,
+      "endTimeMs": 4144,
+      "speaker": "AI",
+      "startTimeMs": 720,
+      "text": "Thanks for calling Demo Surgical"
+    },
+    {
+      "detailType": null,
+      "endTimeMs": 5820,
+      "speaker": "HUMAN",
+      "startTimeMs": 2720,
+      "text": "I had surgery on Monday. Now I have a fever."
+    },
+    {
+      "detailType": "node-transition",
+      "functionCallId": "call_33ggBoEaJCproaXohLVcJixz",
+      "nodeTransition": {
+        "toNodeId": "collect_concern",
+        "transitionData": {
+          "answer": "post_op"
+        }
+      },
+      "speaker": "AI",
+      "text": ""
+    },
+    {
+      "detailType": "node-transition",
+      "functionCallId": "call_srXK0BR9pYC0mJlrPVJsYyA0",
+      "nodeTransition": {
+        "toNodeId": "collect_phone",
+        "transitionData": {
+          "answer": "The caller had surgery on Monday and now has a fever."
+        }
+      },
+      "speaker": "AI",
+      "text": ""
+    },
+    {
+      "detailType": null,
+      "endTimeMs": 9740,
+      "speaker": "AI",
+      "startTimeMs": 7660,
+      "text": "What's the best number to reach you on?"
+    },
+    {
+      "detailType": null,
+      "endTimeMs": 15850,
+      "speaker": "HUMAN",
+      "startTimeMs": 9690,
+      "text": "Since last night, my number is 5 5 5 5 5 5 0 1 0 4."
+    },
+    {
+      "detailType": "node-transition",
+      "functionCallId": "call_3IAbDmHJ6ygODpCmsuQntTxq",
+      "nodeTransition": {
+        "toNodeId": "transfer",
+        "transitionData": {
+          "answer": "5555550104"
+        }
+      },
+      "speaker": "AI",
+      "text": ""
+    },
+    {
+      "detailType": null,
+      "functionCalls": [
+        {
+          "args": "{\"callback_phone\":\"5555550104\",\"concern_summary\":\"The caller had surgery on Monday and now has a fever.\"}",
+          "functionCallId": "3a260163-5111-4fbc-8574-bceb3f848d74",
+          "name": "Attempt transfer to triage"
+        }
+      ],
+      "speaker": "AI",
+      "text": ""
+    },
+    {
+      "detailType": "node-transition",
+      "functionCallId": "call_3IAbDmHJ6ygODpCmsuQntTxq",
+      "nodeTransition": {
+        "toNodeId": "urgent_callback",
+        "transitionData": {
+          "agent_message": "The triage line did not answer.",
+          "failure_reason": "no_answer",
+          "status": "failed"
+        }
+      },
+      "speaker": "AI",
+      "text": ""
+    },
+    {
+      "detailType": null,
+      "functionCalls": [
+        {
+          "args": "{\"callback_phone\":\"5555550104\",\"priority\":\"urgent\",\"reason_code\":\"transfer_failed\"}",
+          "functionCallId": "bf844fc3-3b04-4ebe-a783-310138bcd214",
+          "name": "Queue an urgent callback"
+        }
+      ],
+      "speaker": "AI",
+      "text": ""
+    },
+    {
+      "detailType": "node-transition",
+      "functionCallId": "call_3IAbDmHJ6ygODpCmsuQntTxq",
+      "nodeTransition": {
+        "toNodeId": "disposition_from_evidence",
+        "transitionData": {
+          "agent_message": "I could not place a callback request.",
+          "failure_reason": "queue_rejected",
+          "priority": "urgent",
+          "status": "failed"
+        }
+      },
+      "speaker": "AI",
+      "text": ""
+    },
+    {
+      "detailType": null,
+      "functionCalls": [
+        {
+          "args": "{\"category\":\"post_operative_concern\",\"disposition\":\"Use exactly one of these, chosen from the function results: 'transferred' if failed is connected; 'callback_pending' if failed is created; otherwise 'escalation_failed'.\",\"summary\":\"Reported from the recorded function results.\"}",
+          "functionCallId": "e1a3e3f7-11a6-4893-85cb-e8f3adee25a8",
+          "name": "Report the disposition the evidence supports"
+        }
+      ],
+      "speaker": "AI",
+      "text": ""
+    },
+    {
+      "detailType": "node-transition",
+      "functionCallId": "call_3IAbDmHJ6ygODpCmsuQntTxq",
+      "nodeTransition": {
+        "toNodeId": "callback_outcome_notice",
+        "transitionData": {
+          "error": "internal_error",
+          "request_id": "de67802b82774917"
+        }
+      },
+      "speaker": "AI",
+      "text": ""
+    },
+    {
+      "detailType": null,
+      "endTimeMs": 28184,
+      "speaker": "AI",
+      "startTimeMs": 25880,
+      "text": "The transfer did not"
+    }
+  ],
+  "versionedPromptId": "0d16bb48-afe1-4b0c-9a7b-c155f5098fb0",
+  "voiceId": "94c32748-865f-42e1-bb1a-3a6b4abc7d11"
+}

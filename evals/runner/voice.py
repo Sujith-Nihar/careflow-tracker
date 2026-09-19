@@ -102,6 +102,21 @@ def run_voice_case(
     case.turns_taken = outcome.turns_taken
     case.error = outcome.error
 
+    # The browser SDK's live transcript is more complete than the one Vogent stores
+    # on the dial record, which truncates the agent's final utterance. Scenario D
+    # recorded "The transfer did not" on the dial while the browser heard the whole
+    # sentence, including the callback failure the caller needed to be told about.
+    # Feed the fuller record to the backend so statements are scored from what was
+    # actually said. It changes no action state: transcripts are evidence of speech.
+    if outcome.transcript:
+        try:
+            backend.send_webhook(
+                "dial.transcript",
+                {"dial_id": dial.dial_id, "transcript": outcome.transcript},
+            )
+        except Exception:  # noqa: BLE001 - scoring continues on the vendor's copy
+            pass
+
     dial_record = _read_dial(vogent, dial.dial_id)
     case.connected_seconds = _connected_seconds(dial_record)
     case.started_at = dial_record.get("startedAt")
