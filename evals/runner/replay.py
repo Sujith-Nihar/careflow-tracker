@@ -58,6 +58,10 @@ class BackendClient:
             json={"event": event, "payload": payload}, timeout=self.timeout,
         ).raise_for_status()
 
+    def sync_dial(self, call_id: str) -> dict:
+        """Ask the backend to fetch the dial record now rather than await a webhook."""
+        return self._json("POST", f"/api/calls/{call_id}/sync-dial", org=True)
+
     def bundle_for_dial(self, dial_id: str) -> dict:
         resolved = self._json("GET", f"/api/calls/by-dial/{dial_id}", org=True)
         return self._json("GET", f"/api/calls/{resolved['call_id']}", org=True)
