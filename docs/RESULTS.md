@@ -120,5 +120,80 @@ Run `4d5286d0-f0c2-4906-8be0-57c140881af4`.
 
 ### Optimised run
 
-_Pending._
+Same four scenarios, same frozen version, same metrics, same measurement code.
+Run `d7fc7213-97b1-45be-8602-2063a9c0041f`. Cold cache; nothing reused from the naive run.
+
+| Scenario | Mode | Why this mode | Connected | Cost | Result |
+|----------|------|---------------|-----------|------|--------|
+| structural preflight | lint | gates the rest; fails fast on a flow that cannot speak the truth | 0.0002s | $0 | PASS |
+| A | replay | no failure branch on this path; backend behaviour fully exercised without voice | 0s | $0 | PASS |
+| B | replay | same | 0s | $0 | PASS |
+| C | **voice** | high-risk transfer and callback path | 33s | $0.0495 | PASS |
+| D | **voice** | high-risk, and the subtle double failure | 29s | $0.0435 | PASS |
+| **Total** | | | **62s** | **$0.0930** | 4/4, 198s wall-clock |
+
+### Measured savings
+
+| Measure | Naive | Optimised | Absolute | Percent |
+|---------|-------|-----------|----------|---------|
+| Wall-clock | 285s | 198s | −87s | **−30.5%** |
+| Connected seconds | 148s | 62s | −86s | **−58.1%** |
+| Dollars (estimate) | $0.2220 | $0.0930 | −$0.1290 | **−58.1%** |
+| Voice calls | 4 | 2 | −2 | −50% |
+
+Both dimensions improved. Wall-clock falls by less than dollars because the fixed
+overhead of the run — browser startup, dial creation, polling for the finalised dial
+record — is unchanged for the two scenarios that still make calls, and replay still
+costs real seconds against a hosted database.
+
+Other metered services: none. The synthetic caller's speech is rendered locally by the
+macOS speech synthesiser at no cost, the tunnel is on a free tier, and the database and
+compute are local or already paid for. So every dollar in this comparison is Vogent's.
+
+### Coverage given up
+
+The optimised run buys its savings by not making two calls. What those calls would have
+covered, and now do not:
+
+- **Speech recognition on the routine path.** A and B no longer exercise recognition at
+  all. This is a real loss: recognition destroyed the caller's words for several runs
+  during development, and only a voice call exposed it. A regression in the intake
+  wording would pass the optimised suite.
+- **Whether the agent invokes the scheduler at all by voice.** Replay posts the function
+  call itself, so it proves the backend and the recorded agent behaviour, not the live
+  agent's decision to act.
+- **Turn-taking and latency on the routine path.** Timing effects that only appear in a
+  real conversation.
+- **Wording regressions on the scheduling confirmation.** The structural check verifies
+  that the node reads `{{node.book.status}}`, but not what the agent actually says.
+
+What the optimised run still covers in full: both high-risk paths end to end on real
+voice, the complete evidence chain for every scenario, and every deterministic state
+metric. The check that a flow is capable of truthful speech runs on every version.
+
+### Disagreement between cheap checks and voice runs
+
+For the two scenarios that changed mode, comparing the same scenario across the two runs:
+
+| Scenario | Naive (voice) | Optimised (replay) | Agree? |
+|----------|---------------|--------------------|--------|
+| A | PASS `completed_scheduled` | PASS `completed_scheduled` | yes |
+| B | PASS `completed_transferred` | PASS `completed_transferred` | yes |
+
+No disagreement on this sample, which is a weak result rather than a reassuring one: two
+scenarios, one run each, both already passing. It shows the replay path does not
+contradict voice; it does not show it would catch a voice-only regression. It would not.
+
+One difference is worth stating and is **not** a cheap-check disagreement: scenario D
+failed the naive run and passed the optimised run, both on real voice, with identical
+state evidence. The failing metric was `disclosure_present`, which reads the transcript.
+That is model variance at the default temperature (`INVESTIGATIONS.md` INV-3), and it is
+the strongest argument in these results for weighting state evidence over speech.
+
+### Honest reading
+
+The saving is real and measured, but it is modest in absolute terms: about $0.13 and 87
+seconds on a four-scenario suite. The strategy matters more at scale, where the replay
+and structural paths stay near-free as scenarios are added while voice cost grows
+linearly. On a suite this small, the fixed overhead dominates.
 

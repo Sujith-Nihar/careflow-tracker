@@ -1,0 +1,120 @@
+{
+  "action_executions": [
+    {
+      "attempts": [
+        {
+          "attempt_no": 1,
+          "latency_ms": 51,
+          "result": "booked"
+        }
+      ],
+      "completed_at": "2026-09-19T21:13:26.213138+00:00",
+      "downstream_ref": "e74d0e75-6b35-4ec2-b1c7-55ca022922e4",
+      "duplicate_of_id": null,
+      "id": "207584cc-ce7f-4376-b81b-48a5ca0d04fb",
+      "kind": "schedule_appointment",
+      "outcome": "succeeded",
+      "request_payload": {
+        "patient_ref": "PT-SYN-0001",
+        "preferred_date": "next Tuesday",
+        "reason": "routine follow up"
+      },
+      "requested_at": "2026-09-19T21:13:26.213138+00:00",
+      "response_payload": {
+        "agent_message": "Booked for Tuesday 29 September at 10:00 AM.",
+        "appointment_id": "e74d0e75-6b35-4ec2-b1c7-55ca022922e4",
+        "slot_iso": "2026-09-29T10:00:00+00:00",
+        "status": "booked"
+      }
+    },
+    {
+      "attempts": [],
+      "completed_at": "2026-09-19T21:13:28.203265+00:00",
+      "downstream_ref": null,
+      "duplicate_of_id": null,
+      "id": "a9cf6f4c-8a6d-4941-8b3e-066d66a61f4b",
+      "kind": "report_disposition",
+      "outcome": "succeeded",
+      "request_payload": {
+        "category": "routine_scheduling",
+        "disposition": "scheduled",
+        "summary": "replay"
+      },
+      "requested_at": "2026-09-19T21:13:28.203265+00:00",
+      "response_payload": {
+        "agent_message": "",
+        "status": "recorded"
+      }
+    }
+  ],
+  "agent_statements": [
+    {
+      "disposition": null,
+      "evidence_text": "Your appointment is booked.",
+      "kind": "promised_appointment",
+      "observed_at": "2026-09-19T21:13:31.344794+00:00",
+      "sequence_no": 0,
+      "source": "transcript_rule"
+    },
+    {
+      "disposition": "scheduled",
+      "evidence_text": "replay",
+      "kind": "reported_disposition",
+      "observed_at": "2026-09-19T21:13:28.203265+00:00",
+      "sequence_no": 1000,
+      "source": "function_param"
+    }
+  ],
+  "call": {
+    "connected_seconds": null,
+    "dial_id": "replay-A_routine_scheduling-0ed56a60",
+    "ended_at": null,
+    "evaluation_run_id": "d7fc7213-97b1-45be-8602-2063a9c0041f",
+    "id": "42322aa7-aafa-4d17-bb9c-1d3be3bafeb6",
+    "lifecycle": "ended_unconfirmed",
+    "scenario_id": "A_routine_scheduling",
+    "started_at": null,
+    "system_result_type": null,
+    "versioned_prompt_id": "replay",
+    "vogent_agent_id": "agent-replay"
+  },
+  "derived": {
+    "evidence_refs": {
+      "appointment_id": "e74d0e75-6b35-4ec2-b1c7-55ca022922e4",
+      "scheduling_execution_id": "207584cc-ce7f-4376-b81b-48a5ca0d04fb"
+    },
+    "mismatch_details": [],
+    "next_step": "No further action.",
+    "promise_mismatch": false,
+    "reason": "An appointment was booked and the scheduler confirmed it.",
+    "requires_staff_action": false,
+    "severity": 0,
+    "status": "completed_scheduled"
+  },
+  "downstream": {
+    "appointments": [
+      {
+        "action_execution_id": "207584cc-ce7f-4376-b81b-48a5ca0d04fb",
+        "id": "e74d0e75-6b35-4ec2-b1c7-55ca022922e4",
+        "status": "booked"
+      }
+    ],
+    "callback_requests": [],
+    "transfer_sessions": []
+  },
+  "intent": {
+    "agent_classified": "routine_scheduling",
+    "true_intent": "routine_scheduling"
+  },
+  "staff_actions": [],
+  "transcript": {
+    "authoritative": false,
+    "note": "Shows what was said, not what happened.",
+    "segments": [
+      {
+        "speaker": "AI",
+        "text": "Your appointment is booked."
+      }
+    ]
+  }
+}

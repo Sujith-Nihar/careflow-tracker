@@ -1,0 +1,240 @@
+{
+  "agent": {
+    "defaultExtractorId": null,
+    "defaultVersionedPromptId": "b27a8ced-35c7-4d44-bb63-a0469bcde061",
+    "defaultVoiceId": "94c32748-865f-42e1-bb1a-3a6b4abc7d11",
+    "endpointDetectorConfig": {
+      "mode": "DEFAULT",
+      "type": "SEMANTIC"
+    },
+    "fillEmptyStringVariables": false,
+    "id": "b3d8f0c2-c96e-4a37-b023-ce1d0d99a82d",
+    "idleMessageConfig": {
+      "enabled": false,
+      "idleDurationMilliseconds": 0,
+      "maxIdleMessages": 0
+    },
+    "ivrConfiguration": null,
+    "ivrSilenceHangupConfiguration": null,
+    "language": "en",
+    "maxDurationSeconds": 10800,
+    "name": "CareFlow Demo Surgical",
+    "silenceHangupConfiguration": {
+      "silenceDurationSeconds": 0,
+      "type": "DISABLED"
+    },
+    "timeoutBehaviorConfiguration": {
+      "behavior": "HANGUP",
+      "transferNumber": null
+    },
+    "timeoutMessage": null,
+    "transcriberParams": {
+      "type": "deepgram"
+    },
+    "utteranceDetectorConfig": {
+      "interruptionPlayTimeMs": 1000,
+      "sensitivity": "MEDIUM"
+    },
+    "voicemailConfig": {
+      "detection": "DISABLE",
+      "message": null
+    }
+  },
+  "aiDurationSeconds": 33,
+  "aiResult": {
+    "collect_concern": {
+      "answer": "I had surgery on Tuesday. My surgery wound is bleeding."
+    },
+    "collect_phone": {
+      "answer": "5555550103"
+    },
+    "disposition_from_evidence": {
+      "error": "internal_error",
+      "request_id": "f62b0ea8a2e6435c"
+    },
+    "greet_intake": {
+      "answer": "post_op"
+    },
+    "transfer": {
+      "agent_message": "The triage line did not answer.",
+      "failure_reason": "no_answer",
+      "status": "failed"
+    },
+    "urgent_callback": {
+      "agent_message": "A urgent callback request is in the queue.",
+      "callback_id": "19609252-aa6d-45d9-b4f3-50476e1258ea",
+      "priority": "urgent",
+      "status": "created"
+    }
+  },
+  "durationSeconds": 33,
+  "endedAt": "2026-09-19T21:14:34.094039Z",
+  "id": "40a90b21-9150-47f8-8b6e-492abdb223a3",
+  "inputs": {
+    "callback_phone": "+15555550103",
+    "evaluation_run_id": "d7fc7213-97b1-45be-8602-2063a9c0041f",
+    "patient_ref": "PT-SYN-0003",
+    "scenario_id": "C_postop_transfer_fail_callback"
+  },
+  "recordings": [
+    {
+      "url": "https://api.vogent.ai/api/recordings/11888a8c-a5d4-4b72-b828-383a6bf13a37"
+    }
+  ],
+  "startedAt": "2026-09-19T21:14:00.765668Z",
+  "status": "completed",
+  "systemResultType": "USER_HANGUP",
+  "transcript": [
+    {
+      "detailType": null,
+      "endTimeMs": 4136,
+      "speaker": "AI",
+      "startTimeMs": 680,
+      "text": "Thanks for calling Demo Surgical"
+    },
+    {
+      "detailType": null,
+      "endTimeMs": 6460,
+      "speaker": "HUMAN",
+      "startTimeMs": 2800,
+      "text": "I had surgery on Tuesday. My surgery wound is bleeding."
+    },
+    {
+      "detailType": "node-transition",
+      "functionCallId": "call_ZoU1e0ekQt3OfoqwO0VbKh4f",
+      "nodeTransition": {
+        "toNodeId": "collect_concern",
+        "transitionData": {
+          "answer": "post_op"
+        }
+      },
+      "speaker": "AI",
+      "text": ""
+    },
+    {
+      "detailType": "node-transition",
+      "functionCallId": "call_I5UpOLI1RL6kJnVbPr7EEyGM",
+      "nodeTransition": {
+        "toNodeId": "collect_phone",
+        "transitionData": {
+          "answer": "I had surgery on Tuesday. My surgery wound is bleeding."
+        }
+      },
+      "speaker": "AI",
+      "text": ""
+    },
+    {
+      "detailType": null,
+      "endTimeMs": 11020,
+      "speaker": "AI",
+      "startTimeMs": 8300,
+      "text": "What's the best number to reach you on?"
+    },
+    {
+      "detailType": null,
+      "endTimeMs": 17060,
+      "speaker": "HUMAN",
+      "startTimeMs": 10429,
+      "text": "It started this morning. You can reach me at 5 5 5 5 5 5 0 1 0 3."
+    },
+    {
+      "detailType": "node-transition",
+      "functionCallId": "call_UbF7KT87MYgsy8dWL21UOi5v",
+      "nodeTransition": {
+        "toNodeId": "transfer",
+        "transitionData": {
+          "answer": "5555550103"
+        }
+      },
+      "speaker": "AI",
+      "text": ""
+    },
+    {
+      "detailType": null,
+      "functionCalls": [
+        {
+          "args": "{\"callback_phone\":\"5555550103\",\"concern_summary\":\"I had surgery on Tuesday. My surgery wound is bleeding.\"}",
+          "functionCallId": "f93999e7-aa55-4c29-b593-160abf611bd7",
+          "name": "Attempt transfer to triage"
+        }
+      ],
+      "speaker": "AI",
+      "text": ""
+    },
+    {
+      "detailType": "node-transition",
+      "functionCallId": "call_UbF7KT87MYgsy8dWL21UOi5v",
+      "nodeTransition": {
+        "toNodeId": "urgent_callback",
+        "transitionData": {
+          "agent_message": "The triage line did not answer.",
+          "failure_reason": "no_answer",
+          "status": "failed"
+        }
+      },
+      "speaker": "AI",
+      "text": ""
+    },
+    {
+      "detailType": null,
+      "functionCalls": [
+        {
+          "args": "{\"callback_phone\":\"5555550103\",\"priority\":\"urgent\",\"reason_code\":\"transfer_failed\"}",
+          "functionCallId": "dbc8ac36-8e42-4e16-8216-b4fb693db387",
+          "name": "Queue an urgent callback"
+        }
+      ],
+      "speaker": "AI",
+      "text": ""
+    },
+    {
+      "detailType": "node-transition",
+      "functionCallId": "call_UbF7KT87MYgsy8dWL21UOi5v",
+      "nodeTransition": {
+        "toNodeId": "disposition_from_evidence",
+        "transitionData": {
+          "agent_message": "A urgent callback request is in the queue.",
+          "callback_id": "19609252-aa6d-45d9-b4f3-50476e1258ea",
+          "priority": "urgent",
+          "status": "created"
+        }
+      },
+      "speaker": "AI",
+      "text": ""
+    },
+    {
+      "detailType": null,
+      "functionCalls": [
+        {
+          "args": "{\"category\":\"post_operative_concern\",\"disposition\":\"Use exactly one of these, chosen from the function results: 'transferred' if failed is connected; 'callback_pending' if created is created; otherwise 'escalation_failed'.\",\"summary\":\"Reported from the recorded function results.\"}",
+          "functionCallId": "82aecb6f-9bf3-4eaa-a5d9-5130d530f0ff",
+          "name": "Report the disposition the evidence supports"
+        }
+      ],
+      "speaker": "AI",
+      "text": ""
+    },
+    {
+      "detailType": "node-transition",
+      "functionCallId": "call_UbF7KT87MYgsy8dWL21UOi5v",
+      "nodeTransition": {
+        "toNodeId": "callback_outcome_notice",
+        "transitionData": {
+          "error": "internal_error",
+          "request_id": "f62b0ea8a2e6435c"
+        }
+      },
+      "speaker": "AI",
+      "text": ""
+    },
+    {
+      "detailType": null,
+      "endTimeMs": 33236,
+      "speaker": "AI",
+      "startTimeMs": 29140,
+      "text": "The transfer did not complete. A nurse will call you back on the number"
+    }
+  ],
+  "versionedPromptId": "2013b046-8c3a-48b5-b5cb-85db0950dcb4",
+  "voiceId": "94c32748-865f-42e1-bb1a-3a6b4abc7d11"
+}

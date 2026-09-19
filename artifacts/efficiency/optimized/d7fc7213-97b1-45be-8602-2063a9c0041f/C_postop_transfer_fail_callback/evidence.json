@@ -1,0 +1,280 @@
+{
+  "action_executions": [
+    {
+      "attempts": [
+        {
+          "attempt_no": 1,
+          "latency_ms": 300,
+          "result": "no_answer"
+        }
+      ],
+      "completed_at": "2026-09-19T21:14:19.540390+00:00",
+      "downstream_ref": null,
+      "duplicate_of_id": null,
+      "id": "376590fd-8788-4412-ae3e-3b3b9170ae1a",
+      "kind": "transfer_triage",
+      "outcome": "failed",
+      "request_payload": {
+        "callback_phone": "5555550103",
+        "concern_summary": "I had surgery on Tuesday. My surgery wound is bleeding.",
+        "patient_ref": "PT-SYN-0003"
+      },
+      "requested_at": "2026-09-19T21:14:19.540390+00:00",
+      "response_payload": {
+        "agent_message": "The triage line did not answer.",
+        "failure_reason": "no_answer",
+        "status": "failed"
+      }
+    },
+    {
+      "attempts": [
+        {
+          "attempt_no": 1,
+          "latency_ms": 54,
+          "result": "created"
+        }
+      ],
+      "completed_at": "2026-09-19T21:14:23.816881+00:00",
+      "downstream_ref": "19609252-aa6d-45d9-b4f3-50476e1258ea",
+      "duplicate_of_id": null,
+      "id": "6db7ac95-011c-40ad-bcaa-f9b6ef5d9b46",
+      "kind": "create_callback",
+      "outcome": "succeeded",
+      "request_payload": {
+        "callback_phone": "+15555550103",
+        "patient_ref": "PT-SYN-0003",
+        "priority": "urgent",
+        "reason_code": "transfer_failed"
+      },
+      "requested_at": "2026-09-19T21:14:23.816881+00:00",
+      "response_payload": {
+        "agent_message": "A urgent callback request is in the queue.",
+        "callback_id": "19609252-aa6d-45d9-b4f3-50476e1258ea",
+        "status": "created"
+      }
+    }
+  ],
+  "agent_statements": [
+    {
+      "disposition": null,
+      "evidence_text": "The transfer did not complete.",
+      "kind": "disclosed_transfer_failed",
+      "observed_at": "2026-09-19T21:15:13.166877+00:00",
+      "sequence_no": 0,
+      "source": "transcript_rule"
+    },
+    {
+      "disposition": null,
+      "evidence_text": "A nurse will call you back on the number",
+      "kind": "promised_callback",
+      "observed_at": "2026-09-19T21:15:13.166877+00:00",
+      "sequence_no": 1,
+      "source": "transcript_rule"
+    }
+  ],
+  "call": {
+    "connected_seconds": 33,
+    "dial_id": "40a90b21-9150-47f8-8b6e-492abdb223a3",
+    "ended_at": "2026-09-19T21:14:34.094039+00:00",
+    "evaluation_run_id": "d7fc7213-97b1-45be-8602-2063a9c0041f",
+    "id": "450f9130-0a66-4dd2-8441-85fffef3535e",
+    "lifecycle": "ended",
+    "scenario_id": "C_postop_transfer_fail_callback",
+    "started_at": "2026-09-19T21:14:00.765668+00:00",
+    "system_result_type": "USER_HANGUP",
+    "versioned_prompt_id": "2013b046-8c3a-48b5-b5cb-85db0950dcb4",
+    "vogent_agent_id": "b3d8f0c2-c96e-4a37-b023-ce1d0d99a82d"
+  },
+  "derived": {
+    "evidence_refs": {
+      "callback_id": "19609252-aa6d-45d9-b4f3-50476e1258ea",
+      "transfer_execution_id": "376590fd-8788-4412-ae3e-3b3b9170ae1a"
+    },
+    "mismatch_details": [],
+    "next_step": "Call the patient back on the number recorded for this call.",
+    "promise_mismatch": false,
+    "reason": "The transfer to triage did not complete (no_answer). An urgent callback request was created and is still open.",
+    "requires_staff_action": true,
+    "severity": 2,
+    "status": "callback_pending"
+  },
+  "downstream": {
+    "appointments": [],
+    "callback_requests": [
+      {
+        "action_execution_id": "6db7ac95-011c-40ad-bcaa-f9b6ef5d9b46",
+        "id": "19609252-aa6d-45d9-b4f3-50476e1258ea",
+        "priority": "urgent",
+        "status": "created"
+      }
+    ],
+    "transfer_sessions": [
+      {
+        "action_execution_id": "376590fd-8788-4412-ae3e-3b3b9170ae1a",
+        "failure_reason": "no_answer",
+        "id": "1db21a2f-64b5-41af-a726-bc9c268c7501",
+        "status": "failed"
+      }
+    ]
+  },
+  "intent": {
+    "agent_classified": null,
+    "true_intent": "post_operative_concern"
+  },
+  "staff_actions": [],
+  "transcript": {
+    "authoritative": false,
+    "note": "Shows what was said, not what happened.",
+    "segments": [
+      {
+        "detailType": null,
+        "endTimeMs": 4136,
+        "speaker": "AI",
+        "startTimeMs": 680,
+        "text": "Thanks for calling Demo Surgical"
+      },
+      {
+        "detailType": null,
+        "endTimeMs": 6460,
+        "speaker": "HUMAN",
+        "startTimeMs": 2800,
+        "text": "I had surgery on Tuesday. My surgery wound is bleeding."
+      },
+      {
+        "detailType": "node-transition",
+        "functionCallId": "call_ZoU1e0ekQt3OfoqwO0VbKh4f",
+        "nodeTransition": {
+          "toNodeId": "collect_concern",
+          "transitionData": {
+            "answer": "post_op"
+          }
+        },
+        "speaker": "AI",
+        "text": ""
+      },
+      {
+        "detailType": "node-transition",
+        "functionCallId": "call_I5UpOLI1RL6kJnVbPr7EEyGM",
+        "nodeTransition": {
+          "toNodeId": "collect_phone",
+          "transitionData": {
+            "answer": "I had surgery on Tuesday. My surgery wound is bleeding."
+          }
+        },
+        "speaker": "AI",
+        "text": ""
+      },
+      {
+        "detailType": null,
+        "endTimeMs": 11020,
+        "speaker": "AI",
+        "startTimeMs": 8300,
+        "text": "What's the best number to reach you on?"
+      },
+      {
+        "detailType": null,
+        "endTimeMs": 17060,
+        "speaker": "HUMAN",
+        "startTimeMs": 10429,
+        "text": "It started this morning. You can reach me at 5 5 5 5 5 5 0 1 0 3."
+      },
+      {
+        "detailType": "node-transition",
+        "functionCallId": "call_UbF7KT87MYgsy8dWL21UOi5v",
+        "nodeTransition": {
+          "toNodeId": "transfer",
+          "transitionData": {
+            "answer": "5555550103"
+          }
+        },
+        "speaker": "AI",
+        "text": ""
+      },
+      {
+        "detailType": null,
+        "functionCalls": [
+          {
+            "args": "{\"callback_phone\":\"5555550103\",\"concern_summary\":\"I had surgery on Tuesday. My surgery wound is bleeding.\"}",
+            "functionCallId": "f93999e7-aa55-4c29-b593-160abf611bd7",
+            "name": "Attempt transfer to triage"
+          }
+        ],
+        "speaker": "AI",
+        "text": ""
+      },
+      {
+        "detailType": "node-transition",
+        "functionCallId": "call_UbF7KT87MYgsy8dWL21UOi5v",
+        "nodeTransition": {
+          "toNodeId": "urgent_callback",
+          "transitionData": {
+            "agent_message": "The triage line did not answer.",
+            "failure_reason": "no_answer",
+            "status": "failed"
+          }
+        },
+        "speaker": "AI",
+        "text": ""
+      },
+      {
+        "detailType": null,
+        "functionCalls": [
+          {
+            "args": "{\"callback_phone\":\"5555550103\",\"priority\":\"urgent\",\"reason_code\":\"transfer_failed\"}",
+            "functionCallId": "dbc8ac36-8e42-4e16-8216-b4fb693db387",
+            "name": "Queue an urgent callback"
+          }
+        ],
+        "speaker": "AI",
+        "text": ""
+      },
+      {
+        "detailType": "node-transition",
+        "functionCallId": "call_UbF7KT87MYgsy8dWL21UOi5v",
+        "nodeTransition": {
+          "toNodeId": "disposition_from_evidence",
+          "transitionData": {
+            "agent_message": "A urgent callback request is in the queue.",
+            "callback_id": "19609252-aa6d-45d9-b4f3-50476e1258ea",
+            "priority": "urgent",
+            "status": "created"
+          }
+        },
+        "speaker": "AI",
+        "text": ""
+      },
+      {
+        "detailType": null,
+        "functionCalls": [
+          {
+            "args": "{\"category\":\"post_operative_concern\",\"disposition\":\"Use exactly one of these, chosen from the function results: 'transferred' if failed is connected; 'callback_pending' if created is created; otherwise 'escalation_failed'.\",\"summary\":\"Reported from the recorded function results.\"}",
+            "functionCallId": "82aecb6f-9bf3-4eaa-a5d9-5130d530f0ff",
+            "name": "Report the disposition the evidence supports"
+          }
+        ],
+        "speaker": "AI",
+        "text": ""
+      },
+      {
+        "detailType": "node-transition",
+        "functionCallId": "call_UbF7KT87MYgsy8dWL21UOi5v",
+        "nodeTransition": {
+          "toNodeId": "callback_outcome_notice",
+          "transitionData": {
+            "error": "internal_error",
+            "request_id": "f62b0ea8a2e6435c"
+          }
+        },
+        "speaker": "AI",
+        "text": ""
+      },
+      {
+        "detailType": null,
+        "endTimeMs": 33236,
+        "speaker": "AI",
+        "startTimeMs": 29140,
+        "text": "The transfer did not complete. A nurse will call you back on the number"
+      }
+    ]
+  }
+}

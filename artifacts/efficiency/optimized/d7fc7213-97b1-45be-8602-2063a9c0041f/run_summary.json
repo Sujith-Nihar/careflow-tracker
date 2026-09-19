@@ -1,0 +1,79 @@
+{
+  "evaluation_run_id": "d7fc7213-97b1-45be-8602-2063a9c0041f",
+  "strategy": "optimized",
+  "agent_version": "v2",
+  "structural_preflight": {
+    "passed": true,
+    "seconds": 0.0002,
+    "findings": 0
+  },
+  "replay_eligible": [
+    "A_routine_scheduling",
+    "B_postop_transfer_ok"
+  ],
+  "cases": [
+    {
+      "scenario_id": "A_routine_scheduling",
+      "mode": "replay",
+      "passed": true,
+      "derived_status": "completed_scheduled",
+      "wall_seconds": 14.34,
+      "connected_seconds": 0,
+      "cost_usd": 0.0,
+      "dial_id": null,
+      "failures": [],
+      "reason": "no failure branch on this path; backend behaviour fully exercised without voice",
+      "artifact_path": "/Users/sujiththota/Downloads/Python/takehome/careflow-tracker/artifacts/efficiency/optimized/d7fc7213-97b1-45be-8602-2063a9c0041f/A_routine_scheduling"
+    },
+    {
+      "scenario_id": "B_postop_transfer_ok",
+      "mode": "replay",
+      "passed": true,
+      "derived_status": "completed_transferred",
+      "wall_seconds": 16.24,
+      "connected_seconds": 0,
+      "cost_usd": 0.0,
+      "dial_id": null,
+      "failures": [],
+      "reason": "no failure branch on this path; backend behaviour fully exercised without voice",
+      "artifact_path": "/Users/sujiththota/Downloads/Python/takehome/careflow-tracker/artifacts/efficiency/optimized/d7fc7213-97b1-45be-8602-2063a9c0041f/B_postop_transfer_ok"
+    },
+    {
+      "scenario_id": "C_postop_transfer_fail_callback",
+      "mode": "voice",
+      "passed": true,
+      "derived_status": "callback_pending",
+      "wall_seconds": 86.84,
+      "connected_seconds": 33,
+      "cost_usd": 0.0495,
+      "dial_id": "40a90b21-9150-47f8-8b6e-492abdb223a3",
+      "failures": [],
+      "reason": "high-risk transfer and callback path; keeps real voice coverage",
+      "artifact_path": "/Users/sujiththota/Downloads/Python/takehome/careflow-tracker/artifacts/efficiency/optimized/d7fc7213-97b1-45be-8602-2063a9c0041f/C_postop_transfer_fail_callback"
+    },
+    {
+      "scenario_id": "D_postop_double_failure",
+      "mode": "voice",
+      "passed": true,
+      "derived_status": "escalation_failed",
+      "wall_seconds": 80.35,
+      "connected_seconds": 29,
+      "cost_usd": 0.0435,
+      "dial_id": "33f07e60-70f5-4f12-b95e-20e123883705",
+      "failures": [],
+      "reason": "high-risk transfer and callback path; keeps real voice coverage",
+      "artifact_path": "/Users/sujiththota/Downloads/Python/takehome/careflow-tracker/artifacts/efficiency/optimized/d7fc7213-97b1-45be-8602-2063a9c0041f/D_postop_double_failure"
+    }
+  ],
+  "totals": {
+    "scenarios": 4,
+    "passed": 4,
+    "voice_calls": 2,
+    "wall_seconds": 197.78,
+    "connected_seconds": 62,
+    "cost_usd": 0.093,
+    "cost_label": "CALCULATED_ESTIMATE",
+    "rate_usd_per_second": 0.0015,
+    "rate_source": "https://docs.vogent.ai/platform-overview/billing (read 2026-09-18)"
+  }
+}

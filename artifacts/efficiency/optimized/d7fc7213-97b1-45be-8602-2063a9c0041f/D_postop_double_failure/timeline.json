@@ -1,0 +1,347 @@
+[
+  {
+    "t": 1789852524250,
+    "type": "ready",
+    "value": true
+  },
+  {
+    "t": 1789852526234,
+    "type": "audio_connected",
+    "value": true
+  },
+  {
+    "t": 1789852526361,
+    "type": "status",
+    "value": "in-progress"
+  },
+  {
+    "t": 1789852527000,
+    "type": "transcript",
+    "value": {
+      "speaker": "AI",
+      "text": "Thanks for calling Demo Surgical Associates. Are you calling to schedule a routine appointment, or about a concern after a recent surgery?"
+    }
+  },
+  {
+    "t": 1789852529043,
+    "type": "caller_clip",
+    "value": "http://127.0.0.1:57392/clips/557248f66a1e9053.wav"
+  },
+  {
+    "t": 1789852529311,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "I"
+    }
+  },
+  {
+    "t": 1789852530313,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "I had surgery on"
+    }
+  },
+  {
+    "t": 1789852530314,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "I had surgery on"
+    }
+  },
+  {
+    "t": 1789852530834,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "I had surgery on Monday."
+    }
+  },
+  {
+    "t": 1789852530863,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "I had surgery on Monday."
+    }
+  },
+  {
+    "t": 1789852531620,
+    "type": "transcript",
+    "value": {
+      "speaker": "AI",
+      "text": ""
+    }
+  },
+  {
+    "t": 1789852531843,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "Now I have a fever."
+    }
+  },
+  {
+    "t": 1789852532151,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "Now I have a fever."
+    }
+  },
+  {
+    "t": 1789852532244,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "Now I have a fever."
+    }
+  },
+  {
+    "t": 1789852532880,
+    "type": "transcript",
+    "value": {
+      "speaker": "AI",
+      "text": ""
+    }
+  },
+  {
+    "t": 1789852532889,
+    "type": "transcript",
+    "value": {
+      "speaker": "AI",
+      "text": ""
+    }
+  },
+  {
+    "t": 1789852533172,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "I"
+    }
+  },
+  {
+    "t": 1789852533501,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "I"
+    }
+  },
+  {
+    "t": 1789852533507,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "I"
+    }
+  },
+  {
+    "t": 1789852534112,
+    "type": "transcript",
+    "value": {
+      "speaker": "AI",
+      "text": "What's the best number to reach you on?"
+    }
+  },
+  {
+    "t": 1789852536070,
+    "type": "caller_clip",
+    "value": "http://127.0.0.1:57392/clips/999652f17fde279e.wav"
+  },
+  {
+    "t": 1789852536437,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "I"
+    }
+  },
+  {
+    "t": 1789852537171,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "Since last night,"
+    }
+  },
+  {
+    "t": 1789852537375,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "Since last night,"
+    }
+  },
+  {
+    "t": 1789852537488,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "Since last night,"
+    }
+  },
+  {
+    "t": 1789852538366,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "my number has 5"
+    }
+  },
+  {
+    "t": 1789852539903,
+    "type": "transcript",
+    "value": {
+      "speaker": "AI",
+      "text": "What's the best number to reach you on?"
+    }
+  },
+  {
+    "t": 1789852540316,
+    "type": "transcript",
+    "value": {
+      "speaker": "AI",
+      "text": "What's the best number to reach you on?"
+    }
+  },
+  {
+    "t": 1789852540317,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "my number is 5 5 5 5 5 5"
+    }
+  },
+  {
+    "t": 1789852541680,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "my number is 5 5 5 5 5 5 0 1 0."
+    }
+  },
+  {
+    "t": 1789852543253,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "my number is 5 5 5 5 5 5 0 1 0 4."
+    }
+  },
+  {
+    "t": 1789852543256,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "my number is 5 5 5 5 5 5 0 1 0 4."
+    }
+  },
+  {
+    "t": 1789852543864,
+    "type": "transcript",
+    "value": {
+      "speaker": "AI",
+      "text": ""
+    }
+  },
+  {
+    "t": 1789852543866,
+    "type": "transcript",
+    "value": {
+      "speaker": "AI",
+      "text": ""
+    }
+  },
+  {
+    "t": 1789852543872,
+    "type": "transcript",
+    "value": {
+      "speaker": "AI",
+      "text": ""
+    }
+  },
+  {
+    "t": 1789852544197,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "my number is 5 5 5 5 5 5 0 1 0 4."
+    }
+  },
+  {
+    "t": 1789852545212,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "my number is 5 5 5 5 5 5 0 1 0 4."
+    }
+  },
+  {
+    "t": 1789852546201,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "my number is 5 5 5 5 5 5 0 1 0 4."
+    }
+  },
+  {
+    "t": 1789852547212,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "my number is 5 5 5 5 5 5 0 1 0 4."
+    }
+  },
+  {
+    "t": 1789852547218,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "my number is 5 5 5 5 5 5 0 1 0 4."
+    }
+  },
+  {
+    "t": 1789852547220,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "my number is 5 5 5 5 5 5 0 1 0 4."
+    }
+  },
+  {
+    "t": 1789852550140,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "my number is 5 5 5 5 5 5 0 1 0 4."
+    }
+  },
+  {
+    "t": 1789852550144,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "my number is 5 5 5 5 5 5 0 1 0 4."
+    }
+  },
+  {
+    "t": 1789852551409,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "my number is 5 5 5 5 5 5 0 1 0 4."
+    }
+  },
+  {
+    "t": 1789852552166,
+    "type": "transcript",
+    "value": {
+      "speaker": "AI",
+      "text": "The transfer did not complete, and I could not arrange a callback either. Please call the office directly, or emergency services if this is an emergency; goodbye."
+    }
+  }
+]
