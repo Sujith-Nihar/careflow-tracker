@@ -1,0 +1,33 @@
+"""Load .env and fetch required settings with an actionable error when one is missing."""
+
+from __future__ import annotations
+
+import os
+import sys
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parents[1]
+
+
+def load_env() -> None:
+    env_file = ROOT / ".env"
+    if not env_file.exists():
+        fail(".env not found. Copy .env.example to .env and fill it in (docs/HUMAN_SETUP.md).")
+    for line in env_file.read_text().splitlines():
+        line = line.strip()
+        if not line or line.startswith("#") or "=" not in line:
+            continue
+        key, value = line.split("=", 1)
+        os.environ.setdefault(key.strip(), value.strip().strip('"').strip("'"))
+
+
+def require(name: str) -> str:
+    value = os.environ.get(name, "").strip()
+    if not value:
+        fail(f"{name} is not set in .env. See docs/HUMAN_SETUP.md.")
+    return value
+
+
+def fail(message: str) -> None:
+    print(f"error: {message}", file=sys.stderr)
+    raise SystemExit(1)
