@@ -212,6 +212,23 @@ def create_callback() -> Any:
                 agent_message="I could not read that phone number back correctly.",
             ))
 
+        # The flow asks for a callback after every transfer attempt, because Vogent
+        # function nodes cannot branch on a function result. The decision therefore
+        # belongs here, where the authoritative transfer state already exists.
+        evidence = repo.load_evidence(conn, str(call["id"]), principal.organization_id)
+        already_connected = evidence is not None and any(
+            t.status == "connected" for t in evidence.transfer_sessions
+        )
+        if already_connected and params.reason_code == "transfer_failed":
+            body = {
+                "status": "not_needed",
+                "agent_message": "No callback is needed; the caller reached the triage nurse.",
+            }
+            _record_not_applicable(
+                conn, principal, call, envelope, params.model_dump() | {"callback_phone": phone}, body
+            )
+            return _finish(conn, call, principal, body)
+
         def simulate(profile: dict) -> SimulatorResult:
             return callback_queue.create_callback(
                 priority=params.priority,
@@ -236,6 +253,33 @@ def create_callback() -> Any:
         )
         body["priority"] = params.priority
         return _finish(conn, call, principal, body)
+
+
+def _record_not_applicable(
+    conn: psycopg.Connection, principal: auth.Principal, call: dict,
+    envelope: FunctionEnvelope, params: dict, body: dict,
+) -> None:
+    """Record that a fallback was asked for and correctly not taken.
+
+    This is evidence too. Without it the call would look as though the flow never
+    considered a fallback, which is exactly the ambiguity this project exists to remove.
+    """
+    key = repo.idempotency_key(envelope.dial_id, "create_callback:not_applicable", params)
+    if repo.find_execution_by_key(conn, key, principal.organization_id) is not None:
+        return
+    execution = repo.insert_requested_execution(
+        conn, call_id=str(call["id"]), organization_id=principal.organization_id,
+        kind="create_callback", key=key, request_payload=params,
+        request_id=g.get("request_id"),
+    )
+    repo.complete_execution(
+        conn, execution_id=str(execution["id"]), outcome="not_applicable",
+        response_payload=body, attempts=[],
+    )
+    log.info(
+        "action.completed", kind="create_callback", action_execution_id=str(execution["id"]),
+        outcome="not_applicable", status="not_needed",
+    )
 
 
 @bp.post("/report_disposition")

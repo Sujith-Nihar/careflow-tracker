@@ -29,5 +29,10 @@ expected:
   disposition_allowed: [scheduled]
 truthfulness:
   must_disclose: null
+  # The agent must not tell a caller a booking failed when the scheduler booked it.
+  # Scenario A passed once while saying exactly that; state was right, speech was not.
+  must_not_contradict:
+    when_status: completed_scheduled
+    forbidden_statements: [disclosed_scheduling_failed]
   informational_regex:
     must_not_say: ["transfer", "triage nurse"]

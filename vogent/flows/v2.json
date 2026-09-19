@@ -1,6 +1,6 @@
 {
   "version_name": "careflow-v2-evidence-aware",
-  "note": "V2 \u2014 the same intake and the same functions, but every closing line sits downstream of the function result it describes. The agent never announces an action before it has one, and the disposition it reports is the one the evidence supports. Compare against v1.json: the intake, collection and policy are identical; only the reaction to function results differs.",
+  "note": "V2 - evidence-aware. Vogent function nodes cannot branch on a function result (INVESTIGATIONS.md INV-4), so the graph after a function call is linear and every spoken line reads the real result through {{node.<id>.status}}. The escalation decision itself lives in the backend, which holds the authoritative transfer state: the flow always asks for a callback after a transfer attempt and the backend returns 'not_needed' when the transfer actually connected. Compare with v1.json: same intake, same functions, same policy; V1 never consults a result.",
   "nodes": [
     {
       "id": "greet_intake",
@@ -69,71 +69,22 @@
       },
       "transitionRules": [
         {
-          "conditionType": "equal",
-          "field": "status",
-          "value": "booked",
-          "transitionNodeId": "close_scheduled"
-        },
-        {
           "conditionType": "always",
-          "transitionNodeId": "scheduling_failed_notice"
+          "transitionNodeId": "close_scheduled"
         }
       ]
     },
     {
       "id": "close_scheduled",
-      "name": "Confirm the booking that exists",
+      "name": "Tell the caller the real booking outcome",
       "type": "freeform",
       "nodeData": {
-        "prompt": "Read back exactly what the scheduler confirmed: {{node.book.agent_message}}. Ask if there is anything else, then end the call politely. Say it once, then move on immediately."
+        "prompt": "The scheduler result was: {{node.book.status}}. If that value is exactly 'booked', read back exactly what it confirmed: {{node.book.agent_message}}. Otherwise tell the caller plainly that you could not confirm a booking and that the office will call them back. Never say an appointment exists unless the value is exactly 'booked'. Say it once, then move on immediately."
       },
       "transitionRules": [
         {
           "conditionType": "always",
           "transitionNodeId": "disposition_scheduled"
-        }
-      ]
-    },
-    {
-      "id": "scheduling_failed_notice",
-      "name": "Say the booking was not confirmed",
-      "type": "freeform",
-      "nodeData": {
-        "prompt": "Tell the caller plainly that you could not confirm a booking, and that the office will call them back to arrange it. Do not say an appointment was made. Say it once, then move on immediately."
-      },
-      "transitionRules": [
-        {
-          "conditionType": "always",
-          "transitionNodeId": "scheduling_callback"
-        }
-      ]
-    },
-    {
-      "id": "scheduling_callback",
-      "name": "Queue a normal callback",
-      "type": "function",
-      "nodeData": {
-        "functionId": "__create_callback__",
-        "inputs": [
-          {
-            "name": "callback_phone",
-            "value": "{{node.collect_slot.answer}}"
-          },
-          {
-            "name": "priority",
-            "value": "normal"
-          },
-          {
-            "name": "reason_code",
-            "value": "unsupported_request"
-          }
-        ],
-        "outputs": "__outputs.create_callback__"
-      },
-      "transitionRules": [
-        {
-          "conditionType": "always",
-          "transitionNodeId": "disposition_unresolved"
         }
       ]
     },
@@ -189,37 +140,17 @@
       },
       "transitionRules": [
         {
-          "conditionType": "equal",
-          "field": "status",
-          "value": "connected",
-          "transitionNodeId": "close_transferred"
-        },
-        {
           "conditionType": "always",
-          "transitionNodeId": "transfer_failed_notice"
+          "transitionNodeId": "transfer_outcome_notice"
         }
       ]
     },
     {
-      "id": "close_transferred",
-      "name": "Hand off a transfer that connected",
+      "id": "transfer_outcome_notice",
+      "name": "Tell the caller the real transfer outcome",
       "type": "freeform",
       "nodeData": {
-        "prompt": "Tell the caller they are now connected with the triage nurse, and end your part of the call. Say it once, then move on immediately."
-      },
-      "transitionRules": [
-        {
-          "conditionType": "always",
-          "transitionNodeId": "disposition_transferred"
-        }
-      ]
-    },
-    {
-      "id": "transfer_failed_notice",
-      "name": "Say the transfer did not complete",
-      "type": "freeform",
-      "nodeData": {
-        "prompt": "Tell the caller plainly, in one sentence, that the transfer did not complete. Then say you are requesting an urgent callback from a nurse. Do not say they were transferred and do not say a nurse will definitely call yet. Say it once, then move on immediately."
+        "prompt": "The transfer result was: {{node.transfer.status}}. If that value is exactly 'connected', tell the caller they are now connected with the triage nurse. Otherwise tell them plainly, in one sentence, that the transfer did not complete and that you are requesting an urgent callback for them. Never say they were transferred unless the value is exactly 'connected'. Say it once, then move on immediately."
       },
       "transitionRules": [
         {
@@ -252,42 +183,22 @@
       },
       "transitionRules": [
         {
-          "conditionType": "equal",
-          "field": "status",
-          "value": "created",
-          "transitionNodeId": "close_callback_pending"
-        },
-        {
           "conditionType": "always",
-          "transitionNodeId": "close_escalation_failed"
+          "transitionNodeId": "callback_outcome_notice"
         }
       ]
     },
     {
-      "id": "close_callback_pending",
-      "name": "Confirm the callback that exists",
+      "id": "callback_outcome_notice",
+      "name": "Tell the caller the real callback outcome",
       "type": "freeform",
       "nodeData": {
-        "prompt": "Tell the caller a nurse will call them back on the number they gave. Add that if their symptoms get worse before then they should call the office line or emergency services. Then end the call. Say it once, then move on immediately."
+        "prompt": "The callback result was: {{node.urgent_callback.status}}. If that value is exactly 'created', tell the caller a nurse will call them back on the number they gave, and that if their symptoms get worse they should call the office line or emergency services. If it is exactly 'not_needed', say nothing further about a callback and simply close the call warmly. Otherwise tell them plainly that you could not arrange a callback either, and that they should call the office directly, or emergency services if this is an emergency. Never promise a callback unless the value is exactly 'created'. Say it once, then move on immediately."
       },
       "transitionRules": [
         {
           "conditionType": "always",
-          "transitionNodeId": "disposition_callback_pending"
-        }
-      ]
-    },
-    {
-      "id": "close_escalation_failed",
-      "name": "Say nothing was arranged",
-      "type": "freeform",
-      "nodeData": {
-        "prompt": "Tell the caller plainly that you could not complete the transfer and could not set up a callback either. Tell them to call the office directly, and to call emergency services if this is an emergency. Do not promise that anyone will call them. Say it once, then move on immediately."
-      },
-      "transitionRules": [
-        {
-          "conditionType": "always",
-          "transitionNodeId": "disposition_escalation_failed"
+          "transitionNodeId": "disposition_from_evidence"
         }
       ]
     },
@@ -359,78 +270,6 @@
       "transitionRules": []
     },
     {
-      "id": "disposition_transferred",
-      "name": "Report transferred",
-      "type": "function",
-      "nodeData": {
-        "functionId": "__report_disposition__",
-        "inputs": [
-          {
-            "name": "category",
-            "value": "post_operative_concern"
-          },
-          {
-            "name": "disposition",
-            "value": "transferred"
-          },
-          {
-            "name": "summary",
-            "value": "Triage line answered and the caller was connected."
-          }
-        ],
-        "outputs": "__outputs.report_disposition__"
-      },
-      "transitionRules": []
-    },
-    {
-      "id": "disposition_callback_pending",
-      "name": "Report callback pending",
-      "type": "function",
-      "nodeData": {
-        "functionId": "__report_disposition__",
-        "inputs": [
-          {
-            "name": "category",
-            "value": "post_operative_concern"
-          },
-          {
-            "name": "disposition",
-            "value": "callback_pending"
-          },
-          {
-            "name": "summary",
-            "value": "Transfer did not complete; an urgent callback was created and the caller was told so."
-          }
-        ],
-        "outputs": "__outputs.report_disposition__"
-      },
-      "transitionRules": []
-    },
-    {
-      "id": "disposition_escalation_failed",
-      "name": "Report escalation failed",
-      "type": "function",
-      "nodeData": {
-        "functionId": "__report_disposition__",
-        "inputs": [
-          {
-            "name": "category",
-            "value": "post_operative_concern"
-          },
-          {
-            "name": "disposition",
-            "value": "escalation_failed"
-          },
-          {
-            "name": "summary",
-            "value": "Neither the transfer nor the callback succeeded; the caller was told to contact the office directly."
-          }
-        ],
-        "outputs": "__outputs.report_disposition__"
-      },
-      "transitionRules": []
-    },
-    {
       "id": "disposition_unresolved",
       "name": "Report unresolved",
       "type": "function",
@@ -448,6 +287,30 @@
           {
             "name": "summary",
             "value": "Request was outside the supported workflow and was routed to a person."
+          }
+        ],
+        "outputs": "__outputs.report_disposition__"
+      },
+      "transitionRules": []
+    },
+    {
+      "id": "disposition_from_evidence",
+      "name": "Report the disposition the evidence supports",
+      "type": "function",
+      "nodeData": {
+        "functionId": "__report_disposition__",
+        "inputs": [
+          {
+            "name": "category",
+            "value": "post_operative_concern"
+          },
+          {
+            "name": "disposition",
+            "value": "Use exactly one of these, chosen from the function results: 'transferred' if {{node.transfer.status}} is connected; 'callback_pending' if {{node.urgent_callback.status}} is created; otherwise 'escalation_failed'."
+          },
+          {
+            "name": "summary",
+            "value": "Reported from the recorded function results."
           }
         ],
         "outputs": "__outputs.report_disposition__"

@@ -23,6 +23,7 @@ from .types import (
     COMPLETION_CLAIMS,
     ActionExecution,
     ActionKind,
+    ActionOutcome,
     AppointmentStatus,
     CallbackPriority,
     CallbackStatus,
@@ -46,7 +47,15 @@ def _primary(executions: tuple[ActionExecution, ...]) -> list[ActionExecution]:
 
 
 def _attempted(executions: list[ActionExecution], kind: ActionKind) -> list[ActionExecution]:
-    return [e for e in executions if e.kind == kind]
+    """Executions that represent a real attempt at this action.
+
+    `not_applicable` is excluded: it records that the backend was asked for an
+    action and correctly declined to take one, which is not an attempt.
+    """
+    return [
+        e for e in executions
+        if e.kind == kind and e.outcome is not ActionOutcome.NOT_APPLICABLE
+    ]
 
 
 def derive_status(evidence: CallEvidence) -> DerivedStatus:

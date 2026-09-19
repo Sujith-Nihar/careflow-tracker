@@ -41,6 +41,9 @@ class ActionOutcome(StrEnum):
     FAILED = "failed"
     UNVERIFIED = "unverified"
     REJECTED = "rejected"
+    #: The action was correctly not performed: asking for a fallback after a
+    #: transfer that actually connected. Not a success and not a failure.
+    NOT_APPLICABLE = "not_applicable"
 
 
 class TransferStatus(StrEnum):
@@ -78,6 +81,7 @@ class StatementKind(StrEnum):
     PROMISED_APPOINTMENT = "promised_appointment"
     DISCLOSED_TRANSFER_FAILED = "disclosed_transfer_failed"
     DISCLOSED_CALLBACK_FAILED = "disclosed_callback_failed"
+    DISCLOSED_SCHEDULING_FAILED = "disclosed_scheduling_failed"
     REPORTED_DISPOSITION = "reported_disposition"
 
 

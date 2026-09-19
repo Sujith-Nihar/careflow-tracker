@@ -108,27 +108,34 @@ def get_or_create_call(
         "SELECT * FROM calls WHERE organization_id = %s AND dial_id = %s",
         (organization_id, dial_id),
     )
-    if row:
-        if vogent_agent_id or versioned_prompt_id:
-            execute(
-                conn,
-                """UPDATE calls
-                      SET vogent_agent_id = COALESCE(%s, vogent_agent_id),
-                          versioned_prompt_id = COALESCE(%s, versioned_prompt_id),
-                          lifecycle = CASE WHEN lifecycle = 'registered' THEN 'in_progress'
-                                           ELSE lifecycle END,
-                          updated_at = now()
-                    WHERE id = %s""",
-                (vogent_agent_id, versioned_prompt_id, row["id"]),
-            )
-            row = query_one(conn, "SELECT * FROM calls WHERE id = %s", (row["id"],))
-        return row
-
     profile = query_one(
         conn,
         "SELECT scenario_id, evaluation_run_id, true_intent FROM fault_profiles WHERE dial_id = %s",
         (dial_id,),
     ) or {}
+
+    if row:
+        # Backfill whatever this caller knows and the row is missing. The vendor's
+        # `dial.created` webhook arrives with no scenario, and the runner arrives
+        # with no agent id, so whichever created the row left gaps.
+        execute(
+            conn,
+            """UPDATE calls
+                  SET vogent_agent_id = COALESCE(vogent_agent_id, %s),
+                      versioned_prompt_id = COALESCE(versioned_prompt_id, %s),
+                      scenario_id = COALESCE(scenario_id, %s),
+                      evaluation_run_id = COALESCE(evaluation_run_id, %s),
+                      true_intent = COALESCE(true_intent, %s),
+                      lifecycle = CASE WHEN lifecycle = 'registered' THEN 'in_progress'
+                                       ELSE lifecycle END,
+                      updated_at = now()
+                WHERE id = %s""",
+            (
+                vogent_agent_id, versioned_prompt_id, profile.get("scenario_id"),
+                profile.get("evaluation_run_id"), profile.get("true_intent"), row["id"],
+            ),
+        )
+        return query_one(conn, "SELECT * FROM calls WHERE id = %s", (row["id"],))
 
     # Vogent's `dial.created` webhook and the evaluation runner both reach this
     # point for the same dial at almost the same moment. Let the database settle

@@ -154,3 +154,55 @@ V2 `9cf208b3-14f6-4d34-9735-361877a2f566`.
 configuration that is accepted, stored, and passes every structural check is not evidence that it
 works. Only running it and observing the result is. Four runs and about $0.18 were spent on a setting
 that looked correct in every artifact.
+
+---
+
+## INV-4: Function nodes cannot branch on their own result, so the decision moved to the backend
+
+**Observed.** Run `f25ab060-3103-4a0f-b8ef-23364f7abe30` PASSED scenario A on V2 with a complete and
+correct evidence chain: the scheduler was called with "Next Tuesday", booked an appointment, and the
+derived status was `completed_scheduled` with no staff action needed.
+
+But the transcript shows the agent telling the caller **"I could not confirm the booking today"** while
+the function had returned `status: booked` and an appointment row existed. The metrics scored it a pass
+because the metrics read state, and the state was right. The caller was told the opposite of the truth.
+
+**Evidence.** Two isolated probes, identical flows, varying only the transition rule on a function node
+whose backend demonstrably returned `status: "connected"` (confirmed in the backend log):
+
+| Transition rule on the function node | Branch taken |
+|---------------------------------------|--------------|
+| `equal`, `field: "status"`, value `connected` | fell through to `always` |
+| `equal`, no field, value `connected` | fell through to `always` |
+| `in`, `field: "status"`, values `[connected]` | fell through to `always` |
+| downstream freeform reading `{{node.fn.status}}` | spoke **"BRANCH VALUE IS connected"** |
+
+So the result is fully available to later prompts, and transition conditions on function nodes simply
+never evaluate against it. This is assumption A2 in `VOGENT_PLAN.md`, and it is false.
+
+**Was the assumption wrong.** Yes, and it was the mechanism V2's entire design rested on.
+
+**Change made.** Two changes, both of which arguably improve the design rather than merely work around it.
+
+1. **Speech reads the real value.** After every function call the flow goes to a freeform node whose
+   prompt contains the literal result, `{{node.transfer.status}}`, with an instruction that names the
+   exact value required before the agent may claim success. The agent cannot claim a transfer without
+   the word `connected` being in front of it.
+2. **The escalation decision moved into the backend.** The flow now always asks for a callback after a
+   transfer attempt, and `create_callback` consults the persisted transfer sessions for that call. If a
+   transfer actually connected it returns `not_needed` and creates nothing, recorded as a new action
+   outcome `not_applicable`: asked for, correctly declined. Not a success, not a failure.
+
+That second change puts the decision where the authoritative state already lives, instead of asking a
+language model to re-derive it from a string. The flow no longer needs to be trusted with it.
+
+**What it costs.** V2's post-operative path is now linear, so the graph itself no longer encodes the
+policy branch, and the structural preflight check in the efficiency experiment must be rewritten: the
+old rule counted outcome-conditioned edges, and the correct rule is now that every closing line must
+sit downstream of the function whose result it describes and must reference that result.
+
+**A note on the metric gap this exposed.** Scenario A passed while the agent said something false,
+because no metric compared the agent's claim about the booking against the booking. The deterministic
+state metrics are sound; the truthfulness coverage was thinner than intended on the scheduling path,
+where only the post-operative scenarios had a required `must_disclose`. That is a real weakness in my
+own suite, found by reading a transcript on a passing run.

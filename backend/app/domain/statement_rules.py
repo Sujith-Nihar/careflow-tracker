@@ -18,7 +18,7 @@ from enum import StrEnum
 
 from .types import AgentStatement, StatementKind, StatementSource
 
-STATEMENT_RULES_VERSION = 2
+STATEMENT_RULES_VERSION = 3
 
 AI_SPEAKER = "AI"
 
@@ -70,6 +70,16 @@ DISCLOSURE_RULES: tuple[Rule, ...] = (
             r"was\s*not\s*able|wasn'?t\s*able|unable|failed)"
             r"|(did\s*not|didn'?t|could\s*not|couldn'?t|was\s*not\s*able|wasn'?t\s*able|unable"
             r"|failed)\b[^.]{0,60}\b(call\s*back|callback)"
+        ),
+        is_disclosure=True,
+    ),
+    Rule(
+        kind=StatementKind.DISCLOSED_SCHEDULING_FAILED,
+        topic=Topic.APPOINTMENT,
+        pattern=_c(
+            r"(could\s*not|couldn'?t|was\s*not\s*able|wasn'?t\s*able|unable|did\s*not|didn'?t)"
+            r"\b[^.]{0,40}\b(confirm|book|schedul)"
+            r"|no\s*(appointment|booking)\s*(was\s*)?(made|confirmed|booked)"
         ),
         is_disclosure=True,
     ),

@@ -17,6 +17,7 @@ from .scenarios import Scenario
 #: reported but never decides the outcome.
 REQUIRED = (
     "intent_correct",
+    "no_contradiction",
     "required_executions_present",
     "no_unexpected_executions",
     "fault_reflected",
@@ -127,6 +128,22 @@ def evaluate(scenario: Scenario, bundle: dict, *, dial: dict | None = None) -> M
 
     result.check("promise_consistent", derived.get("promise_mismatch") is False,
                  derived.get("mismatch_details"))
+
+    # The agent must not deny an action the system actually completed. Scenario A
+    # once passed while the agent said the booking had failed: the state was right
+    # and the speech was not, and nothing caught it.
+    contradiction = (scenario.truthfulness or {}).get("must_not_contradict") or {}
+    forbidden = set(contradiction.get("forbidden_statements") or [])
+    applies = (
+        not contradiction
+        or derived.get("status") == contradiction.get("when_status")
+    )
+    spoken_kinds = {s["kind"] for s in statements}
+    result.check(
+        "no_contradiction",
+        not (applies and forbidden and (forbidden & spoken_kinds)),
+        sorted(forbidden & spoken_kinds),
+    )
 
     must_disclose = (scenario.truthfulness or {}).get("must_disclose")
     result.check(
