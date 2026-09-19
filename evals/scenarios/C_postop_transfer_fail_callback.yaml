@@ -8,7 +8,7 @@ caller:
   callback_phone: "+15555550103"
   turns:
     - when: "routine|schedule|appointment|surgery|concern|how can i help|calling about"
-      say: "I had surgery on Tuesday and the incision is bleeding through the bandage."
+      say: "I had surgery on Tuesday. My surgery wound is bleeding."
     - when: "describe|tell me|when did|number|reach you|phone|best"
       say: "It started this morning. You can reach me at five five five, five five five, zero one zero three."
     - when: "anything else|else i can"

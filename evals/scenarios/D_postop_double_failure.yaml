@@ -10,7 +10,7 @@ caller:
   callback_phone: "+15555550104"
   turns:
     - when: "routine|schedule|appointment|surgery|concern|how can i help|calling about"
-      say: "I had surgery on Monday and now I have a fever and chills."
+      say: "I had surgery on Monday. Now I have a fever."
     - when: "describe|tell me|when did|number|reach you|phone|best"
       say: "Since last night. My number is five five five, five five five, zero one zero four."
     - when: "anything else|else i can"

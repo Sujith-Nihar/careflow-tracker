@@ -1,0 +1,114 @@
+{
+  "evaluation_run_id": "1f4967ea-5980-46a9-ba67-b7e12f6057fd",
+  "strategy": "naive_voice",
+  "agent_version": "v2",
+  "versioned_prompt_id": "dbae4cc6-cb6c-4e6e-922c-ee4e208bf066",
+  "cases": [
+    {
+      "scenario_id": "A_routine_scheduling",
+      "scenario_version": 1,
+      "version": "v2",
+      "versioned_prompt_id": "dbae4cc6-cb6c-4e6e-922c-ee4e208bf066",
+      "dial_id": "d2bab518-5c5a-4ed1-b062-3f81da674c5d",
+      "evaluation_run_id": "1f4967ea-5980-46a9-ba67-b7e12f6057fd",
+      "call_id": "01dd818f-b36c-49df-a48b-0fd249d9826f",
+      "passed": false,
+      "failures": [
+        "intent_correct",
+        "required_executions_present",
+        "derived_status_expected",
+        "staff_action_expected"
+      ],
+      "metrics": {
+        "call_completed": {
+          "ok": true,
+          "detail": "USER_HANGUP"
+        },
+        "intent_correct": {
+          "ok": false,
+          "detail": {
+            "invoked": [],
+            "agent_classified": null
+          }
+        },
+        "required_executions_present": {
+          "ok": false,
+          "detail": {
+            "expected": [
+              "schedule_appointment"
+            ],
+            "actual": []
+          }
+        },
+        "no_unexpected_executions": {
+          "ok": true,
+          "detail": []
+        },
+        "fault_reflected": {
+          "ok": true,
+          "detail": {
+            "transfers": [],
+            "callbacks": []
+          }
+        },
+        "fallback_correct": true,
+        "no_false_success": true,
+        "derived_status_expected": {
+          "ok": false,
+          "detail": {
+            "expected": "completed_scheduled",
+            "actual": "no_action_recorded"
+          }
+        },
+        "staff_action_expected": {
+          "ok": false,
+          "detail": {
+            "expected": false,
+            "actual": true
+          }
+        },
+        "disposition_truthful": {
+          "ok": true,
+          "detail": {
+            "allowed": [
+              "scheduled"
+            ],
+            "reported": []
+          }
+        },
+        "promise_consistent": {
+          "ok": true,
+          "detail": []
+        },
+        "disclosure_present": true,
+        "transcript_must_not_say": {
+          "ok": true,
+          "detail": []
+        }
+      },
+      "derived_status": "no_action_recorded",
+      "requires_staff_action": true,
+      "promise_mismatch": false,
+      "started_at": "2026-09-19T20:15:36.237915Z",
+      "ended_at": "2026-09-19T20:16:33.239255Z",
+      "wall_seconds": 67.28,
+      "connected_seconds": 56,
+      "cost_usd": 0.084,
+      "cost_label": "CALCULATED_ESTIMATE",
+      "system_result_type": "USER_HANGUP",
+      "turns_taken": 10,
+      "error": null,
+      "artifact_path": "/Users/sujiththota/Downloads/Python/takehome/careflow-tracker/artifacts/v2/1f4967ea-5980-46a9-ba67-b7e12f6057fd/A_routine_scheduling"
+    }
+  ],
+  "totals": {
+    "scenarios": 1,
+    "passed": 0,
+    "wall_seconds": 67.28,
+    "connected_seconds": 56,
+    "cost_usd": 0.084,
+    "cost_label": "CALCULATED_ESTIMATE",
+    "rate_usd_per_second": 0.0015,
+    "rate_source": "https://docs.vogent.ai/platform-overview/billing (read 2026-09-18)"
+  }
+}

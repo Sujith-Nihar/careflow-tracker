@@ -33,7 +33,7 @@ agent, its two versions, and the four functions are represented and reproduced.
 | `dial.created` webhook | exists, not in the documented event list | arrives before the runner registers the dial, which exposed a create race |
 | `modelOptionValues` offered by the model metadata | **temperature below the default makes the agent mute**; accepted with 200, no error anywhere | four silent runs (`INVESTIGATIONS.md` INV-3). We publish no model options. |
 | Updating a function with `PATCH` | **`PUT`**; `PATCH` returns 405 with an empty body | `vogent/scripts/sync_functions.py` |
-| Transition rules shown without a `field` for question nodes | an `equal` rule on a question node needs **`field: "answer"`**; with `field: null` it never matches and the flow stalls on the intake node | seventh run looped on the greeting for 100s |
+| Transition rules and the `field` key on question nodes | a question node's `equal` rule must carry **no field at all**. Naming `answer`, which is exactly what its own `outputSchema` calls the value, makes every rule fall through. Function nodes are the opposite: they require `field: "status"`. | proved by an isolated two-node probe: identical flow, only this differed. One routed, the other fell through. |
 
 Verified by building, not by reading. The probe versioned prompts used to establish the node type
 (`probe-freeform`, `probe-question`, `probe-function`) are left in the workspace; the API exposes no

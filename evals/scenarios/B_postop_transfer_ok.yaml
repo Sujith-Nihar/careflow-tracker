@@ -8,12 +8,12 @@ caller:
   callback_phone: "+15555550102"
   turns:
     - when: "routine|schedule|appointment|surgery|concern|how can i help|calling about"
-      say: "I had surgery last week and I have a question about my incision."
+      say: "I had surgery last week. I have a concern about my surgery wound."
     - when: "describe|tell me|what.*happening|number|reach you|phone"
       say: "It looks a bit red around the edges. My number is five five five, five five five, zero one zero two."
     - when: "anything else|else i can"
       say: "No, that's all."
-  fallback_say: "I had surgery last week and I'm worried about my incision."
+  fallback_say: "I had surgery last week. I have a concern about my surgery wound."
   end_when: "take care|goodbye|connected|triage nurse"
   max_turns: 8
 fault_profile:

@@ -1,0 +1,183 @@
+{
+  "action_executions": [],
+  "agent_statements": [],
+  "call": {
+    "connected_seconds": 56,
+    "dial_id": "d2bab518-5c5a-4ed1-b062-3f81da674c5d",
+    "ended_at": "2026-09-19T20:16:33.239255+00:00",
+    "evaluation_run_id": "1f4967ea-5980-46a9-ba67-b7e12f6057fd",
+    "id": "01dd818f-b36c-49df-a48b-0fd249d9826f",
+    "lifecycle": "ended",
+    "scenario_id": "A_routine_scheduling",
+    "started_at": "2026-09-19T20:15:36.237915+00:00",
+    "system_result_type": "USER_HANGUP",
+    "versioned_prompt_id": "dbae4cc6-cb6c-4e6e-922c-ee4e208bf066",
+    "vogent_agent_id": null
+  },
+  "derived": {
+    "evidence_refs": {},
+    "mismatch_details": [],
+    "next_step": "Review the call and contact the patient if they needed something.",
+    "promise_mismatch": false,
+    "reason": "The call ended without any recorded action. Whatever the caller was told, nothing was scheduled, transferred, or queued.",
+    "requires_staff_action": true,
+    "severity": 3,
+    "status": "no_action_recorded"
+  },
+  "downstream": {
+    "appointments": [],
+    "callback_requests": [],
+    "transfer_sessions": []
+  },
+  "intent": {
+    "agent_classified": null,
+    "true_intent": "routine_scheduling"
+  },
+  "staff_actions": [],
+  "transcript": {
+    "authoritative": false,
+    "note": "Shows what was said, not what happened.",
+    "segments": [
+      {
+        "detailType": null,
+        "endTimeMs": 4072,
+        "speaker": "AI",
+        "startTimeMs": 680,
+        "text": "Thanks for calling Demo Surgical"
+      },
+      {
+        "detailType": null,
+        "endTimeMs": 5399,
+        "speaker": "HUMAN",
+        "startTimeMs": 2720,
+        "text": "I just need a run for an off appointment."
+      },
+      {
+        "detailType": null,
+        "endTimeMs": 11100,
+        "speaker": "AI",
+        "startTimeMs": 6300,
+        "text": "Are you trying to set up a routine appointment? If yes, I can connect you to the scheduler."
+      },
+      {
+        "detailType": null,
+        "endTimeMs": 12110,
+        "speaker": "HUMAN",
+        "startTimeMs": 8530,
+        "text": "Hi. I'd like to book a routine for an oil appointment, please."
+      },
+      {
+        "detailType": null,
+        "endTimeMs": 16328,
+        "speaker": "AI",
+        "startTimeMs": 13000,
+        "text": "I can connect you to the scheduler for a routine"
+      },
+      {
+        "detailType": null,
+        "endTimeMs": 17480,
+        "speaker": "HUMAN",
+        "startTimeMs": 15050,
+        "text": "I just need a routine follow-up appointment."
+      },
+      {
+        "detailType": null,
+        "endTimeMs": 21784,
+        "speaker": "AI",
+        "startTimeMs": 18360,
+        "text": "I can connect you to the scheduler for a routine"
+      },
+      {
+        "detailType": null,
+        "endTimeMs": 23090,
+        "speaker": "HUMAN",
+        "startTimeMs": 17670,
+        "text": "I just need a routine for an out appointment."
+      },
+      {
+        "detailType": null,
+        "endTimeMs": 27212,
+        "speaker": "AI",
+        "startTimeMs": 23820,
+        "text": "I can connect you to the scheduler for a routine"
+      },
+      {
+        "detailType": null,
+        "endTimeMs": 28490,
+        "speaker": "HUMAN",
+        "startTimeMs": 25890,
+        "text": "I just need a routine follow-up appointment."
+      },
+      {
+        "detailType": null,
+        "endTimeMs": 33584,
+        "speaker": "AI",
+        "startTimeMs": 29360,
+        "text": "I can connect you to the scheduler for a routine appointment. Please hold"
+      },
+      {
+        "detailType": null,
+        "endTimeMs": 33850,
+        "speaker": "HUMAN",
+        "startTimeMs": 31670,
+        "text": "I just need a routine for an eye appointment."
+      },
+      {
+        "detailType": null,
+        "endTimeMs": 38316,
+        "speaker": "AI",
+        "startTimeMs": 35020,
+        "text": "I can connect you to the scheduler for a routine"
+      },
+      {
+        "detailType": null,
+        "endTimeMs": 39390,
+        "speaker": "HUMAN",
+        "startTimeMs": 37000,
+        "text": "I just need a routine follow-up appointment."
+      },
+      {
+        "detailType": null,
+        "endTimeMs": 44784,
+        "speaker": "AI",
+        "startTimeMs": 40560,
+        "text": "I can connect you to the scheduler for a routine"
+      },
+      {
+        "detailType": null,
+        "endTimeMs": 44960,
+        "speaker": "HUMAN",
+        "startTimeMs": 42780,
+        "text": "I just need a routine for an up appointment."
+      },
+      {
+        "detailType": null,
+        "endTimeMs": 49508,
+        "speaker": "AI",
+        "startTimeMs": 46020,
+        "text": "I can connect you to the scheduler for a routine"
+      },
+      {
+        "detailType": null,
+        "endTimeMs": 50600,
+        "speaker": "HUMAN",
+        "startTimeMs": 48030,
+        "text": "I just need a ride for an appointment."
+      },
+      {
+        "detailType": null,
+        "endTimeMs": 54824,
+        "speaker": "AI",
+        "startTimeMs": 51560,
+        "text": "I can\u2019t help arrange transportation. Please hold while I"
+      },
+      {
+        "detailType": null,
+        "endTimeMs": 56070,
+        "speaker": "HUMAN",
+        "startTimeMs": 53500,
+        "text": "I just need a run-in in for an oil appointment."
+      }
+    ]
+  }
+}

@@ -34,14 +34,12 @@
         {
           "conditionType": "equal",
           "value": "routine",
-          "transitionNodeId": "collect_slot",
-          "field": "answer"
+          "transitionNodeId": "collect_slot"
         },
         {
           "conditionType": "equal",
           "value": "post_op",
-          "transitionNodeId": "collect_concern",
-          "field": "answer"
+          "transitionNodeId": "collect_concern"
         },
         {
           "conditionType": "always",

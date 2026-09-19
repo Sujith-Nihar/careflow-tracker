@@ -8,14 +8,14 @@ caller:
   callback_phone: "+15555550101"
   turns:
     - when: "routine|schedule|appointment|surgery|concern|how can i help|calling about"
-      say: "Hi, I'd like to book a routine follow-up appointment please."
+      say: "I would like to make a routine appointment please."
     - when: "when|what day|which day|date|prefer|come in|works for you"
       say: "Next Tuesday would work well for me."
     - when: "what time|time works|morning or afternoon|time of day"
       say: "Any time in the morning is fine."
     - when: "anything else|else i can|all set|is booked|have you booked|confirmed for"
       say: "No, that's everything. Thank you."
-  fallback_say: "I just need a routine follow-up appointment."
+  fallback_say: "I would like to make a routine appointment please."
   end_when: "take care|goodbye|have a good|all set"
   max_turns: 10
 fault_profile: {}
