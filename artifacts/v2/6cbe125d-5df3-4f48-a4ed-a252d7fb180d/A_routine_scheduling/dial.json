@@ -1,0 +1,115 @@
+{
+  "agent": {
+    "defaultExtractorId": null,
+    "defaultVersionedPromptId": "b27a8ced-35c7-4d44-bb63-a0469bcde061",
+    "defaultVoiceId": "94c32748-865f-42e1-bb1a-3a6b4abc7d11",
+    "endpointDetectorConfig": {
+      "mode": "DEFAULT",
+      "type": "SEMANTIC"
+    },
+    "fillEmptyStringVariables": false,
+    "id": "b3d8f0c2-c96e-4a37-b023-ce1d0d99a82d",
+    "idleMessageConfig": {
+      "enabled": false,
+      "idleDurationMilliseconds": 0,
+      "maxIdleMessages": 0
+    },
+    "ivrConfiguration": null,
+    "ivrSilenceHangupConfiguration": null,
+    "language": "en",
+    "maxDurationSeconds": 10800,
+    "name": "CareFlow Demo Surgical",
+    "silenceHangupConfiguration": {
+      "silenceDurationSeconds": 0,
+      "type": "DISABLED"
+    },
+    "timeoutBehaviorConfiguration": {
+      "behavior": "HANGUP",
+      "transferNumber": null
+    },
+    "timeoutMessage": null,
+    "transcriberParams": {
+      "type": "deepgram"
+    },
+    "utteranceDetectorConfig": {
+      "interruptionPlayTimeMs": 1000,
+      "sensitivity": "MEDIUM"
+    },
+    "voicemailConfig": {
+      "detection": "DISABLE",
+      "message": null
+    }
+  },
+  "aiDurationSeconds": 20,
+  "aiResult": {},
+  "durationSeconds": 20,
+  "endedAt": "2026-09-19T20:08:50.150756Z",
+  "id": "3dab4d90-f3f2-4a7a-b3c6-4698b974dc4a",
+  "inputs": {
+    "callback_phone": "+15555550101",
+    "evaluation_run_id": "6cbe125d-5df3-4f48-a4ed-a252d7fb180d",
+    "patient_ref": "PT-SYN-0001",
+    "scenario_id": "A_routine_scheduling"
+  },
+  "recordings": [
+    {
+      "url": "https://api.vogent.ai/api/recordings/39d31f53-790f-462c-9ded-84749dbbe9a0"
+    }
+  ],
+  "startedAt": "2026-09-19T20:08:29.923151Z",
+  "status": "completed",
+  "systemResultType": "USER_HANGUP",
+  "transcript": [
+    {
+      "detailType": null,
+      "endTimeMs": 3260,
+      "speaker": "AI",
+      "startTimeMs": 780,
+      "text": "Thanks for calling Demo Surgical Associates."
+    },
+    {
+      "detailType": null,
+      "endTimeMs": 6510,
+      "speaker": "HUMAN",
+      "startTimeMs": 2720,
+      "text": "Hi. I'd like to book a party for an off appointment, please."
+    },
+    {
+      "detailType": null,
+      "endTimeMs": 11764,
+      "speaker": "AI",
+      "startTimeMs": 7540,
+      "text": "I can help with a routine appointment. What day works for"
+    },
+    {
+      "detailType": null,
+      "endTimeMs": 11830,
+      "speaker": "HUMAN",
+      "startTimeMs": 9889,
+      "text": "Next Tuesday would work well for me."
+    },
+    {
+      "detailType": null,
+      "endTimeMs": 14440,
+      "speaker": "AI",
+      "startTimeMs": 12680,
+      "text": "What time works best on Tuesday?"
+    },
+    {
+      "detailType": null,
+      "endTimeMs": 17140,
+      "speaker": "HUMAN",
+      "startTimeMs": 14550,
+      "text": "No. That's everything. Thank you."
+    },
+    {
+      "detailType": null,
+      "endTimeMs": 19700,
+      "speaker": "AI",
+      "startTimeMs": 17780,
+      "text": "You\u2019re welcome. Goodbye."
+    }
+  ],
+  "versionedPromptId": "9cf208b3-14f6-4d34-9735-361877a2f566",
+  "voiceId": "94c32748-865f-42e1-bb1a-3a6b4abc7d11"
+}

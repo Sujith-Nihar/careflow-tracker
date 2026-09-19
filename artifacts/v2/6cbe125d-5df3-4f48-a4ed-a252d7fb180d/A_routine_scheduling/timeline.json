@@ -1,0 +1,256 @@
+[
+  {
+    "t": 1789848507757,
+    "type": "ready",
+    "value": true
+  },
+  {
+    "t": 1789848509828,
+    "type": "audio_connected",
+    "value": true
+  },
+  {
+    "t": 1789848510003,
+    "type": "status",
+    "value": "in-progress"
+  },
+  {
+    "t": 1789848510648,
+    "type": "transcript",
+    "value": {
+      "speaker": "AI",
+      "text": "Thanks for calling Demo Surgical Associates."
+    }
+  },
+  {
+    "t": 1789848512604,
+    "type": "caller_clip",
+    "value": "http://127.0.0.1:51689/clips/2d9bb9672038a04f.wav"
+  },
+  {
+    "t": 1789848512891,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "Hi."
+    }
+  },
+  {
+    "t": 1789848513147,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "Hi."
+    }
+  },
+  {
+    "t": 1789848513381,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "Hi."
+    }
+  },
+  {
+    "t": 1789848513427,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "Hi."
+    }
+  },
+  {
+    "t": 1789848514431,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "I'd like to book a"
+    }
+  },
+  {
+    "t": 1789848515332,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "I'd like to book a party for an"
+    }
+  },
+  {
+    "t": 1789848516296,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "I'd like to book a party for an up appointment, please."
+    }
+  },
+  {
+    "t": 1789848516508,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "I'd like to book a party for an off appointment, please."
+    }
+  },
+  {
+    "t": 1789848516510,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "Hi. I'd like to book a party for an off appointment, please."
+    }
+  },
+  {
+    "t": 1789848517351,
+    "type": "transcript",
+    "value": {
+      "speaker": "AI",
+      "text": "I can help with a routine appointment. What day works for you?"
+    }
+  },
+  {
+    "t": 1789848519456,
+    "type": "caller_clip",
+    "value": "http://127.0.0.1:51689/clips/ff88424ca21f9c70.wav"
+  },
+  {
+    "t": 1789848520488,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "Next Tuesday,"
+    }
+  },
+  {
+    "t": 1789848521539,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "Next Tuesday would work well for me."
+    }
+  },
+  {
+    "t": 1789848521540,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "Next Tuesday would work well for me."
+    }
+  },
+  {
+    "t": 1789848521648,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "Next Tuesday would work well for me."
+    }
+  },
+  {
+    "t": 1789848521667,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "Next Tuesday would work well for me."
+    }
+  },
+  {
+    "t": 1789848522471,
+    "type": "transcript",
+    "value": {
+      "speaker": "AI",
+      "text": "What time works best on Tuesday?"
+    }
+  },
+  {
+    "t": 1789848524159,
+    "type": "transcript",
+    "value": {
+      "speaker": "AI",
+      "text": "What time works best on Tuesday?"
+    }
+  },
+  {
+    "t": 1789848524364,
+    "type": "caller_clip",
+    "value": "http://127.0.0.1:51689/clips/ff9272e4be23c508.wav"
+  },
+  {
+    "t": 1789848524684,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "No."
+    }
+  },
+  {
+    "t": 1789848525208,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "No."
+    }
+  },
+  {
+    "t": 1789848525208,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "No."
+    }
+  },
+  {
+    "t": 1789848526129,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "That's everything."
+    }
+  },
+  {
+    "t": 1789848526165,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "That's everything."
+    }
+  },
+  {
+    "t": 1789848526256,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "No. That's everything."
+    }
+  },
+  {
+    "t": 1789848526946,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "Thank you."
+    }
+  },
+  {
+    "t": 1789848526966,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "No. That's everything. Thank you."
+    }
+  },
+  {
+    "t": 1789848527562,
+    "type": "transcript",
+    "value": {
+      "speaker": "AI",
+      "text": "You\u2019re welcome. Goodbye."
+    }
+  },
+  {
+    "t": 1789848529441,
+    "type": "transcript",
+    "value": {
+      "speaker": "AI",
+      "text": "You\u2019re welcome. Goodbye."
+    }
+  }
+]

@@ -228,11 +228,8 @@ def _next_line(scenario: Scenario, agent_text: str, spoken: set[int]) -> str | N
             spoken.add(index)
             return turn.say
 
-    # The agent said something the script did not anticipate. Repeat the caller's
-    # goal rather than going silent, which would end the call as a timeout and
-    # hide what the agent actually did.
-    for index, turn in enumerate(scenario.turns):
-        if index not in spoken:
-            spoken.add(index)
-            return turn.say
+    # The agent said something the script did not anticipate. Restate the caller's
+    # goal. Deliberately do NOT consume the next scripted turn: they are ordered,
+    # and the last one is usually a closing line, so playing it out of order hangs
+    # up in the middle of the task and looks like an agent failure.
     return scenario.fallback_say or None

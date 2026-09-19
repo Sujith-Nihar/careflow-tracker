@@ -54,7 +54,7 @@
       "nodeData": {
         "question": "Which day would you like to come in?",
         "questionType": "freeform",
-        "clarificationDetails": "Accept a day of the week or a date. Do not offer specific times."
+        "clarificationDetails": "A day of the week or a date is a complete answer on its own. Do not ask for a time of day, and do not offer times. As soon as the caller names a day, move on."
       },
       "transitionRules": [
         {
@@ -129,7 +129,7 @@
       "nodeData": {
         "question": "What's the best number to reach you on?",
         "questionType": "freeform",
-        "clarificationDetails": "Capture the digits the caller says."
+        "clarificationDetails": "Capture the digits the caller says. Repeating the number back is enough; do not ask any further questions. Move on as soon as you have a number."
       },
       "transitionRules": [
         {

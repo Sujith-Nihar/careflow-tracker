@@ -1,0 +1,92 @@
+{
+  "action_executions": [],
+  "agent_statements": [],
+  "call": {
+    "connected_seconds": 20,
+    "dial_id": "3dab4d90-f3f2-4a7a-b3c6-4698b974dc4a",
+    "ended_at": "2026-09-19T20:08:50.150756+00:00",
+    "evaluation_run_id": "6cbe125d-5df3-4f48-a4ed-a252d7fb180d",
+    "id": "34d98c04-4043-4ec0-b4c9-98c83321ce80",
+    "lifecycle": "ended",
+    "scenario_id": "A_routine_scheduling",
+    "started_at": "2026-09-19T20:08:29.923151+00:00",
+    "system_result_type": "USER_HANGUP",
+    "versioned_prompt_id": "9cf208b3-14f6-4d34-9735-361877a2f566",
+    "vogent_agent_id": null
+  },
+  "derived": {
+    "evidence_refs": {},
+    "mismatch_details": [],
+    "next_step": "Review the call and contact the patient if they needed something.",
+    "promise_mismatch": false,
+    "reason": "The call ended without any recorded action. Whatever the caller was told, nothing was scheduled, transferred, or queued.",
+    "requires_staff_action": true,
+    "severity": 3,
+    "status": "no_action_recorded"
+  },
+  "downstream": {
+    "appointments": [],
+    "callback_requests": [],
+    "transfer_sessions": []
+  },
+  "intent": {
+    "agent_classified": null,
+    "true_intent": "routine_scheduling"
+  },
+  "staff_actions": [],
+  "transcript": {
+    "authoritative": false,
+    "note": "Shows what was said, not what happened.",
+    "segments": [
+      {
+        "detailType": null,
+        "endTimeMs": 3260,
+        "speaker": "AI",
+        "startTimeMs": 780,
+        "text": "Thanks for calling Demo Surgical Associates."
+      },
+      {
+        "detailType": null,
+        "endTimeMs": 6510,
+        "speaker": "HUMAN",
+        "startTimeMs": 2720,
+        "text": "Hi. I'd like to book a party for an off appointment, please."
+      },
+      {
+        "detailType": null,
+        "endTimeMs": 11764,
+        "speaker": "AI",
+        "startTimeMs": 7540,
+        "text": "I can help with a routine appointment. What day works for"
+      },
+      {
+        "detailType": null,
+        "endTimeMs": 11830,
+        "speaker": "HUMAN",
+        "startTimeMs": 9889,
+        "text": "Next Tuesday would work well for me."
+      },
+      {
+        "detailType": null,
+        "endTimeMs": 14440,
+        "speaker": "AI",
+        "startTimeMs": 12680,
+        "text": "What time works best on Tuesday?"
+      },
+      {
+        "detailType": null,
+        "endTimeMs": 17140,
+        "speaker": "HUMAN",
+        "startTimeMs": 14550,
+        "text": "No. That's everything. Thank you."
+      },
+      {
+        "detailType": null,
+        "endTimeMs": 19700,
+        "speaker": "AI",
+        "startTimeMs": 17780,
+        "text": "You\u2019re welcome. Goodbye."
+      }
+    ]
+  }
+}

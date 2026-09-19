@@ -1,0 +1,30 @@
+[
+  {
+    "speaker": "AI",
+    "text": "Thanks for calling Demo Surgical Associates."
+  },
+  {
+    "speaker": "HUMAN",
+    "text": "Hi. I'd like to book a party for an off appointment, please."
+  },
+  {
+    "speaker": "AI",
+    "text": "I can help with a routine appointment. What day works for"
+  },
+  {
+    "speaker": "HUMAN",
+    "text": "Next Tuesday would work well for me."
+  },
+  {
+    "speaker": "AI",
+    "text": "What time works best on Tuesday?"
+  },
+  {
+    "speaker": "HUMAN",
+    "text": "No. That's everything. Thank you."
+  },
+  {
+    "speaker": "AI",
+    "text": "You\u2019re welcome. Goodbye."
+  }
+]
