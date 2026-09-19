@@ -1,0 +1,92 @@
+{
+  "action_executions": [],
+  "agent_statements": [],
+  "call": {
+    "connected_seconds": 100,
+    "dial_id": "6863468c-3a18-4ab0-8fd6-aeb395569c19",
+    "ended_at": "2026-09-19T20:20:18.176546+00:00",
+    "evaluation_run_id": "db9246f3-7a97-4409-8ca9-dfba0484b558",
+    "id": "bc2596a6-11e7-4288-81a6-21935e5cbdd0",
+    "lifecycle": "ended",
+    "scenario_id": "A_routine_scheduling",
+    "started_at": "2026-09-19T20:18:37.471258+00:00",
+    "system_result_type": "USER_HANGUP",
+    "versioned_prompt_id": "488bf6aa-ff3d-4cd1-9c0a-58be97f096fa",
+    "vogent_agent_id": null
+  },
+  "derived": {
+    "evidence_refs": {},
+    "mismatch_details": [],
+    "next_step": "Review the call and contact the patient if they needed something.",
+    "promise_mismatch": false,
+    "reason": "The call ended without any recorded action. Whatever the caller was told, nothing was scheduled, transferred, or queued.",
+    "requires_staff_action": true,
+    "severity": 3,
+    "status": "no_action_recorded"
+  },
+  "downstream": {
+    "appointments": [],
+    "callback_requests": [],
+    "transfer_sessions": []
+  },
+  "intent": {
+    "agent_classified": null,
+    "true_intent": "routine_scheduling"
+  },
+  "staff_actions": [],
+  "transcript": {
+    "authoritative": false,
+    "note": "Shows what was said, not what happened.",
+    "segments": [
+      {
+        "detailType": null,
+        "endTimeMs": 3840,
+        "speaker": "AI",
+        "startTimeMs": 640,
+        "text": "Thanks for calling Demo Surgical Associates."
+      },
+      {
+        "detailType": null,
+        "endTimeMs": 5470,
+        "speaker": "HUMAN",
+        "startTimeMs": 2800,
+        "text": "I would like to make a routine appointment please."
+      },
+      {
+        "detailType": null,
+        "endTimeMs": 9700,
+        "speaker": "AI",
+        "startTimeMs": 6500,
+        "text": "I can help with that. Please hold"
+      },
+      {
+        "detailType": null,
+        "endTimeMs": 11240,
+        "speaker": "HUMAN",
+        "startTimeMs": 8740,
+        "text": "I would like to make a routine appointment, please."
+      },
+      {
+        "detailType": null,
+        "endTimeMs": 14720,
+        "speaker": "AI",
+        "startTimeMs": 12160,
+        "text": "I can help with that. Please hold."
+      },
+      {
+        "detailType": null,
+        "endTimeMs": 16780,
+        "speaker": "HUMAN",
+        "startTimeMs": 14090,
+        "text": "I would like to make a routine appointment, please."
+      },
+      {
+        "detailType": null,
+        "endTimeMs": 21380,
+        "speaker": "AI",
+        "startTimeMs": 17540,
+        "text": "I can help with that. Please hold."
+      }
+    ]
+  }
+}

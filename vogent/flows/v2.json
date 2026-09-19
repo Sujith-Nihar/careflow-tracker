@@ -1,21 +1,7 @@
 {
   "version_name": "careflow-v2-evidence-aware",
-  "note": "V2 \u2014 the same intake and the same functions, but every closing line sits downstream of the function result it describes. The agent never announces an action before it has one, and the disposition it reports is the one the evidence supports. Compare against v1.json: the intake, collection and policy are identical; only the reaction to function results differs. The flow opens with a freeform greeting node: a question node as the entry point produces no opening utterance, so the call starts in silence (see INVESTIGATIONS.md INV-2).",
+  "note": "V2 \u2014 the same intake and the same functions, but every closing line sits downstream of the function result it describes. The agent never announces an action before it has one, and the disposition it reports is the one the evidence supports. Compare against v1.json: the intake, collection and policy are identical; only the reaction to function results differs.",
   "nodes": [
-    {
-      "id": "greeting",
-      "name": "Opening line",
-      "type": "freeform",
-      "nodeData": {
-        "prompt": "Say exactly: Thanks for calling Demo Surgical Associates. Nothing else."
-      },
-      "transitionRules": [
-        {
-          "conditionType": "always",
-          "transitionNodeId": "greet_intake"
-        }
-      ]
-    },
     {
       "id": "greet_intake",
       "name": "Greeting and intake",
@@ -99,7 +85,7 @@
       "name": "Confirm the booking that exists",
       "type": "freeform",
       "nodeData": {
-        "prompt": "Read back exactly what the scheduler confirmed: {{node.book.agent_message}}. Ask if there is anything else, then end the call politely."
+        "prompt": "Read back exactly what the scheduler confirmed: {{node.book.agent_message}}. Ask if there is anything else, then end the call politely. Say it once, then move on immediately."
       },
       "transitionRules": [
         {
@@ -113,7 +99,7 @@
       "name": "Say the booking was not confirmed",
       "type": "freeform",
       "nodeData": {
-        "prompt": "Tell the caller plainly that you could not confirm a booking, and that the office will call them back to arrange it. Do not say an appointment was made."
+        "prompt": "Tell the caller plainly that you could not confirm a booking, and that the office will call them back to arrange it. Do not say an appointment was made. Say it once, then move on immediately."
       },
       "transitionRules": [
         {
@@ -219,7 +205,7 @@
       "name": "Hand off a transfer that connected",
       "type": "freeform",
       "nodeData": {
-        "prompt": "Tell the caller they are now connected with the triage nurse, and end your part of the call."
+        "prompt": "Tell the caller they are now connected with the triage nurse, and end your part of the call. Say it once, then move on immediately."
       },
       "transitionRules": [
         {
@@ -233,7 +219,7 @@
       "name": "Say the transfer did not complete",
       "type": "freeform",
       "nodeData": {
-        "prompt": "Tell the caller plainly, in one sentence, that the transfer did not complete. Then say you are requesting an urgent callback from a nurse. Do not say they were transferred and do not say a nurse will definitely call yet."
+        "prompt": "Tell the caller plainly, in one sentence, that the transfer did not complete. Then say you are requesting an urgent callback from a nurse. Do not say they were transferred and do not say a nurse will definitely call yet. Say it once, then move on immediately."
       },
       "transitionRules": [
         {
@@ -282,7 +268,7 @@
       "name": "Confirm the callback that exists",
       "type": "freeform",
       "nodeData": {
-        "prompt": "Tell the caller a nurse will call them back on the number they gave. Add that if their symptoms get worse before then they should call the office line or emergency services. Then end the call."
+        "prompt": "Tell the caller a nurse will call them back on the number they gave. Add that if their symptoms get worse before then they should call the office line or emergency services. Then end the call. Say it once, then move on immediately."
       },
       "transitionRules": [
         {
@@ -296,7 +282,7 @@
       "name": "Say nothing was arranged",
       "type": "freeform",
       "nodeData": {
-        "prompt": "Tell the caller plainly that you could not complete the transfer and could not set up a callback either. Tell them to call the office directly, and to call emergency services if this is an emergency. Do not promise that anyone will call them."
+        "prompt": "Tell the caller plainly that you could not complete the transfer and could not set up a callback either. Tell them to call the office directly, and to call emergency services if this is an emergency. Do not promise that anyone will call them. Say it once, then move on immediately."
       },
       "transitionRules": [
         {
@@ -310,7 +296,7 @@
       "name": "Unsupported request",
       "type": "freeform",
       "nodeData": {
-        "prompt": "Explain plainly that this is outside what you can help with, and that you are asking someone from the office to call them back. Then end the call."
+        "prompt": "Explain plainly that this is outside what you can help with, and that you are asking someone from the office to call them back. Then end the call. Say it once, then move on immediately."
       },
       "transitionRules": [
         {

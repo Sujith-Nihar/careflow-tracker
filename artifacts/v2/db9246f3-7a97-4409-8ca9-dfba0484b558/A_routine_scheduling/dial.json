@@ -1,0 +1,110 @@
+{
+  "agent": {
+    "defaultExtractorId": null,
+    "defaultVersionedPromptId": "b27a8ced-35c7-4d44-bb63-a0469bcde061",
+    "defaultVoiceId": "94c32748-865f-42e1-bb1a-3a6b4abc7d11",
+    "endpointDetectorConfig": {
+      "mode": "DEFAULT",
+      "type": "SEMANTIC"
+    },
+    "fillEmptyStringVariables": false,
+    "id": "b3d8f0c2-c96e-4a37-b023-ce1d0d99a82d",
+    "idleMessageConfig": {
+      "enabled": false,
+      "idleDurationMilliseconds": 0,
+      "maxIdleMessages": 0
+    },
+    "ivrConfiguration": null,
+    "ivrSilenceHangupConfiguration": null,
+    "language": "en",
+    "maxDurationSeconds": 10800,
+    "name": "CareFlow Demo Surgical",
+    "silenceHangupConfiguration": {
+      "silenceDurationSeconds": 0,
+      "type": "DISABLED"
+    },
+    "timeoutBehaviorConfiguration": {
+      "behavior": "HANGUP",
+      "transferNumber": null
+    },
+    "timeoutMessage": null,
+    "transcriberParams": {
+      "type": "deepgram"
+    },
+    "utteranceDetectorConfig": {
+      "interruptionPlayTimeMs": 1000,
+      "sensitivity": "MEDIUM"
+    },
+    "voicemailConfig": {
+      "detection": "DISABLE",
+      "message": null
+    }
+  },
+  "aiDurationSeconds": 100,
+  "aiResult": {},
+  "durationSeconds": 100,
+  "endedAt": "2026-09-19T20:20:18.176546Z",
+  "id": "6863468c-3a18-4ab0-8fd6-aeb395569c19",
+  "inputs": {
+    "callback_phone": "+15555550101",
+    "evaluation_run_id": "db9246f3-7a97-4409-8ca9-dfba0484b558",
+    "patient_ref": "PT-SYN-0001",
+    "scenario_id": "A_routine_scheduling"
+  },
+  "startedAt": "2026-09-19T20:18:37.471258Z",
+  "status": "completed",
+  "systemResultType": "USER_HANGUP",
+  "transcript": [
+    {
+      "detailType": null,
+      "endTimeMs": 3840,
+      "speaker": "AI",
+      "startTimeMs": 640,
+      "text": "Thanks for calling Demo Surgical Associates."
+    },
+    {
+      "detailType": null,
+      "endTimeMs": 5470,
+      "speaker": "HUMAN",
+      "startTimeMs": 2800,
+      "text": "I would like to make a routine appointment please."
+    },
+    {
+      "detailType": null,
+      "endTimeMs": 9700,
+      "speaker": "AI",
+      "startTimeMs": 6500,
+      "text": "I can help with that. Please hold"
+    },
+    {
+      "detailType": null,
+      "endTimeMs": 11240,
+      "speaker": "HUMAN",
+      "startTimeMs": 8740,
+      "text": "I would like to make a routine appointment, please."
+    },
+    {
+      "detailType": null,
+      "endTimeMs": 14720,
+      "speaker": "AI",
+      "startTimeMs": 12160,
+      "text": "I can help with that. Please hold."
+    },
+    {
+      "detailType": null,
+      "endTimeMs": 16780,
+      "speaker": "HUMAN",
+      "startTimeMs": 14090,
+      "text": "I would like to make a routine appointment, please."
+    },
+    {
+      "detailType": null,
+      "endTimeMs": 21380,
+      "speaker": "AI",
+      "startTimeMs": 17540,
+      "text": "I can help with that. Please hold."
+    }
+  ],
+  "versionedPromptId": "488bf6aa-ff3d-4cd1-9c0a-58be97f096fa",
+  "voiceId": "94c32748-865f-42e1-bb1a-3a6b4abc7d11"
+}

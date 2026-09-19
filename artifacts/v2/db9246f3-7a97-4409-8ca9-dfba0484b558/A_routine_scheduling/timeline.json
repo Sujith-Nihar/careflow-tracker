@@ -1,0 +1,264 @@
+[
+  {
+    "t": 1789849115385,
+    "type": "ready",
+    "value": true
+  },
+  {
+    "t": 1789849117385,
+    "type": "audio_connected",
+    "value": true
+  },
+  {
+    "t": 1789849117486,
+    "type": "status",
+    "value": "in-progress"
+  },
+  {
+    "t": 1789849118063,
+    "type": "transcript",
+    "value": {
+      "speaker": "AI",
+      "text": "Thanks for calling Demo Surgical Associates."
+    }
+  },
+  {
+    "t": 1789849120182,
+    "type": "caller_clip",
+    "value": "http://127.0.0.1:52629/clips/1788a3588fcd4c60.wav"
+  },
+  {
+    "t": 1789849120455,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "I"
+    }
+  },
+  {
+    "t": 1789849121213,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "I"
+    }
+  },
+  {
+    "t": 1789849121470,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "I would like to make a"
+    }
+  },
+  {
+    "t": 1789849122491,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "I would like to make a routine appointment"
+    }
+  },
+  {
+    "t": 1789849123037,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "I would like to make a routine appointment please."
+    }
+  },
+  {
+    "t": 1789849123058,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "I would like to make a routine appointment please."
+    }
+  },
+  {
+    "t": 1789849123948,
+    "type": "transcript",
+    "value": {
+      "speaker": "AI",
+      "text": "I can help with that. Please hold while I connect you with our scheduler."
+    }
+  },
+  {
+    "t": 1789849126000,
+    "type": "caller_clip",
+    "value": "http://127.0.0.1:52629/clips/1788a3588fcd4c60.wav"
+  },
+  {
+    "t": 1789849127091,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "I would like to make"
+    }
+  },
+  {
+    "t": 1789849127093,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "I would like to make"
+    }
+  },
+  {
+    "t": 1789849128141,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "I would like to make a routine appointment"
+    }
+  },
+  {
+    "t": 1789849128837,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "I would like to make a routine appointment, please."
+    }
+  },
+  {
+    "t": 1789849128857,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "I would like to make a routine appointment, please."
+    }
+  },
+  {
+    "t": 1789849129603,
+    "type": "transcript",
+    "value": {
+      "speaker": "AI",
+      "text": "I can help with that. Please hold."
+    }
+  },
+  {
+    "t": 1789849131496,
+    "type": "caller_clip",
+    "value": "http://127.0.0.1:52629/clips/1788a3588fcd4c60.wav"
+  },
+  {
+    "t": 1789849131898,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "I"
+    }
+  },
+  {
+    "t": 1789849132066,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "I"
+    }
+  },
+  {
+    "t": 1789849132869,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "I would like to make a"
+    }
+  },
+  {
+    "t": 1789849133909,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "I would like to make a routine appointment,"
+    }
+  },
+  {
+    "t": 1789849134339,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "I would like to make a routine appointment, please."
+    }
+  },
+  {
+    "t": 1789849134433,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "I would like to make a routine appointment, please."
+    }
+  },
+  {
+    "t": 1789849135008,
+    "type": "transcript",
+    "value": {
+      "speaker": "AI",
+      "text": "I can help with that. Please hold."
+    }
+  },
+  {
+    "t": 1789849138749,
+    "type": "transcript",
+    "value": {
+      "speaker": "AI",
+      "text": "I can help with that. Please hold."
+    }
+  },
+  {
+    "t": 1789849202718,
+    "type": "transcript",
+    "value": {
+      "speaker": "AI",
+      "text": "I can help with that. Please hold. Thanks for calling Demo Surgical Associates."
+    }
+  },
+  {
+    "t": 1789849202719,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "I would like to make a routine appointment please."
+    }
+  },
+  {
+    "t": 1789849202721,
+    "type": "transcript",
+    "value": {
+      "speaker": "AI",
+      "text": "I can help with that. Please hold"
+    }
+  },
+  {
+    "t": 1789849202721,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "I would like to make a routine appointment, please."
+    }
+  },
+  {
+    "t": 1789849202722,
+    "type": "transcript",
+    "value": {
+      "speaker": "AI",
+      "text": "I can help with that. Please hold."
+    }
+  },
+  {
+    "t": 1789849202722,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "I would like to make a routine appointment, please."
+    }
+  },
+  {
+    "t": 1789849202722,
+    "type": "transcript",
+    "value": {
+      "speaker": "AI",
+      "text": "I can help with that. Please hold."
+    }
+  }
+]

@@ -1,21 +1,7 @@
 {
   "version_name": "careflow-v1-baseline",
-  "note": "V1 \u2014 a believable baseline. It announces the transfer before attempting it, then moves on unconditionally, and reports the call resolved. Nothing here is sabotage: every edge is one a reasonable builder would draw when they assume the function succeeds. It is the flow that produces the practice manager's complaint. The flow opens with a freeform greeting node: a question node as the entry point produces no opening utterance, so the call starts in silence (see INVESTIGATIONS.md INV-2).",
+  "note": "V1 \u2014 a believable baseline. It announces the transfer before attempting it, then moves on unconditionally, and reports the call resolved. Nothing here is sabotage: every edge is one a reasonable builder would draw when they assume the function succeeds. It is the flow that produces the practice manager's complaint.",
   "nodes": [
-    {
-      "id": "greeting",
-      "name": "Opening line",
-      "type": "freeform",
-      "nodeData": {
-        "prompt": "Say exactly: Thanks for calling Demo Surgical Associates. Nothing else."
-      },
-      "transitionRules": [
-        {
-          "conditionType": "always",
-          "transitionNodeId": "greet_intake"
-        }
-      ]
-    },
     {
       "id": "greet_intake",
       "name": "Greeting and intake",
@@ -93,7 +79,7 @@
       "name": "Confirm appointment to caller",
       "type": "freeform",
       "nodeData": {
-        "prompt": "Tell the caller they are all set for {{node.collect_slot.answer}} and ask if there is anything else. Then end the call politely."
+        "prompt": "Tell the caller they are all set for {{node.collect_slot.answer}} and ask if there is anything else. Then end the call politely. Say it once, then move on immediately."
       },
       "transitionRules": [
         {
@@ -139,7 +125,7 @@
       "name": "Announce the transfer",
       "type": "freeform",
       "nodeData": {
-        "prompt": "Tell the caller you are connecting them to the triage nurse now. Keep it to one sentence."
+        "prompt": "Tell the caller you are connecting them to the triage nurse now. Keep it to one sentence. Say it once, then move on immediately."
       },
       "transitionRules": [
         {
@@ -178,7 +164,7 @@
       "name": "Hand off",
       "type": "freeform",
       "nodeData": {
-        "prompt": "Tell the caller the triage nurse will take it from here, wish them well, and end the call."
+        "prompt": "Tell the caller the triage nurse will take it from here, wish them well, and end the call. Say it once, then move on immediately."
       },
       "transitionRules": [
         {
@@ -192,7 +178,7 @@
       "name": "Unsupported request",
       "type": "freeform",
       "nodeData": {
-        "prompt": "Explain that you can only help with scheduling and post-operative concerns, and that someone from the office can call them back. Then end the call."
+        "prompt": "Explain that you can only help with scheduling and post-operative concerns, and that someone from the office can call them back. Then end the call. Say it once, then move on immediately."
       },
       "transitionRules": [
         {

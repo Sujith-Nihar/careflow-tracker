@@ -1,0 +1,54 @@
+[
+  {
+    "speaker": "AI",
+    "text": "Thanks for calling Demo Surgical Associates."
+  },
+  {
+    "speaker": "HUMAN",
+    "text": "I would like to make a routine appointment please."
+  },
+  {
+    "speaker": "AI",
+    "text": "I can help with that. Please hold"
+  },
+  {
+    "speaker": "HUMAN",
+    "text": "I would like to make a routine appointment, please."
+  },
+  {
+    "speaker": "AI",
+    "text": "I can help with that. Please hold."
+  },
+  {
+    "speaker": "HUMAN",
+    "text": "I would like to make a routine appointment, please."
+  },
+  {
+    "speaker": "AI",
+    "text": "I can help with that. Please hold. Thanks for calling Demo Surgical Associates."
+  },
+  {
+    "speaker": "HUMAN",
+    "text": "I would like to make a routine appointment please."
+  },
+  {
+    "speaker": "AI",
+    "text": "I can help with that. Please hold"
+  },
+  {
+    "speaker": "HUMAN",
+    "text": "I would like to make a routine appointment, please."
+  },
+  {
+    "speaker": "AI",
+    "text": "I can help with that. Please hold."
+  },
+  {
+    "speaker": "HUMAN",
+    "text": "I would like to make a routine appointment, please."
+  },
+  {
+    "speaker": "AI",
+    "text": "I can help with that. Please hold."
+  }
+]

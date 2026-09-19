@@ -29,7 +29,8 @@ agent, its two versions, and the four functions are represented and reproduced.
 | Function `path` field | request field is **`apiPath`**; `headers` are `[{key, value}]`; `inputJsonSchema` is a **JSON string**, not an object | `POST /functions` |
 | Question node output referenced as `{{node.<id>.output}}` | the field is **`answer`** (`outputSchema` confirms it) | every scheduling and concern template silently referenced a missing field |
 | `aiOpen` documented as deprecated | accepted and **ignored**; stays `false` | it is not the lever for who speaks first |
-| Nothing documented about which node types may open a call | a **`question` node cannot open a call**; a `freeform` node can | the agent sat silent for two runs (`INVESTIGATIONS.md` INV-2) |
+| Which node types may open a call | **any node type opens a call fine.** The silence had nothing to do with node type (see INV-3). | two runs misdiagnosed before the real cause was isolated |
+| Freeform node progression | a freeform node **stays put unless its prompt states when to move on**. The docs say progression "depends on conditions stated in the node's prompt"; in practice an instruction like "say it once, then move on immediately" is required or the node loops. | the agent repeated "I can help with that. Please hold." until the call timed out |
 | `dial.created` webhook | exists, not in the documented event list | arrives before the runner registers the dial, which exposed a create race |
 | `modelOptionValues` offered by the model metadata | **temperature below the default makes the agent mute**; accepted with 200, no error anywhere | four silent runs (`INVESTIGATIONS.md` INV-3). We publish no model options. |
 | Updating a function with `PATCH` | **`PUT`**; `PATCH` returns 405 with an empty body | `vogent/scripts/sync_functions.py` |
