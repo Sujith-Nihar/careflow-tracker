@@ -11,8 +11,8 @@ caller:
       say: "I had surgery on Tuesday. My surgery wound is bleeding."
     - when: "describe|tell me|when did|number|reach you|phone|best"
       say: "It started this morning. You can reach me at five five five, five five five, zero one zero three."
-    - when: "anything else|else i can"
-      say: "No, that's all. Thank you."
+    - when: "anything else|else i can|call you back|worse|emergency"
+      say: "Okay, thank you."
   fallback_say: "I had surgery this week and I'm worried about the incision."
   end_when: "take care|goodbye|call you back|emergency services"
   max_turns: 10

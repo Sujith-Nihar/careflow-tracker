@@ -51,6 +51,13 @@ ABANDON_AFTER_SILENT_SECONDS = 35.0
 #: only keeps a dead call alive and billing.
 MAX_FALLBACK_REPEATS = 2
 
+#: When no scripted trigger matches, the caller stays quiet for this long before
+#: restating anything. The agent pauses while its functions run, and a caller who
+#: fills that pause derails the flow: observed on scenario C, where speaking during
+#: the post-transfer sequence sent the agent back to attempting the transfer again.
+#: Silence is the correct behaviour while the other side is working.
+STALL_SECONDS = 9.0
+
 
 @dataclass
 class CallOutcome:
@@ -194,6 +201,15 @@ def _converse(page, scenario: Scenario, clips: dict[str, Path], origin: str, out
             continue
 
         line = _next_line(scenario, text, spoken)
+
+        # Nothing in the script answers this. Wait: the agent is most likely mid-way
+        # through its own function calls, and interrupting derails it.
+        if line is None or line == scenario.fallback_say:
+            if time.monotonic() - stable_since < STALL_SECONDS:
+                time.sleep(POLL_SECONDS)
+                continue
+            line = scenario.fallback_say
+
         if line is None:
             time.sleep(POLL_SECONDS)
             continue
