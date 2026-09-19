@@ -2,7 +2,8 @@
 
 Kyron Medical full-stack take-home. A healthcare voice-agent workflow where a call counts as complete
 only when persisted function and downstream-system evidence says so, never because the agent said so.
-Assignment: `docs/ASSIGNMENT.md`. Limits: 16 active hours (`TIME_LOG.md`), 48-hour window from
+Assignment: `docs/ASSIGNMENT.md`. Limits: 16 active hours (tracked by the candidate in `TIME_LOG.md`,
+which Claude never edits), 48-hour window from
 2026-09-18 22:00 local. All data is synthetic. Commit only when asked, in small topic-grouped commits with short plain messages and no AI attribution trailer.
 
 ## Read in this order
@@ -69,5 +70,7 @@ docs/       design documents listed above; SUBMISSION.md and MANAGER_UPDATE.md a
 - Every query takes `organization_id`. Every Vogent function route is idempotent on `(dial_id, function, params)`.
 - `derive_status()` is pure and lives in `backend/app/domain/derive_status.py`; every decision-table row has a test.
 - Business failures return HTTP 200 with a `status` field (D7). Never retry transfers (D8).
-- Save run artifacts and investigation notes the moment they exist. Update `TIME_LOG.md` at phase boundaries.
+- Save run artifacts and investigation notes the moment they exist.
+- **Never edit `TIME_LOG.md`.** The candidate owns it and writes it themselves. Do not add, change or
+  reformat entries, and do not estimate hours on their behalf. Read it if you need the budget, nothing more.
 - Fictional policy is the only clinical rule (`ASSIGNMENT.md`); never diagnose or invent rules in prompts.

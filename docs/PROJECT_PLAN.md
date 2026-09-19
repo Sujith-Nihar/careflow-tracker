@@ -226,7 +226,8 @@ Why: R2, R26; deliverables 1–11.
 Steps:
 1. `SUBMISSION.md` sections 1–11 from the checklist; links to artifacts and IDs.
 2. `docs/MANAGER_UPDATE.md`: what staff can trust, what remains manual, what next — written from actual results.
-3. `README.md` two-minute path (`make setup migrate seed api ui`); `make secret-scan`; `TIME_LOG.md` final.
+3. `README.md` two-minute path (`make setup migrate seed api ui`); `make secret-scan`.
+   The candidate finalises `TIME_LOG.md` themselves; Claude does not touch it.
 4. Record the ≤ 8-minute walkthrough (scenario C trace, V1 vs V2 table, efficiency table, worker DLQ).
 Acceptance: `SUBMISSION_CHECKLIST.md` fully ticked with links; time log ≤ 16 h.
 
