@@ -1,0 +1,41 @@
+# CareFlow Tracker — see docs/PROJECT_PLAN.md for phases, docs/HUMAN_SETUP.md for credentials.
+.DEFAULT_GOAL := help
+SHELL := /bin/bash
+VENV := .venv
+PY := $(VENV)/bin/python
+PIP := $(VENV)/bin/pip
+PYTEST := $(VENV)/bin/pytest
+
+help: ## list targets
+	@grep -hE '^[a-z0-9_-]+:.*?## ' $(MAKEFILE_LIST) | awk -F':.*?## ' '{printf "  %-16s %s\n", $$1, $$2}'
+
+$(VENV)/bin/python:
+	python3.12 -m venv $(VENV)
+	$(PIP) install -q --upgrade pip
+
+setup: $(VENV)/bin/python ## install backend deps (dev extras included)
+	$(PIP) install -q -e "backend[dev]"
+	@echo "backend deps installed. Frontend and eval deps are installed in their own phases."
+
+test: ## run backend tests (db-marked tests skip without DATABASE_URL)
+	$(PYTEST) backend -q
+
+test-cov: ## run backend tests with coverage of the domain layer
+	$(PYTEST) backend -q --cov=backend/app/domain --cov-report=term-missing
+
+db-check: ## verify DATABASE_URL connectivity
+	$(PY) scripts/db_check.py
+
+vogent-check: ## verify VOGENT_API_KEY by listing agents (prints no secrets)
+	$(PY) scripts/vogent_check.py
+
+migrate: ## apply backend/migrations/*.sql to DATABASE_URL
+	$(PY) scripts/migrate.py
+
+migrate-test: ## apply migrations to the careflow_test schema
+	$(PY) scripts/migrate.py --test-schema
+
+secret-scan: ## fail if anything that looks like a credential is tracked by git
+	@scripts/secret_scan.sh
+
+.PHONY: help setup test test-cov db-check vogent-check migrate migrate-test secret-scan

@@ -1,0 +1,15 @@
+# For reviewers without a Supabase project: `docker compose up -d db`, then
+# DATABASE_URL=postgresql://careflow:careflow@localhost:5432/careflow
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: careflow
+      POSTGRES_PASSWORD: careflow
+      POSTGRES_DB: careflow
+    ports: ["5432:5432"]
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U careflow"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
