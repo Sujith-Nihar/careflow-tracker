@@ -38,7 +38,7 @@ migrate-test: ## apply migrations to the careflow_test schema
 seed: ## create the synthetic organizations
 	$(PY) scripts/seed.py
 
-api: ## run the Flask API on FLASK_PORT (default 5000)
+api: ## run the Flask API on FLASK_PORT (default 5055)
 	$(PY) -m flask --app backend/app:create_app run --port $${FLASK_PORT:-5055} --reload
 
 tunnel: ## expose the local API on BACKEND_PUBLIC_URL so Vogent can reach it
