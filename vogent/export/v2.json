@@ -324,7 +324,7 @@
         "name": "Unsupported request",
         "nodeData": {
           "outputs": null,
-          "prompt": "Explain plainly that this is outside what you can help with, and that you are asking someone from the office to call them back. Then end the call. Say it once, then move on immediately."
+          "prompt": "Tell the caller plainly that this is outside what you can help with and that you are asking the office to follow up. Do not say that anyone will call them. Say it once, then move on immediately."
         },
         "outputSchema": null,
         "transitionRules": [
@@ -475,7 +475,16 @@
           ]
         },
         "outputSchema": "{\"properties\":{\"status\":{\"additionalProperties\":false,\"type\":\"string\",\"description\":\"recorded\"}},\"additionalProperties\":false,\"type\":\"object\",\"required\":[\"status\"]}",
-        "transitionRules": [],
+        "transitionRules": [
+          {
+            "arrayConditionType": null,
+            "conditionType": "always",
+            "field": null,
+            "transitionNodeId": "unsupported_notice",
+            "value": null,
+            "values": null
+          }
+        ],
         "type": "function"
       },
       {
@@ -521,11 +530,22 @@
           }
         ],
         "type": "function"
+      },
+      {
+        "id": "unsupported_notice",
+        "name": "Tell the caller whether a callback exists",
+        "nodeData": {
+          "outputs": null,
+          "prompt": "The callback result was: {{node.unsupported_callback.status}}. If that value is exactly 'created', tell the caller someone from the office will call them back. Otherwise tell them plainly that you could not arrange a callback and that they should call the office directly. Never say anyone will call them unless the value is exactly 'created'. Then say goodbye and end the call."
+        },
+        "outputSchema": null,
+        "transitionRules": [],
+        "type": "freeform"
       }
     ],
     "openingLineType": "INBOUND_OUTBOUND"
   },
-  "id": "0d16bb48-afe1-4b0c-9a7b-c155f5098fb0",
+  "id": "2013b046-8c3a-48b5-b5cb-85db0950dcb4",
   "modelOptionValues": [
     {
       "optionId": "temperature",

@@ -54,10 +54,15 @@ tunnel: ## expose the local API on BACKEND_PUBLIC_URL so Vogent can reach it
 replay: ## run scenarios through the backend without voice (needs `make api` running)
 	$(PY) -m evals.runner.cli --artifacts artifacts/replay
 
-eval: ## real Vogent voice runs: make eval VERSION=v2 [SCENARIOS=A_routine_scheduling]
-	$(PY) -m evals.runner.voice_cli --version $${VERSION:-v2} $${SCENARIOS:+--scenarios $$SCENARIOS}
+eval: ## real Vogent voice runs: make eval VERSION=v2 [SCENARIOS=...] [STRATEGY=optimized]
+	$(PY) -m evals.runner.voice_cli --version $${VERSION:-v2} \
+		--strategy $${STRATEGY:-naive_voice} $${SCENARIOS:+--scenarios $$SCENARIOS}
+
+structural: ## cheap flow lint, no calls, no cost
+	$(PY) -c "import sys; sys.path.insert(0,'evals'); from runner.structural import check; \
+		[print(f'{v}: {\"PASS\" if check(v).passed else \"FAIL\"} ({len(check(v).findings)} findings)') for v in ('v1','v2')]"
 
 secret-scan: ## fail if anything that looks like a credential is tracked by git
 	@scripts/secret_scan.sh
 
-.PHONY: help setup test test-cov db-check vogent-check migrate migrate-test seed api api-restart tunnel replay eval secret-scan
+.PHONY: help setup test test-cov db-check vogent-check migrate migrate-test seed api api-restart tunnel replay eval structural secret-scan

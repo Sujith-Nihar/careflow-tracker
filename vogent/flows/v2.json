@@ -183,7 +183,7 @@
       "name": "Unsupported request",
       "type": "freeform",
       "nodeData": {
-        "prompt": "Explain plainly that this is outside what you can help with, and that you are asking someone from the office to call them back. Then end the call. Say it once, then move on immediately."
+        "prompt": "Tell the caller plainly that this is outside what you can help with and that you are asking the office to follow up. Do not say that anyone will call them. Say it once, then move on immediately."
       },
       "transitionRules": [
         {
@@ -272,7 +272,12 @@
         ],
         "outputs": "__outputs.report_disposition__"
       },
-      "transitionRules": []
+      "transitionRules": [
+        {
+          "conditionType": "always",
+          "transitionNodeId": "unsupported_notice"
+        }
+      ]
     },
     {
       "id": "disposition_from_evidence",
@@ -302,6 +307,15 @@
           "transitionNodeId": "callback_outcome_notice"
         }
       ]
+    },
+    {
+      "id": "unsupported_notice",
+      "name": "Tell the caller whether a callback exists",
+      "type": "freeform",
+      "nodeData": {
+        "prompt": "The callback result was: {{node.unsupported_callback.status}}. If that value is exactly 'created', tell the caller someone from the office will call them back. Otherwise tell them plainly that you could not arrange a callback and that they should call the office directly. Never say anyone will call them unless the value is exactly 'created'. Then say goodbye and end the call."
+      },
+      "transitionRules": []
     }
   ]
 }

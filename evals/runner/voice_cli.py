@@ -33,6 +33,10 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--scenarios", help="comma-separated scenario ids (default: voice-eligible)")
     parser.add_argument("--bucket", help="artifact sub-directory (default: the version)")
     parser.add_argument("--headed", action="store_true", help="show the browser")
+    parser.add_argument(
+        "--strategy", default="naive_voice", choices=["naive_voice", "optimized"],
+        help="naive_voice: a full voice call per scenario. optimized: risk-based mix.",
+    )
     args = parser.parse_args(argv)
 
     load_env()
@@ -59,6 +63,17 @@ def main(argv: list[str] | None = None) -> int:
     run_id = str(uuid.uuid4())
     root = ARTIFACT_ROOT / (args.bucket or args.version)
 
+    if args.strategy == "optimized":
+        from .optimized import run_optimised
+
+        summary = run_optimised(
+            scenarios, version=args.version, backend=backend, vogent=vogent,
+            artifacts_root=ARTIFACT_ROOT / (args.bucket or "efficiency/optimized"),
+            headless=not args.headed,
+        )
+        _print_optimised(summary)
+        return 0 if summary["totals"]["passed"] == summary["totals"]["scenarios"] else 1
+
     print(f"run {run_id}  version {args.version}  {len(scenarios)} scenario(s)\n")
     cases = []
     for scenario in scenarios:
@@ -84,6 +99,32 @@ def main(argv: list[str] | None = None) -> int:
     _print_summary(summary)
     print(f"\nartifacts: {root / run_id}")
     return 0 if all(c.passed for c in cases) else 1
+
+
+def _print_optimised(summary: dict) -> None:
+    pre = summary["structural_preflight"]
+    print(
+        f"run {summary['evaluation_run_id']}  version {summary['agent_version']}  strategy optimized\n"
+    )
+    print(
+        f"  structural preflight  {'PASS' if pre['passed'] else 'FAIL'}  "
+        f"{pre['seconds']}s  {pre['findings']} finding(s)"
+    )
+    for case in summary["cases"]:
+        verdict = "PASS" if case["passed"] else "FAIL"
+        cost = f"${case['cost_usd']:.4f}" if case["cost_usd"] else "$0.0000"
+        print(
+            f"  {case['scenario_id']:34} {case['mode']:10} {verdict:5} "
+            f"{case['derived_status'] or '-':22} {case['connected_seconds']:>3}s  {cost}"
+        )
+        if case["failures"]:
+            print(f"      failed metrics: {', '.join(case['failures'])}")
+    t = summary["totals"]
+    print(
+        f"\n{t['passed']}/{t['scenarios']} passed  |  {t['voice_calls']} voice call(s)  |  "
+        f"wall {t['wall_seconds']:.0f}s  |  connected {t['connected_seconds']}s  |  "
+        f"${t['cost_usd']:.4f} ({t['cost_label']})"
+    )
 
 
 def _summarise(run_id: str, version: str, cases: list) -> dict:
