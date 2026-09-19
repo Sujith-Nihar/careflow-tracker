@@ -58,6 +58,12 @@ eval: ## real Vogent voice runs: make eval VERSION=v2 [SCENARIOS=...] [STRATEGY=
 	$(PY) -m evals.runner.voice_cli --version $${VERSION:-v2} \
 		--strategy $${STRATEGY:-naive_voice} $${SCENARIOS:+--scenarios $$SCENARIOS}
 
+ui: ## run the staff dashboard on :3000 (needs `make api`)
+	@set -a; . ./.env; set +a; cd frontend && npx next dev -p 3000
+
+ui-install: ## install frontend dependencies
+	cd frontend && npm install
+
 structural: ## cheap flow lint, no calls, no cost
 	$(PY) -c "import sys; sys.path.insert(0,'evals'); from runner.structural import check; \
 		[print(f'{v}: {\"PASS\" if check(v).passed else \"FAIL\"} ({len(check(v).findings)} findings)') for v in ('v1','v2')]"
@@ -65,4 +71,4 @@ structural: ## cheap flow lint, no calls, no cost
 secret-scan: ## fail if anything that looks like a credential is tracked by git
 	@scripts/secret_scan.sh
 
-.PHONY: help setup test test-cov db-check vogent-check migrate migrate-test seed api api-restart tunnel replay eval structural secret-scan
+.PHONY: help setup test test-cov db-check vogent-check migrate migrate-test seed api api-restart tunnel replay eval structural ui ui-install secret-scan

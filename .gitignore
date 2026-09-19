@@ -36,3 +36,7 @@ artifacts/replay/
 
 # workspace-specific ids written by vogent/scripts/sync_*.py
 vogent/ids.json
+
+# frontend
+frontend/.next/
+frontend/node_modules/
