@@ -132,7 +132,15 @@ def run_voice_case(
 
 
 def _read_dial(vogent: VogentClient, dial_id: str, *, attempts: int = 8) -> dict:
-    """Poll until the dial record is finalised, so duration and transcript exist."""
+    """Poll until the dial record is finalised, then keep reading while it grows.
+
+    `endedAt` appears before the transcript finishes being written. Returning on
+    the first sight of it truncates the agent's closing sentence, which is exactly
+    the sentence the truthfulness checks depend on: scenario D once recorded only
+    "The transfer" and failed its disclosure check on a call that was otherwise
+    correct. So once the call has ended, keep re-reading until the transcript
+    stops growing.
+    """
     record: dict = {}
     for attempt in range(attempts):
         try:
@@ -140,9 +148,29 @@ def _read_dial(vogent: VogentClient, dial_id: str, *, attempts: int = 8) -> dict
         except Exception:  # noqa: BLE001 - a transient read must not lose the run
             record = record or {}
         if record.get("endedAt"):
-            return record
+            break
         time.sleep(2 + attempt)
-    return record
+
+    if not record.get("endedAt"):
+        return record
+
+    best = record
+    for _ in range(4):
+        time.sleep(3)
+        try:
+            candidate = vogent.get_dial(dial_id)
+        except Exception:  # noqa: BLE001
+            continue
+        if _transcript_length(candidate) > _transcript_length(best):
+            best = candidate
+        else:
+            break
+    return best
+
+
+def _transcript_length(record: dict) -> int:
+    """Total characters spoken, which grows as the vendor finishes writing."""
+    return sum(len(str(s.get("text") or "")) for s in (record.get("transcript") or []))
 
 
 def _connected_seconds(dial_record: dict) -> int | None:
