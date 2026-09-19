@@ -211,3 +211,20 @@ def test_a_webhook_and_the_runner_can_create_the_same_call_concurrently(client, 
                         headers={"X-Organization-Id": demo_org}).json
     assert detail["call"]["scenario_id"] == "race_check"
     assert detail["intent"]["true_intent"] == "post_operative_concern"
+
+
+def test_a_failed_transfer_still_leaves_a_call_detail_record(client, demo_org):
+    """The attempt is evidence. Staff must see that the line was tried and did not answer."""
+    dial = dial_id()
+    register_dial(client, demo_org, dial, "failed_transfer_record",
+                  {"transfer": "fail"}, "post_operative_concern")
+    response = call_function(client, "transfer_triage", dial, {
+        "concern_summary": "bleeding", "callback_phone": "+15555550150",
+    })
+    assert response.json["status"] == "failed"
+
+    bundle = bundle_for(client, demo_org, dial)
+    sessions = bundle["downstream"]["transfer_sessions"]
+    assert len(sessions) == 1
+    assert sessions[0]["status"] == "failed"
+    assert sessions[0]["failure_reason"] == "no_answer"

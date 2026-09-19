@@ -145,11 +145,10 @@ def transfer_triage() -> Any:
             )
             return str(row["id"])
 
+        stored = params.model_dump() | {"patient_ref": patient_ref}
         body = run_action(
             conn, organization_id=principal.organization_id, call=call, dial_id=envelope.dial_id,
-            kind="transfer_triage",
-            params=params.model_dump() | {"patient_ref": patient_ref},
-            request_id=g.get("request_id"),
+            kind="transfer_triage", params=stored, request_id=g.get("request_id"),
             simulate=simulate, persist_downstream=persist,
             transcript_snapshot=envelope.transcript_snapshot,
         )
@@ -157,16 +156,21 @@ def transfer_triage() -> Any:
         # A transfer that did not connect still leaves a call-detail record. The
         # attempt is evidence, and staff need to see that the line was tried.
         if body.get("status") in {"failed", "unverified"}:
-            _record_failed_transfer(conn, principal, call, envelope, body)
+            _record_failed_transfer(conn, principal, call, envelope, stored, body)
 
         return _finish(conn, call, principal, body)
 
 
 def _record_failed_transfer(
     conn: psycopg.Connection, principal: auth.Principal, call: dict,
-    envelope: FunctionEnvelope, body: dict,
+    envelope: FunctionEnvelope, params: dict, body: dict,
 ) -> None:
-    key = repo.idempotency_key(envelope.dial_id, "transfer_triage", envelope.params or {})
+    """Persist the call-detail record for a transfer that did not connect.
+
+    The params must be the same normalised dict `run_action` was given, or the
+    idempotency key will not match the execution it belongs to.
+    """
+    key = repo.idempotency_key(envelope.dial_id, "transfer_triage", params)
     execution = repo.find_execution_by_key(conn, key, principal.organization_id)
     if execution is None:
         return

@@ -46,6 +46,11 @@ OPEN_AFTER_SILENCE_SECONDS = 6.0
 #: broken, and a longer wait will not diagnose it any better.
 ABANDON_AFTER_SILENT_SECONDS = 35.0
 
+#: How often the caller may fall back to restating their goal. Beyond this the
+#: agent is looping, and a real caller would stop repeating themselves. Continuing
+#: only keeps a dead call alive and billing.
+MAX_FALLBACK_REPEATS = 2
+
 
 @dataclass
 class CallOutcome:
@@ -141,6 +146,7 @@ def _converse(page, scenario: Scenario, clips: dict[str, Path], origin: str, out
     started_at = time.monotonic()
     deadline = started_at + MAX_CALL_SECONDS
     spoken: set[int] = set()
+    fallbacks = 0
     last_text = ""
     stable_since = None
     heard_agent = False
@@ -191,6 +197,15 @@ def _converse(page, scenario: Scenario, clips: dict[str, Path], origin: str, out
         if line is None:
             time.sleep(POLL_SECONDS)
             continue
+
+        if line == scenario.fallback_say:
+            fallbacks += 1
+            if fallbacks > MAX_FALLBACK_REPEATS:
+                outcome.error = (
+                    "the agent repeated itself and the script had nothing left to say; "
+                    "stopped rather than keep a looping call alive"
+                )
+                break
 
         clip = clips.get(line)
         if clip is None:

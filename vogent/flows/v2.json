@@ -79,7 +79,7 @@
       "name": "Tell the caller the real booking outcome",
       "type": "freeform",
       "nodeData": {
-        "prompt": "The scheduler result was: {{node.book.status}}. If that value is exactly 'booked', read back exactly what it confirmed: {{node.book.agent_message}}. Otherwise tell the caller plainly that you could not confirm a booking and that the office will call them back. Never say an appointment exists unless the value is exactly 'booked'. Say it once, then move on immediately."
+        "prompt": "The scheduler result was: {{node.book.status}}. If that value is exactly 'booked', read back exactly what it confirmed: {{node.book.agent_message}}. Otherwise tell the caller plainly that you could not confirm a booking and that the office will call them back. Never say an appointment exists unless the value is exactly 'booked'. Say this once and then move on immediately. Do not wait for the caller to reply, do not ask a question, and do not repeat yourself."
       },
       "transitionRules": [
         {
@@ -150,7 +150,7 @@
       "name": "Tell the caller the real transfer outcome",
       "type": "freeform",
       "nodeData": {
-        "prompt": "The transfer result was: {{node.transfer.status}}. If that value is exactly 'connected', tell the caller they are now connected with the triage nurse. Otherwise tell them plainly, in one sentence, that the transfer did not complete and that you are requesting an urgent callback for them. Never say they were transferred unless the value is exactly 'connected'. Say it once, then move on immediately."
+        "prompt": "The transfer result was: {{node.transfer.status}}. If that value is exactly 'connected', tell the caller they are now connected with the triage nurse. Otherwise tell them plainly, in one sentence, that the transfer did not complete and that you are requesting an urgent callback for them. Never say they were transferred unless the value is exactly 'connected'. Say this once and then move on immediately. Do not wait for the caller to reply, do not ask a question, and do not repeat yourself."
       },
       "transitionRules": [
         {
@@ -193,7 +193,7 @@
       "name": "Tell the caller the real callback outcome",
       "type": "freeform",
       "nodeData": {
-        "prompt": "The callback result was: {{node.urgent_callback.status}}. If that value is exactly 'created', tell the caller a nurse will call them back on the number they gave, and that if their symptoms get worse they should call the office line or emergency services. If it is exactly 'not_needed', say nothing further about a callback and simply close the call warmly. Otherwise tell them plainly that you could not arrange a callback either, and that they should call the office directly, or emergency services if this is an emergency. Never promise a callback unless the value is exactly 'created'. Say it once, then move on immediately."
+        "prompt": "The callback result was: {{node.urgent_callback.status}}. If that value is exactly 'created', tell the caller a nurse will call them back on the number they gave, and that if their symptoms get worse they should call the office line or emergency services. If it is exactly 'not_needed', say nothing further about a callback and simply close the call warmly. Otherwise tell them plainly that you could not arrange a callback either, and that they should call the office directly, or emergency services if this is an emergency. Never promise a callback unless the value is exactly 'created'. Say this once and then move on immediately. Do not wait for the caller to reply, do not ask a question, and do not repeat yourself."
       },
       "transitionRules": [
         {

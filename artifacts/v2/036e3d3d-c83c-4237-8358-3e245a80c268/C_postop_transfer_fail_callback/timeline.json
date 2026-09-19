@@ -1,0 +1,811 @@
+[
+  {
+    "t": 1789850011532,
+    "type": "ready",
+    "value": true
+  },
+  {
+    "t": 1789850013508,
+    "type": "audio_connected",
+    "value": true
+  },
+  {
+    "t": 1789850013670,
+    "type": "status",
+    "value": "in-progress"
+  },
+  {
+    "t": 1789850014222,
+    "type": "transcript",
+    "value": {
+      "speaker": "AI",
+      "text": "Thanks for calling Demo Surgical Associates. Are you calling to schedule a routine appointment, or about a concern after a recent surgery?"
+    }
+  },
+  {
+    "t": 1789850016296,
+    "type": "caller_clip",
+    "value": "http://127.0.0.1:53724/clips/9907b0360c01650c.wav"
+  },
+  {
+    "t": 1789850017578,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "I had surgery on"
+    }
+  },
+  {
+    "t": 1789850017581,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "I had surgery on"
+    }
+  },
+  {
+    "t": 1789850018216,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "I had surgery on Tuesday."
+    }
+  },
+  {
+    "t": 1789850018239,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "I had surgery on Tuesday."
+    }
+  },
+  {
+    "t": 1789850018772,
+    "type": "transcript",
+    "value": {
+      "speaker": "AI",
+      "text": ""
+    }
+  },
+  {
+    "t": 1789850019219,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "My surgery 1"
+    }
+  },
+  {
+    "t": 1789850020037,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "My surgery wound is bleeding."
+    }
+  },
+  {
+    "t": 1789850020056,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "My surgery wound is bleeding."
+    }
+  },
+  {
+    "t": 1789850020640,
+    "type": "transcript",
+    "value": {
+      "speaker": "AI",
+      "text": ""
+    }
+  },
+  {
+    "t": 1789850020645,
+    "type": "transcript",
+    "value": {
+      "speaker": "AI",
+      "text": ""
+    }
+  },
+  {
+    "t": 1789850021212,
+    "type": "transcript",
+    "value": {
+      "speaker": "AI",
+      "text": ""
+    }
+  },
+  {
+    "t": 1789850021215,
+    "type": "transcript",
+    "value": {
+      "speaker": "AI",
+      "text": ""
+    }
+  },
+  {
+    "t": 1789850021829,
+    "type": "transcript",
+    "value": {
+      "speaker": "AI",
+      "text": "What's the best number to reach you on?"
+    }
+  },
+  {
+    "t": 1789850023913,
+    "type": "caller_clip",
+    "value": "http://127.0.0.1:53724/clips/cd30dfda596e4c23.wav"
+  },
+  {
+    "t": 1789850024038,
+    "type": "transcript",
+    "value": {
+      "speaker": "AI",
+      "text": "What's the best number to reach you on?"
+    }
+  },
+  {
+    "t": 1789850025049,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "It started this month"
+    }
+  },
+  {
+    "t": 1789850025414,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "It started this morning."
+    }
+  },
+  {
+    "t": 1789850025433,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "It started this morning."
+    }
+  },
+  {
+    "t": 1789850026419,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "You can reach me at"
+    }
+  },
+  {
+    "t": 1789850027417,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "You can reach me at 5 5 5"
+    }
+  },
+  {
+    "t": 1789850028592,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "You can reach me at 5 5 5 5 5 5"
+    }
+  },
+  {
+    "t": 1789850029925,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "You can reach me at 5 5 5 5 5 5 0 1 0."
+    }
+  },
+  {
+    "t": 1789850031595,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "You can reach me at 5 5 5 5 5 5 0 1 0 3."
+    }
+  },
+  {
+    "t": 1789850031646,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "It started this morning. You can reach me at 5 5 5 5 5 5 0 1 0 3."
+    }
+  },
+  {
+    "t": 1789850032156,
+    "type": "transcript",
+    "value": {
+      "speaker": "AI",
+      "text": ""
+    }
+  },
+  {
+    "t": 1789850032158,
+    "type": "transcript",
+    "value": {
+      "speaker": "AI",
+      "text": ""
+    }
+  },
+  {
+    "t": 1789850032162,
+    "type": "transcript",
+    "value": {
+      "speaker": "AI",
+      "text": ""
+    }
+  },
+  {
+    "t": 1789850032635,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "You can reach me at 5 5 5 5 5 5 0 1 0 3."
+    }
+  },
+  {
+    "t": 1789850033592,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "You can reach me at 5 5 5 5 5 5 0 1 0 3."
+    }
+  },
+  {
+    "t": 1789850034519,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "You can reach me at 5 5 5 5 5 5 0 1 0 3."
+    }
+  },
+  {
+    "t": 1789850034644,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "You can reach me at 5 5 5 5 5 5 0 1 0 3."
+    }
+  },
+  {
+    "t": 1789850035166,
+    "type": "transcript",
+    "value": {
+      "speaker": "AI",
+      "text": "The transfer did not complete, and I am requesting an urgent callback for you now."
+    }
+  },
+  {
+    "t": 1789850035574,
+    "type": "transcript",
+    "value": {
+      "speaker": "AI",
+      "text": "The transfer did not complete, and I am requesting an urgent callback for you now."
+    }
+  },
+  {
+    "t": 1789850037197,
+    "type": "caller_clip",
+    "value": "http://127.0.0.1:53724/clips/efc44746db81582f.wav"
+  },
+  {
+    "t": 1789850037507,
+    "type": "transcript",
+    "value": {
+      "speaker": "AI",
+      "text": "The transfer did not complete, and I am requesting an urgent callback for you now."
+    }
+  },
+  {
+    "t": 1789850038508,
+    "type": "transcript",
+    "value": {
+      "speaker": "AI",
+      "text": "The transfer did not complete, and I am requesting an urgent callback for you now."
+    }
+  },
+  {
+    "t": 1789850038509,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "I had surgery this"
+    }
+  },
+  {
+    "t": 1789850039517,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "I had surgery this week, and I'm worried about"
+    }
+  },
+  {
+    "t": 1789850040523,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "I had surgery this week, and I'm worried about the incision."
+    }
+  },
+  {
+    "t": 1789850041576,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "I had surgery this week, and I'm worried about the incision."
+    }
+  },
+  {
+    "t": 1789850042506,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "I had surgery this week, and I'm worried about the incision."
+    }
+  },
+  {
+    "t": 1789850042507,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "I had surgery this week, and I'm worried about the incision."
+    }
+  },
+  {
+    "t": 1789850042931,
+    "type": "caller_clip",
+    "value": "http://127.0.0.1:53724/clips/efc44746db81582f.wav"
+  },
+  {
+    "t": 1789850043554,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "I had"
+    }
+  },
+  {
+    "t": 1789850044497,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "I had surgery this week,"
+    }
+  },
+  {
+    "t": 1789850045494,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "I had surgery this week,"
+    }
+  },
+  {
+    "t": 1789850045496,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "I had surgery this week, and I'm worried about"
+    }
+  },
+  {
+    "t": 1789850046329,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "I had surgery this week, and I'm worried about the incision."
+    }
+  },
+  {
+    "t": 1789850046362,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "I had surgery this week, and I'm worried about the incision. I had surgery this week, and I'm worried about the incision."
+    }
+  },
+  {
+    "t": 1789850047225,
+    "type": "transcript",
+    "value": {
+      "speaker": "AI",
+      "text": "I\u2019m sorry, but I can\u2019t help with that directly. Please hold while I connect you to the live triage nurse."
+    }
+  },
+  {
+    "t": 1789850049265,
+    "type": "caller_clip",
+    "value": "http://127.0.0.1:53724/clips/efc44746db81582f.wav"
+  },
+  {
+    "t": 1789850050371,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "I had surgery"
+    }
+  },
+  {
+    "t": 1789850051329,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "I had surgery this week, and I'm"
+    }
+  },
+  {
+    "t": 1789850052327,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "I had surgery this week, and I'm worried about the incision."
+    }
+  },
+  {
+    "t": 1789850052329,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "I had surgery this week, and I'm worried about the incision."
+    }
+  },
+  {
+    "t": 1789850052634,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "I had surgery this week, and I'm worried about the incision."
+    }
+  },
+  {
+    "t": 1789850052651,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "I had surgery this week, and I'm worried about the incision."
+    }
+  },
+  {
+    "t": 1789850053353,
+    "type": "transcript",
+    "value": {
+      "speaker": "AI",
+      "text": "Please hold while I connect you to the triage nurse."
+    }
+  },
+  {
+    "t": 1789850055305,
+    "type": "caller_clip",
+    "value": "http://127.0.0.1:53724/clips/efc44746db81582f.wav"
+  },
+  {
+    "t": 1789850055643,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "I"
+    }
+  },
+  {
+    "t": 1789850056460,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "I"
+    }
+  },
+  {
+    "t": 1789850056664,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "I had surgery this"
+    }
+  },
+  {
+    "t": 1789850057710,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "I had surgery this week,"
+    }
+  },
+  {
+    "t": 1789850057795,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "I had surgery this week, I've been worried about"
+    }
+  },
+  {
+    "t": 1789850058662,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "I had surgery this week, and I'm worried about the incision."
+    }
+  },
+  {
+    "t": 1789850058760,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "I had surgery this week, and I'm worried about the incision."
+    }
+  },
+  {
+    "t": 1789850059613,
+    "type": "transcript",
+    "value": {
+      "speaker": "AI",
+      "text": "The transfer did not complete, and I am requesting an urgent callback for you."
+    }
+  },
+  {
+    "t": 1789850061660,
+    "type": "caller_clip",
+    "value": "http://127.0.0.1:53724/clips/efc44746db81582f.wav"
+  },
+  {
+    "t": 1789850062668,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "I had surgery"
+    }
+  },
+  {
+    "t": 1789850063730,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "I had surgery this week, and there are more"
+    }
+  },
+  {
+    "t": 1789850063731,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "I had surgery this week, and there are more"
+    }
+  },
+  {
+    "t": 1789850064687,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "I had surgery this week, and I'm worried about the incision."
+    }
+  },
+  {
+    "t": 1789850065052,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "I had surgery this week, and I'm worried about the incision."
+    }
+  },
+  {
+    "t": 1789850065052,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "I had surgery this week, and I'm worried about the incision."
+    }
+  },
+  {
+    "t": 1789850065697,
+    "type": "transcript",
+    "value": {
+      "speaker": "AI",
+      "text": "The transfer did not complete, and I am requesting an urgent callback for you."
+    }
+  },
+  {
+    "t": 1789850067702,
+    "type": "caller_clip",
+    "value": "http://127.0.0.1:53724/clips/efc44746db81582f.wav"
+  },
+  {
+    "t": 1789850068025,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "I"
+    }
+  },
+  {
+    "t": 1789850069035,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "I had surgery this"
+    }
+  },
+  {
+    "t": 1789850069036,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "I had surgery this"
+    }
+  },
+  {
+    "t": 1789850070076,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "I had surgery"
+    }
+  },
+  {
+    "t": 1789850070123,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "I had surgery"
+    }
+  },
+  {
+    "t": 1789850071081,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "I had surgery this week, and I'm worried about the incision."
+    }
+  },
+  {
+    "t": 1789850071102,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "I had surgery this week, and I'm worried about the incision."
+    }
+  },
+  {
+    "t": 1789850071719,
+    "type": "transcript",
+    "value": {
+      "speaker": "AI",
+      "text": "The transfer did not complete, and I am requesting an urgent callback for you."
+    }
+  },
+  {
+    "t": 1789850073752,
+    "type": "caller_clip",
+    "value": "http://127.0.0.1:53724/clips/efc44746db81582f.wav"
+  },
+  {
+    "t": 1789850074107,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "I"
+    }
+  },
+  {
+    "t": 1789850075109,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "I had surgery this"
+    }
+  },
+  {
+    "t": 1789850075110,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "I had surgery this"
+    }
+  },
+  {
+    "t": 1789850076170,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "I had"
+    }
+  },
+  {
+    "t": 1789850076192,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "I had surgery this week, and I'm worried of"
+    }
+  },
+  {
+    "t": 1789850077206,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "I had surgery this week, and I'm worried about the incision."
+    }
+  },
+  {
+    "t": 1789850077227,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "I had surgery this week, and I'm worried about the incision."
+    }
+  },
+  {
+    "t": 1789850077851,
+    "type": "transcript",
+    "value": {
+      "speaker": "AI",
+      "text": "The transfer did not complete, and I am requesting an urgent callback for you."
+    }
+  },
+  {
+    "t": 1789850079808,
+    "type": "caller_clip",
+    "value": "http://127.0.0.1:53724/clips/efc44746db81582f.wav"
+  },
+  {
+    "t": 1789850080115,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "I"
+    }
+  },
+  {
+    "t": 1789850081119,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "I had surgery this"
+    }
+  },
+  {
+    "t": 1789850081122,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "I had surgery this"
+    }
+  },
+  {
+    "t": 1789850082121,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "I had surgery this week"
+    }
+  },
+  {
+    "t": 1789850082216,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "I had surgery this week and I'm worried about"
+    }
+  },
+  {
+    "t": 1789850083198,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "I had surgery this week and I am worried about the incision."
+    }
+  },
+  {
+    "t": 1789850083208,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "I had surgery this week and I am worried about the incision."
+    }
+  }
+]
