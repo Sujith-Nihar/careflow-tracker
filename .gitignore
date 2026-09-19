@@ -28,3 +28,5 @@ evals/.cache/
 vogent/ids.json
 evals/.cache/
 evals/fixtures/**/dial_token*
+.coverage
+*.egg-info/
