@@ -4,16 +4,16 @@
     "v1": {
       "ai_model_id": "f3991a4c-7abb-4ce3-bf60-962250942517",
       "name": "careflow-v1-baseline",
-      "nodes": 12,
+      "nodes": 13,
       "outcome_conditioned_transitions": 0,
-      "versioned_prompt_id": "c32acdd0-3637-43ad-bf10-4b523b7ac3a5"
+      "versioned_prompt_id": "139c8c53-d3c9-42c9-92f8-07611abdcb30"
     },
     "v2": {
       "ai_model_id": "f3991a4c-7abb-4ce3-bf60-962250942517",
       "name": "careflow-v2-evidence-aware",
-      "nodes": 21,
-      "outcome_conditioned_transitions": 3,
-      "versioned_prompt_id": "285da967-c4e1-4744-ae93-e787fb076ec9"
+      "nodes": 14,
+      "outcome_conditioned_transitions": 0,
+      "versioned_prompt_id": "0d16bb48-afe1-4b0c-9a7b-c155f5098fb0"
     }
   }
 }

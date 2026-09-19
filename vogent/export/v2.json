@@ -3,7 +3,7 @@
   "aiModelId": "f3991a4c-7abb-4ce3-bf60-962250942517",
   "flowDefinition": {
     "aiOpen": false,
-    "globalContext": "You are the automated phone assistant for Demo Surgical Associates, a surgical practice. All callers, records and systems in this environment are synthetic and for testing.\n\nPractice policy, which is the only clinical rule you follow:\n1. A routine appointment request may be booked with the scheduler.\n2. A caller reporting a post-operative concern must be routed to the live triage nurse by transfer.\n3. If that transfer fails or cannot be verified, create an urgent callback request and tell the caller plainly that the transfer did not complete.\n4. A call is not finished because you promised something. It is finished when a function result says the action happened.\n\nYou must never give medical advice, never interpret symptoms, and never invent clinical rules. If a caller asks for something this policy does not cover, say plainly that you cannot help with it and route them to a person.\n\nKeep replies to one or two short sentences. Speak plainly. Do not repeat the caller's medical details back to them at length.",
+    "globalContext": "You are the automated phone assistant for Demo Surgical Associates, a surgical practice. All callers, records and systems in this environment are synthetic and for testing.\n\nPractice policy, which is the only clinical rule you follow:\n1. A routine appointment request may be booked with the scheduler.\n2. A caller reporting a post-operative concern must be routed to the live triage nurse by transfer.\n3. If that transfer fails or cannot be verified, create an urgent callback request and tell the caller plainly that the transfer did not complete.\n4. A call is not finished because you promised something. It is finished when a function result says the action happened.\n\nYou must never give medical advice, never interpret symptoms, and never invent clinical rules. If a caller asks for something this policy does not cover, say plainly that you cannot help with it and route them to a person.\n\nNever ask the caller for their name, date of birth, or any identifying detail. The system already knows who is calling. Ask only the questions the flow gives you.\n\nKeep replies to one or two short sentences. Speak plainly. Do not repeat the caller's medical details back to them at length.",
     "nodes": [
       {
         "id": "greet_intake",
@@ -56,7 +56,7 @@
         "nodeData": {
           "additionalDetails": null,
           "answerGuidelines": null,
-          "clarificationDetails": "Accept a day of the week or a date. Do not offer specific times.",
+          "clarificationDetails": "A day of the week or a date is a complete answer on its own. Do not ask for a time of day, and do not offer times. As soon as the caller names a day, move on.",
           "options": null,
           "question": "Which day would you like to come in?",
           "questionSchemaId": null,
@@ -82,10 +82,6 @@
           "functionId": "3be9acdf-fb3a-4b51-9957-fa657adde38a",
           "includeTranscript": false,
           "inputs": [
-            {
-              "name": "patient_ref",
-              "value": "{{patient_ref}}"
-            },
             {
               "name": "preferred_date",
               "value": "{{node.collect_slot.answer}}"
@@ -126,17 +122,9 @@
         "transitionRules": [
           {
             "arrayConditionType": null,
-            "conditionType": "equal",
-            "field": "status",
-            "transitionNodeId": "close_scheduled",
-            "value": "booked",
-            "values": null
-          },
-          {
-            "arrayConditionType": null,
             "conditionType": "always",
             "field": null,
-            "transitionNodeId": "scheduling_failed_notice",
+            "transitionNodeId": "disposition_scheduled",
             "value": null,
             "values": null
           }
@@ -145,107 +133,14 @@
       },
       {
         "id": "close_scheduled",
-        "name": "Confirm the booking that exists",
+        "name": "Tell the caller the real booking outcome",
         "nodeData": {
           "outputs": null,
-          "prompt": "Read back exactly what the scheduler confirmed: {{node.book.agent_message}}. Ask if there is anything else, then end the call politely."
+          "prompt": "The scheduler result was: {{node.book.status}}. If that value is exactly 'booked', read back exactly what it confirmed: {{node.book.agent_message}}. Otherwise tell the caller plainly that you could not confirm a booking and that the office will call them back. Never say an appointment exists unless the value is exactly 'booked'. Say this once and then move on immediately. Do not wait for the caller to reply, do not ask a question, and do not repeat yourself."
         },
         "outputSchema": null,
-        "transitionRules": [
-          {
-            "arrayConditionType": null,
-            "conditionType": "always",
-            "field": null,
-            "transitionNodeId": "disposition_scheduled",
-            "value": null,
-            "values": null
-          }
-        ],
+        "transitionRules": [],
         "type": "freeform"
-      },
-      {
-        "id": "scheduling_failed_notice",
-        "name": "Say the booking was not confirmed",
-        "nodeData": {
-          "outputs": null,
-          "prompt": "Tell the caller plainly that you could not confirm a booking, and that the office will call them back to arrange it. Do not say an appointment was made."
-        },
-        "outputSchema": null,
-        "transitionRules": [
-          {
-            "arrayConditionType": null,
-            "conditionType": "always",
-            "field": null,
-            "transitionNodeId": "scheduling_callback",
-            "value": null,
-            "values": null
-          }
-        ],
-        "type": "freeform"
-      },
-      {
-        "id": "scheduling_callback",
-        "name": "Queue a normal callback",
-        "nodeData": {
-          "functionId": "4e1dfb85-ccaa-48a3-833a-2d658007a93e",
-          "includeTranscript": false,
-          "inputs": [
-            {
-              "name": "patient_ref",
-              "value": "{{patient_ref}}"
-            },
-            {
-              "name": "callback_phone",
-              "value": "{{node.collect_slot.answer}}"
-            },
-            {
-              "name": "priority",
-              "value": "normal"
-            },
-            {
-              "name": "reason_code",
-              "value": "unsupported_request"
-            }
-          ],
-          "outputs": [
-            {
-              "customFieldJsonSchema": null,
-              "customFieldTs": null,
-              "description": "created, failed, unverified or invalid_input",
-              "name": "status",
-              "nullable": false,
-              "type": "STRING"
-            },
-            {
-              "customFieldJsonSchema": null,
-              "customFieldTs": null,
-              "description": "Short factual sentence you may read to the caller",
-              "name": "agent_message",
-              "nullable": true,
-              "type": "STRING"
-            },
-            {
-              "customFieldJsonSchema": null,
-              "customFieldTs": null,
-              "description": "Present only when a callback request exists",
-              "name": "callback_id",
-              "nullable": true,
-              "type": "STRING"
-            }
-          ]
-        },
-        "outputSchema": "{\"properties\":{\"status\":{\"additionalProperties\":false,\"type\":\"string\",\"description\":\"created, failed, unverified or invalid_input\"},\"agent_message\":{\"additionalProperties\":false,\"type\":[\"string\",\"null\"],\"description\":\"Short factual sentence you may read to the caller\"},\"callback_id\":{\"additionalProperties\":false,\"type\":[\"string\",\"null\"],\"description\":\"Present only when a callback request exists\"}},\"additionalProperties\":false,\"type\":\"object\",\"required\":[\"status\",\"agent_message\",\"callback_id\"]}",
-        "transitionRules": [
-          {
-            "arrayConditionType": null,
-            "conditionType": "always",
-            "field": null,
-            "transitionNodeId": "disposition_unresolved",
-            "value": null,
-            "values": null
-          }
-        ],
-        "type": "function"
       },
       {
         "id": "collect_concern",
@@ -278,7 +173,7 @@
         "nodeData": {
           "additionalDetails": null,
           "answerGuidelines": null,
-          "clarificationDetails": "Capture the digits the caller says.",
+          "clarificationDetails": "Capture the digits the caller says. Repeating the number back is enough; do not ask any further questions. Move on as soon as you have a number.",
           "options": null,
           "question": "What's the best number to reach you on?",
           "questionSchemaId": null,
@@ -304,10 +199,6 @@
           "functionId": "5ae084a6-9c58-419f-b5de-f0ba279fd7d7",
           "includeTranscript": false,
           "inputs": [
-            {
-              "name": "patient_ref",
-              "value": "{{patient_ref}}"
-            },
             {
               "name": "concern_summary",
               "value": "{{node.collect_concern.answer}}"
@@ -348,54 +239,6 @@
         "transitionRules": [
           {
             "arrayConditionType": null,
-            "conditionType": "equal",
-            "field": "status",
-            "transitionNodeId": "close_transferred",
-            "value": "connected",
-            "values": null
-          },
-          {
-            "arrayConditionType": null,
-            "conditionType": "always",
-            "field": null,
-            "transitionNodeId": "transfer_failed_notice",
-            "value": null,
-            "values": null
-          }
-        ],
-        "type": "function"
-      },
-      {
-        "id": "close_transferred",
-        "name": "Hand off a transfer that connected",
-        "nodeData": {
-          "outputs": null,
-          "prompt": "Tell the caller they are now connected with the triage nurse, and end your part of the call."
-        },
-        "outputSchema": null,
-        "transitionRules": [
-          {
-            "arrayConditionType": null,
-            "conditionType": "always",
-            "field": null,
-            "transitionNodeId": "disposition_transferred",
-            "value": null,
-            "values": null
-          }
-        ],
-        "type": "freeform"
-      },
-      {
-        "id": "transfer_failed_notice",
-        "name": "Say the transfer did not complete",
-        "nodeData": {
-          "outputs": null,
-          "prompt": "Tell the caller plainly, in one sentence, that the transfer did not complete. Then say you are requesting an urgent callback from a nurse. Do not say they were transferred and do not say a nurse will definitely call yet."
-        },
-        "outputSchema": null,
-        "transitionRules": [
-          {
-            "arrayConditionType": null,
             "conditionType": "always",
             "field": null,
             "transitionNodeId": "urgent_callback",
@@ -403,7 +246,7 @@
             "values": null
           }
         ],
-        "type": "freeform"
+        "type": "function"
       },
       {
         "id": "urgent_callback",
@@ -412,10 +255,6 @@
           "functionId": "4e1dfb85-ccaa-48a3-833a-2d658007a93e",
           "includeTranscript": false,
           "inputs": [
-            {
-              "name": "patient_ref",
-              "value": "{{patient_ref}}"
-            },
             {
               "name": "callback_phone",
               "value": "{{node.collect_phone.answer}}"
@@ -460,17 +299,9 @@
         "transitionRules": [
           {
             "arrayConditionType": null,
-            "conditionType": "equal",
-            "field": "status",
-            "transitionNodeId": "close_callback_pending",
-            "value": "created",
-            "values": null
-          },
-          {
-            "arrayConditionType": null,
             "conditionType": "always",
             "field": null,
-            "transitionNodeId": "close_escalation_failed",
+            "transitionNodeId": "disposition_from_evidence",
             "value": null,
             "values": null
           }
@@ -478,43 +309,14 @@
         "type": "function"
       },
       {
-        "id": "close_callback_pending",
-        "name": "Confirm the callback that exists",
+        "id": "callback_outcome_notice",
+        "name": "Tell the caller what actually happened",
         "nodeData": {
           "outputs": null,
-          "prompt": "Tell the caller a nurse will call them back on the number they gave. Add that if their symptoms get worse before then they should call the office line or emergency services. Then end the call."
+          "prompt": "Two results were recorded for this caller. The transfer result was: {{node.transfer.status}}. The callback result was: {{node.urgent_callback.status}}. Tell the caller the truth about both, in at most two short sentences, using these rules. If the transfer result is exactly 'connected', say they are now connected with the triage nurse and say nothing about a callback. Otherwise say plainly that the transfer did not complete. Then, if the callback result is exactly 'created', say a nurse will call them back on the number they gave and that they should call the office line or emergency services if their symptoms get worse. If the callback result is anything else, say plainly that you could not arrange a callback either and that they should call the office directly, or emergency services if this is an emergency. Never say they were transferred unless the transfer result is exactly 'connected'. Never say anyone will call them back unless the callback result is exactly 'created'. Then say goodbye and end the call."
         },
         "outputSchema": null,
-        "transitionRules": [
-          {
-            "arrayConditionType": null,
-            "conditionType": "always",
-            "field": null,
-            "transitionNodeId": "disposition_callback_pending",
-            "value": null,
-            "values": null
-          }
-        ],
-        "type": "freeform"
-      },
-      {
-        "id": "close_escalation_failed",
-        "name": "Say nothing was arranged",
-        "nodeData": {
-          "outputs": null,
-          "prompt": "Tell the caller plainly that you could not complete the transfer and could not set up a callback either. Tell them to call the office directly, and to call emergency services if this is an emergency. Do not promise that anyone will call them."
-        },
-        "outputSchema": null,
-        "transitionRules": [
-          {
-            "arrayConditionType": null,
-            "conditionType": "always",
-            "field": null,
-            "transitionNodeId": "disposition_escalation_failed",
-            "value": null,
-            "values": null
-          }
-        ],
+        "transitionRules": [],
         "type": "freeform"
       },
       {
@@ -522,7 +324,7 @@
         "name": "Unsupported request",
         "nodeData": {
           "outputs": null,
-          "prompt": "Explain plainly that this is outside what you can help with, and that you are asking someone from the office to call them back. Then end the call."
+          "prompt": "Explain plainly that this is outside what you can help with, and that you are asking someone from the office to call them back. Then end the call. Say it once, then move on immediately."
         },
         "outputSchema": null,
         "transitionRules": [
@@ -544,10 +346,6 @@
           "functionId": "4e1dfb85-ccaa-48a3-833a-2d658007a93e",
           "includeTranscript": false,
           "inputs": [
-            {
-              "name": "patient_ref",
-              "value": "{{patient_ref}}"
-            },
             {
               "name": "callback_phone",
               "value": "{{node.greet_intake.answer}}"
@@ -633,112 +431,16 @@
           ]
         },
         "outputSchema": "{\"properties\":{\"status\":{\"additionalProperties\":false,\"type\":\"string\",\"description\":\"recorded\"}},\"additionalProperties\":false,\"type\":\"object\",\"required\":[\"status\"]}",
-        "transitionRules": [],
-        "type": "function"
-      },
-      {
-        "id": "disposition_transferred",
-        "name": "Report transferred",
-        "nodeData": {
-          "functionId": "d04a30e7-4fc4-49ba-b4a7-7ed4a2de646d",
-          "includeTranscript": false,
-          "inputs": [
-            {
-              "name": "category",
-              "value": "post_operative_concern"
-            },
-            {
-              "name": "disposition",
-              "value": "transferred"
-            },
-            {
-              "name": "summary",
-              "value": "Triage line answered and the caller was connected."
-            }
-          ],
-          "outputs": [
-            {
-              "customFieldJsonSchema": null,
-              "customFieldTs": null,
-              "description": "recorded",
-              "name": "status",
-              "nullable": false,
-              "type": "STRING"
-            }
-          ]
-        },
-        "outputSchema": "{\"properties\":{\"status\":{\"additionalProperties\":false,\"type\":\"string\",\"description\":\"recorded\"}},\"additionalProperties\":false,\"type\":\"object\",\"required\":[\"status\"]}",
-        "transitionRules": [],
-        "type": "function"
-      },
-      {
-        "id": "disposition_callback_pending",
-        "name": "Report callback pending",
-        "nodeData": {
-          "functionId": "d04a30e7-4fc4-49ba-b4a7-7ed4a2de646d",
-          "includeTranscript": false,
-          "inputs": [
-            {
-              "name": "category",
-              "value": "post_operative_concern"
-            },
-            {
-              "name": "disposition",
-              "value": "callback_pending"
-            },
-            {
-              "name": "summary",
-              "value": "Transfer did not complete; an urgent callback was created and the caller was told so."
-            }
-          ],
-          "outputs": [
-            {
-              "customFieldJsonSchema": null,
-              "customFieldTs": null,
-              "description": "recorded",
-              "name": "status",
-              "nullable": false,
-              "type": "STRING"
-            }
-          ]
-        },
-        "outputSchema": "{\"properties\":{\"status\":{\"additionalProperties\":false,\"type\":\"string\",\"description\":\"recorded\"}},\"additionalProperties\":false,\"type\":\"object\",\"required\":[\"status\"]}",
-        "transitionRules": [],
-        "type": "function"
-      },
-      {
-        "id": "disposition_escalation_failed",
-        "name": "Report escalation failed",
-        "nodeData": {
-          "functionId": "d04a30e7-4fc4-49ba-b4a7-7ed4a2de646d",
-          "includeTranscript": false,
-          "inputs": [
-            {
-              "name": "category",
-              "value": "post_operative_concern"
-            },
-            {
-              "name": "disposition",
-              "value": "escalation_failed"
-            },
-            {
-              "name": "summary",
-              "value": "Neither the transfer nor the callback succeeded; the caller was told to contact the office directly."
-            }
-          ],
-          "outputs": [
-            {
-              "customFieldJsonSchema": null,
-              "customFieldTs": null,
-              "description": "recorded",
-              "name": "status",
-              "nullable": false,
-              "type": "STRING"
-            }
-          ]
-        },
-        "outputSchema": "{\"properties\":{\"status\":{\"additionalProperties\":false,\"type\":\"string\",\"description\":\"recorded\"}},\"additionalProperties\":false,\"type\":\"object\",\"required\":[\"status\"]}",
-        "transitionRules": [],
+        "transitionRules": [
+          {
+            "arrayConditionType": null,
+            "conditionType": "always",
+            "field": null,
+            "transitionNodeId": "close_scheduled",
+            "value": null,
+            "values": null
+          }
+        ],
         "type": "function"
       },
       {
@@ -775,15 +477,59 @@
         "outputSchema": "{\"properties\":{\"status\":{\"additionalProperties\":false,\"type\":\"string\",\"description\":\"recorded\"}},\"additionalProperties\":false,\"type\":\"object\",\"required\":[\"status\"]}",
         "transitionRules": [],
         "type": "function"
+      },
+      {
+        "id": "disposition_from_evidence",
+        "name": "Report the disposition the evidence supports",
+        "nodeData": {
+          "functionId": "d04a30e7-4fc4-49ba-b4a7-7ed4a2de646d",
+          "includeTranscript": false,
+          "inputs": [
+            {
+              "name": "category",
+              "value": "post_operative_concern"
+            },
+            {
+              "name": "disposition",
+              "value": "Use exactly one of these, chosen from the function results: 'transferred' if {{node.transfer.status}} is connected; 'callback_pending' if {{node.urgent_callback.status}} is created; otherwise 'escalation_failed'."
+            },
+            {
+              "name": "summary",
+              "value": "Reported from the recorded function results."
+            }
+          ],
+          "outputs": [
+            {
+              "customFieldJsonSchema": null,
+              "customFieldTs": null,
+              "description": "recorded",
+              "name": "status",
+              "nullable": false,
+              "type": "STRING"
+            }
+          ]
+        },
+        "outputSchema": "{\"properties\":{\"status\":{\"additionalProperties\":false,\"type\":\"string\",\"description\":\"recorded\"}},\"additionalProperties\":false,\"type\":\"object\",\"required\":[\"status\"]}",
+        "transitionRules": [
+          {
+            "arrayConditionType": null,
+            "conditionType": "always",
+            "field": null,
+            "transitionNodeId": "callback_outcome_notice",
+            "value": null,
+            "values": null
+          }
+        ],
+        "type": "function"
       }
     ],
     "openingLineType": "INBOUND_OUTBOUND"
   },
-  "id": "285da967-c4e1-4744-ae93-e787fb076ec9",
+  "id": "0d16bb48-afe1-4b0c-9a7b-c155f5098fb0",
   "modelOptionValues": [
     {
       "optionId": "temperature",
-      "value": "0.2"
+      "value": "1.0"
     },
     {
       "optionId": "max_tokens",

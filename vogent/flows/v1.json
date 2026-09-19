@@ -70,7 +70,7 @@
       "transitionRules": [
         {
           "conditionType": "always",
-          "transitionNodeId": "close_scheduled"
+          "transitionNodeId": "disposition_after_booking"
         }
       ]
     },
@@ -81,12 +81,7 @@
       "nodeData": {
         "prompt": "Tell the caller they are all set for {{node.collect_slot.answer}} and ask if there is anything else. Then end the call politely. Say it once, then move on immediately."
       },
-      "transitionRules": [
-        {
-          "conditionType": "always",
-          "transitionNodeId": "disposition_resolved"
-        }
-      ]
+      "transitionRules": []
     },
     {
       "id": "collect_concern",
@@ -155,7 +150,7 @@
       "transitionRules": [
         {
           "conditionType": "always",
-          "transitionNodeId": "close_transferred"
+          "transitionNodeId": "disposition_after_transfer"
         }
       ]
     },
@@ -166,12 +161,7 @@
       "nodeData": {
         "prompt": "Tell the caller the triage nurse will take it from here, wish them well, and end the call. Say it once, then move on immediately."
       },
-      "transitionRules": [
-        {
-          "conditionType": "always",
-          "transitionNodeId": "disposition_resolved"
-        }
-      ]
+      "transitionRules": []
     },
     {
       "id": "other_help",
@@ -186,30 +176,6 @@
           "transitionNodeId": "disposition_unresolved"
         }
       ]
-    },
-    {
-      "id": "disposition_resolved",
-      "name": "Report resolved",
-      "type": "function",
-      "nodeData": {
-        "functionId": "__report_disposition__",
-        "inputs": [
-          {
-            "name": "category",
-            "value": "{{node.greet_intake.answer}}"
-          },
-          {
-            "name": "disposition",
-            "value": "resolved"
-          },
-          {
-            "name": "summary",
-            "value": "Caller was helped and the call was completed."
-          }
-        ],
-        "outputs": "__outputs.report_disposition__"
-      },
-      "transitionRules": []
     },
     {
       "id": "disposition_unresolved",
@@ -234,6 +200,64 @@
         "outputs": "__outputs.report_disposition__"
       },
       "transitionRules": []
+    },
+    {
+      "id": "disposition_after_booking",
+      "name": "Report resolved after booking",
+      "type": "function",
+      "nodeData": {
+        "functionId": "__report_disposition__",
+        "inputs": [
+          {
+            "name": "category",
+            "value": "{{node.greet_intake.answer}}"
+          },
+          {
+            "name": "disposition",
+            "value": "resolved"
+          },
+          {
+            "name": "summary",
+            "value": "Caller was helped and the call was completed."
+          }
+        ],
+        "outputs": "__outputs.report_disposition__"
+      },
+      "transitionRules": [
+        {
+          "conditionType": "always",
+          "transitionNodeId": "close_scheduled"
+        }
+      ]
+    },
+    {
+      "id": "disposition_after_transfer",
+      "name": "Report resolved after the transfer attempt",
+      "type": "function",
+      "nodeData": {
+        "functionId": "__report_disposition__",
+        "inputs": [
+          {
+            "name": "category",
+            "value": "{{node.greet_intake.answer}}"
+          },
+          {
+            "name": "disposition",
+            "value": "resolved"
+          },
+          {
+            "name": "summary",
+            "value": "Caller was helped and the call was completed."
+          }
+        ],
+        "outputs": "__outputs.report_disposition__"
+      },
+      "transitionRules": [
+        {
+          "conditionType": "always",
+          "transitionNodeId": "close_transferred"
+        }
+      ]
     }
   ]
 }

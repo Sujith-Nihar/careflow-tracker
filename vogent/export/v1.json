@@ -3,7 +3,7 @@
   "aiModelId": "f3991a4c-7abb-4ce3-bf60-962250942517",
   "flowDefinition": {
     "aiOpen": false,
-    "globalContext": "You are the automated phone assistant for Demo Surgical Associates, a surgical practice. All callers, records and systems in this environment are synthetic and for testing.\n\nPractice policy, which is the only clinical rule you follow:\n1. A routine appointment request may be booked with the scheduler.\n2. A caller reporting a post-operative concern must be routed to the live triage nurse by transfer.\n3. If that transfer fails or cannot be verified, create an urgent callback request and tell the caller plainly that the transfer did not complete.\n4. A call is not finished because you promised something. It is finished when a function result says the action happened.\n\nYou must never give medical advice, never interpret symptoms, and never invent clinical rules. If a caller asks for something this policy does not cover, say plainly that you cannot help with it and route them to a person.\n\nKeep replies to one or two short sentences. Speak plainly. Do not repeat the caller's medical details back to them at length.",
+    "globalContext": "You are the automated phone assistant for Demo Surgical Associates, a surgical practice. All callers, records and systems in this environment are synthetic and for testing.\n\nPractice policy, which is the only clinical rule you follow:\n1. A routine appointment request may be booked with the scheduler.\n2. A caller reporting a post-operative concern must be routed to the live triage nurse by transfer.\n3. If that transfer fails or cannot be verified, create an urgent callback request and tell the caller plainly that the transfer did not complete.\n4. A call is not finished because you promised something. It is finished when a function result says the action happened.\n\nYou must never give medical advice, never interpret symptoms, and never invent clinical rules. If a caller asks for something this policy does not cover, say plainly that you cannot help with it and route them to a person.\n\nNever ask the caller for their name, date of birth, or any identifying detail. The system already knows who is calling. Ask only the questions the flow gives you.\n\nKeep replies to one or two short sentences. Speak plainly. Do not repeat the caller's medical details back to them at length.",
     "nodes": [
       {
         "id": "greet_intake",
@@ -56,7 +56,7 @@
         "nodeData": {
           "additionalDetails": null,
           "answerGuidelines": null,
-          "clarificationDetails": "Accept a day of the week or a date. Do not offer specific times.",
+          "clarificationDetails": "A day of the week or a date is a complete answer on its own. Do not ask for a time of day, and do not offer times. As soon as the caller names a day, move on.",
           "options": null,
           "question": "Which day would you like to come in?",
           "questionSchemaId": null,
@@ -82,10 +82,6 @@
           "functionId": "3be9acdf-fb3a-4b51-9957-fa657adde38a",
           "includeTranscript": false,
           "inputs": [
-            {
-              "name": "patient_ref",
-              "value": "{{patient_ref}}"
-            },
             {
               "name": "preferred_date",
               "value": "{{node.collect_slot.answer}}"
@@ -128,7 +124,7 @@
             "arrayConditionType": null,
             "conditionType": "always",
             "field": null,
-            "transitionNodeId": "close_scheduled",
+            "transitionNodeId": "disposition_after_booking",
             "value": null,
             "values": null
           }
@@ -140,19 +136,10 @@
         "name": "Confirm appointment to caller",
         "nodeData": {
           "outputs": null,
-          "prompt": "Tell the caller they are all set for {{node.collect_slot.answer}} and ask if there is anything else. Then end the call politely."
+          "prompt": "Tell the caller they are all set for {{node.collect_slot.answer}} and ask if there is anything else. Then end the call politely. Say it once, then move on immediately."
         },
         "outputSchema": null,
-        "transitionRules": [
-          {
-            "arrayConditionType": null,
-            "conditionType": "always",
-            "field": null,
-            "transitionNodeId": "disposition_resolved",
-            "value": null,
-            "values": null
-          }
-        ],
+        "transitionRules": [],
         "type": "freeform"
       },
       {
@@ -186,7 +173,7 @@
         "nodeData": {
           "additionalDetails": null,
           "answerGuidelines": null,
-          "clarificationDetails": "Capture the digits the caller says.",
+          "clarificationDetails": "Capture the digits the caller says. Repeating the number back is enough; do not ask any further questions. Move on as soon as you have a number.",
           "options": null,
           "question": "What's the best number to reach you on?",
           "questionSchemaId": null,
@@ -210,7 +197,7 @@
         "name": "Announce the transfer",
         "nodeData": {
           "outputs": null,
-          "prompt": "Tell the caller you are connecting them to the triage nurse now. Keep it to one sentence."
+          "prompt": "Tell the caller you are connecting them to the triage nurse now. Keep it to one sentence. Say it once, then move on immediately."
         },
         "outputSchema": null,
         "transitionRules": [
@@ -232,10 +219,6 @@
           "functionId": "5ae084a6-9c58-419f-b5de-f0ba279fd7d7",
           "includeTranscript": false,
           "inputs": [
-            {
-              "name": "patient_ref",
-              "value": "{{patient_ref}}"
-            },
             {
               "name": "concern_summary",
               "value": "{{node.collect_concern.answer}}"
@@ -278,7 +261,7 @@
             "arrayConditionType": null,
             "conditionType": "always",
             "field": null,
-            "transitionNodeId": "close_transferred",
+            "transitionNodeId": "disposition_after_transfer",
             "value": null,
             "values": null
           }
@@ -290,19 +273,10 @@
         "name": "Hand off",
         "nodeData": {
           "outputs": null,
-          "prompt": "Tell the caller the triage nurse will take it from here, wish them well, and end the call."
+          "prompt": "Tell the caller the triage nurse will take it from here, wish them well, and end the call. Say it once, then move on immediately."
         },
         "outputSchema": null,
-        "transitionRules": [
-          {
-            "arrayConditionType": null,
-            "conditionType": "always",
-            "field": null,
-            "transitionNodeId": "disposition_resolved",
-            "value": null,
-            "values": null
-          }
-        ],
+        "transitionRules": [],
         "type": "freeform"
       },
       {
@@ -310,7 +284,7 @@
         "name": "Unsupported request",
         "nodeData": {
           "outputs": null,
-          "prompt": "Explain that you can only help with scheduling and post-operative concerns, and that someone from the office can call them back. Then end the call."
+          "prompt": "Explain that you can only help with scheduling and post-operative concerns, and that someone from the office can call them back. Then end the call. Say it once, then move on immediately."
         },
         "outputSchema": null,
         "transitionRules": [
@@ -324,41 +298,6 @@
           }
         ],
         "type": "freeform"
-      },
-      {
-        "id": "disposition_resolved",
-        "name": "Report resolved",
-        "nodeData": {
-          "functionId": "d04a30e7-4fc4-49ba-b4a7-7ed4a2de646d",
-          "includeTranscript": false,
-          "inputs": [
-            {
-              "name": "category",
-              "value": "{{node.greet_intake.answer}}"
-            },
-            {
-              "name": "disposition",
-              "value": "resolved"
-            },
-            {
-              "name": "summary",
-              "value": "Caller was helped and the call was completed."
-            }
-          ],
-          "outputs": [
-            {
-              "customFieldJsonSchema": null,
-              "customFieldTs": null,
-              "description": "recorded",
-              "name": "status",
-              "nullable": false,
-              "type": "STRING"
-            }
-          ]
-        },
-        "outputSchema": "{\"properties\":{\"status\":{\"additionalProperties\":false,\"type\":\"string\",\"description\":\"recorded\"}},\"additionalProperties\":false,\"type\":\"object\",\"required\":[\"status\"]}",
-        "transitionRules": [],
-        "type": "function"
       },
       {
         "id": "disposition_unresolved",
@@ -394,15 +333,103 @@
         "outputSchema": "{\"properties\":{\"status\":{\"additionalProperties\":false,\"type\":\"string\",\"description\":\"recorded\"}},\"additionalProperties\":false,\"type\":\"object\",\"required\":[\"status\"]}",
         "transitionRules": [],
         "type": "function"
+      },
+      {
+        "id": "disposition_after_booking",
+        "name": "Report resolved after booking",
+        "nodeData": {
+          "functionId": "d04a30e7-4fc4-49ba-b4a7-7ed4a2de646d",
+          "includeTranscript": false,
+          "inputs": [
+            {
+              "name": "category",
+              "value": "{{node.greet_intake.answer}}"
+            },
+            {
+              "name": "disposition",
+              "value": "resolved"
+            },
+            {
+              "name": "summary",
+              "value": "Caller was helped and the call was completed."
+            }
+          ],
+          "outputs": [
+            {
+              "customFieldJsonSchema": null,
+              "customFieldTs": null,
+              "description": "recorded",
+              "name": "status",
+              "nullable": false,
+              "type": "STRING"
+            }
+          ]
+        },
+        "outputSchema": "{\"properties\":{\"status\":{\"additionalProperties\":false,\"type\":\"string\",\"description\":\"recorded\"}},\"additionalProperties\":false,\"type\":\"object\",\"required\":[\"status\"]}",
+        "transitionRules": [
+          {
+            "arrayConditionType": null,
+            "conditionType": "always",
+            "field": null,
+            "transitionNodeId": "close_scheduled",
+            "value": null,
+            "values": null
+          }
+        ],
+        "type": "function"
+      },
+      {
+        "id": "disposition_after_transfer",
+        "name": "Report resolved after the transfer attempt",
+        "nodeData": {
+          "functionId": "d04a30e7-4fc4-49ba-b4a7-7ed4a2de646d",
+          "includeTranscript": false,
+          "inputs": [
+            {
+              "name": "category",
+              "value": "{{node.greet_intake.answer}}"
+            },
+            {
+              "name": "disposition",
+              "value": "resolved"
+            },
+            {
+              "name": "summary",
+              "value": "Caller was helped and the call was completed."
+            }
+          ],
+          "outputs": [
+            {
+              "customFieldJsonSchema": null,
+              "customFieldTs": null,
+              "description": "recorded",
+              "name": "status",
+              "nullable": false,
+              "type": "STRING"
+            }
+          ]
+        },
+        "outputSchema": "{\"properties\":{\"status\":{\"additionalProperties\":false,\"type\":\"string\",\"description\":\"recorded\"}},\"additionalProperties\":false,\"type\":\"object\",\"required\":[\"status\"]}",
+        "transitionRules": [
+          {
+            "arrayConditionType": null,
+            "conditionType": "always",
+            "field": null,
+            "transitionNodeId": "close_transferred",
+            "value": null,
+            "values": null
+          }
+        ],
+        "type": "function"
       }
     ],
     "openingLineType": "INBOUND_OUTBOUND"
   },
-  "id": "c32acdd0-3637-43ad-bf10-4b523b7ac3a5",
+  "id": "139c8c53-d3c9-42c9-92f8-07611abdcb30",
   "modelOptionValues": [
     {
       "optionId": "temperature",
-      "value": "0.2"
+      "value": "1.0"
     },
     {
       "optionId": "max_tokens",
