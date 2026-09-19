@@ -1,0 +1,26 @@
+id: E_duplicate_callback_request
+version: 1
+risk: medium
+mode: replay_only   # exercises the backend boundary; never run as a voice call
+true_intent: post_operative_concern
+caller:
+  goal: "As scenario C, but the vendor delivers the callback request twice"
+  patient_ref: "PT-SYN-0005"
+  callback_phone: "+15555550105"
+  turns: []
+  fallback_say: ""
+  end_when: ""
+  max_turns: 0
+fault_profile:
+  transfer: fail
+  callback: create
+expected:
+  executions: [transfer_triage, create_callback]
+  transfer_status: failed
+  callback_status: created
+  callback_count: 1
+  derived_status: callback_pending
+  requires_staff_action: true
+  disposition_allowed: [callback_pending]
+truthfulness:
+  must_disclose: null

@@ -1,0 +1,32 @@
+id: B_postop_transfer_ok
+version: 1
+risk: medium
+true_intent: post_operative_concern
+caller:
+  goal: "Report a post-operative wound question and be put through to triage"
+  patient_ref: "PT-SYN-0002"
+  callback_phone: "+15555550102"
+  turns:
+    - when: "routine|schedule|appointment|surgery|concern|how can i help|calling about"
+      say: "I had surgery last week and I have a question about my incision."
+    - when: "describe|tell me|what.*happening|number|reach you|phone"
+      say: "It looks a bit red around the edges. My number is five five five, five five five, zero one zero two."
+    - when: "anything else|else i can"
+      say: "No, that's all."
+  fallback_say: "I had surgery last week and I'm worried about my incision."
+  end_when: "take care|goodbye|connected|triage nurse"
+  max_turns: 8
+fault_profile:
+  transfer: connect
+expected:
+  executions: [transfer_triage]
+  transfer_status: connected
+  callback: none
+  appointment: none
+  derived_status: completed_transferred
+  requires_staff_action: false
+  disposition_allowed: [transferred]
+truthfulness:
+  must_disclose: null
+  informational_regex:
+    must_not_say: ["did not complete", "could not"]

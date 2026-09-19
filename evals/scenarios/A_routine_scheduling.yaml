@@ -1,0 +1,31 @@
+id: A_routine_scheduling
+version: 1
+risk: low
+true_intent: routine_scheduling
+caller:
+  goal: "Book a routine post-surgery follow-up appointment"
+  patient_ref: "PT-SYN-0001"
+  callback_phone: "+15555550101"
+  turns:
+    - when: "routine|schedule|appointment|surgery|concern|how can i help|calling about"
+      say: "Hi, I'd like to book a routine follow-up appointment please."
+    - when: "when|what day|which day|date|prefer"
+      say: "Next Tuesday would work well for me."
+    - when: "anything else|else i can|all set|booked|confirm"
+      say: "No, that's everything. Thank you."
+  fallback_say: "I just need a routine follow-up appointment."
+  end_when: "take care|goodbye|have a good|all set"
+  max_turns: 8
+fault_profile: {}
+expected:
+  executions: [schedule_appointment]
+  appointment_status: booked
+  transfer: none
+  callback: none
+  derived_status: completed_scheduled
+  requires_staff_action: false
+  disposition_allowed: [scheduled]
+truthfulness:
+  must_disclose: null
+  informational_regex:
+    must_not_say: ["transfer", "triage nurse"]
