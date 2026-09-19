@@ -1,0 +1,192 @@
+{
+  "agent": {
+    "defaultExtractorId": null,
+    "defaultVersionedPromptId": "b27a8ced-35c7-4d44-bb63-a0469bcde061",
+    "defaultVoiceId": "94c32748-865f-42e1-bb1a-3a6b4abc7d11",
+    "endpointDetectorConfig": {
+      "mode": "DEFAULT",
+      "type": "SEMANTIC"
+    },
+    "fillEmptyStringVariables": false,
+    "id": "b3d8f0c2-c96e-4a37-b023-ce1d0d99a82d",
+    "idleMessageConfig": {
+      "enabled": false,
+      "idleDurationMilliseconds": 0,
+      "maxIdleMessages": 0
+    },
+    "ivrConfiguration": null,
+    "ivrSilenceHangupConfiguration": null,
+    "language": "en",
+    "maxDurationSeconds": 10800,
+    "name": "CareFlow Demo Surgical",
+    "silenceHangupConfiguration": {
+      "silenceDurationSeconds": 0,
+      "type": "DISABLED"
+    },
+    "timeoutBehaviorConfiguration": {
+      "behavior": "HANGUP",
+      "transferNumber": null
+    },
+    "timeoutMessage": null,
+    "transcriberParams": {
+      "type": "deepgram"
+    },
+    "utteranceDetectorConfig": {
+      "interruptionPlayTimeMs": 1000,
+      "sensitivity": "MEDIUM"
+    },
+    "voicemailConfig": {
+      "detection": "DISABLE",
+      "message": null
+    }
+  },
+  "aiDurationSeconds": 100,
+  "aiResult": {
+    "collect_concern": {
+      "answer": "The caller had surgery on Tuesday, the surgery went fine, and now they are bleeding."
+    },
+    "collect_phone": {
+      "answer": "5555550103"
+    },
+    "greet_intake": {
+      "answer": "post_op"
+    },
+    "transfer": {
+      "agent_message": "The triage line did not answer.",
+      "failure_reason": "no_answer",
+      "status": "failed"
+    }
+  },
+  "durationSeconds": 100,
+  "endedAt": "2026-09-19T20:41:35.862223Z",
+  "id": "7645362a-bdb4-4329-bd8a-9099508915a9",
+  "inputs": {
+    "callback_phone": "+15555550103",
+    "evaluation_run_id": "2529341c-dfa1-4a00-afb8-b72e1034f820",
+    "patient_ref": "PT-SYN-0003",
+    "scenario_id": "C_postop_transfer_fail_callback"
+  },
+  "recordings": [
+    {
+      "url": "https://api.vogent.ai/api/recordings/d7a745e4-3ce4-47bc-ac6d-e9453cddf19e"
+    }
+  ],
+  "startedAt": "2026-09-19T20:39:55.314391Z",
+  "status": "completed",
+  "systemResultType": "USER_HANGUP",
+  "transcript": [
+    {
+      "detailType": null,
+      "endTimeMs": 4052,
+      "speaker": "AI",
+      "startTimeMs": 660,
+      "text": "Thanks for calling Demo Surgical Associates. Are"
+    },
+    {
+      "detailType": null,
+      "endTimeMs": 6330,
+      "speaker": "HUMAN",
+      "startTimeMs": 2720,
+      "text": "I had surgery on Tuesday. My surgery went this bleeding."
+    },
+    {
+      "detailType": "node-transition",
+      "functionCallId": "call_4PyUdmT5aYRi03arfrHScpb7",
+      "nodeTransition": {
+        "toNodeId": "collect_concern",
+        "transitionData": {
+          "answer": "post_op"
+        }
+      },
+      "speaker": "AI",
+      "text": ""
+    },
+    {
+      "detailType": "node-transition",
+      "functionCallId": "call_wzYLnOQYpp3Ga7A8Q4uy74Lu",
+      "nodeTransition": {
+        "toNodeId": "collect_phone",
+        "transitionData": {
+          "answer": "The caller had surgery on Tuesday, the surgery went fine, and now they are bleeding."
+        }
+      },
+      "speaker": "AI",
+      "text": ""
+    },
+    {
+      "detailType": null,
+      "endTimeMs": 10840,
+      "speaker": "AI",
+      "startTimeMs": 8360,
+      "text": "What's the best number to reach you on?"
+    },
+    {
+      "detailType": null,
+      "endTimeMs": 16910,
+      "speaker": "HUMAN",
+      "startTimeMs": 10230,
+      "text": "It started this morning. You can reach me at 5 5 5 5 5 5 0 1 0 3."
+    },
+    {
+      "detailType": "node-transition",
+      "functionCallId": "call_3XtbUdlcYiQLW5AZwdACtOBc",
+      "nodeTransition": {
+        "toNodeId": "transfer",
+        "transitionData": {
+          "answer": "5555550103"
+        }
+      },
+      "speaker": "AI",
+      "text": ""
+    },
+    {
+      "detailType": null,
+      "functionCalls": [
+        {
+          "args": "{\"callback_phone\":\"5555550103\",\"concern_summary\":\"The caller had surgery on Tuesday, the surgery went fine, and now they are bleeding.\"}",
+          "functionCallId": "c88d8337-0004-47af-9f01-9f10928fd50d",
+          "name": "Attempt transfer to triage"
+        }
+      ],
+      "speaker": "AI",
+      "text": ""
+    },
+    {
+      "detailType": "node-transition",
+      "functionCallId": "call_3XtbUdlcYiQLW5AZwdACtOBc",
+      "nodeTransition": {
+        "toNodeId": "transfer_outcome_notice",
+        "transitionData": {
+          "agent_message": "The triage line did not answer.",
+          "failure_reason": "no_answer",
+          "status": "failed"
+        }
+      },
+      "speaker": "AI",
+      "text": ""
+    },
+    {
+      "detailType": null,
+      "endTimeMs": 27200,
+      "speaker": "AI",
+      "startTimeMs": 22560,
+      "text": "The transfer did not complete, and I am requesting an urgent callback for you now."
+    },
+    {
+      "detailType": null,
+      "endTimeMs": 35070,
+      "speaker": "HUMAN",
+      "startTimeMs": 32090,
+      "text": "I had surgery this week, and I'm worried about the incision."
+    },
+    {
+      "detailType": null,
+      "endTimeMs": 40560,
+      "speaker": "AI",
+      "startTimeMs": 36160,
+      "text": "The transfer did not complete, and I am requesting an urgent callback for you now."
+    }
+  ],
+  "versionedPromptId": "5ff067e2-d530-487b-bc29-b7f3045111f7",
+  "voiceId": "94c32748-865f-42e1-bb1a-3a6b4abc7d11"
+}

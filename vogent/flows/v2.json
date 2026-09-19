@@ -141,20 +141,6 @@
       "transitionRules": [
         {
           "conditionType": "always",
-          "transitionNodeId": "transfer_outcome_notice"
-        }
-      ]
-    },
-    {
-      "id": "transfer_outcome_notice",
-      "name": "Tell the caller the real transfer outcome",
-      "type": "freeform",
-      "nodeData": {
-        "prompt": "The transfer result was: {{node.transfer.status}}. If that value is exactly 'connected', tell the caller they are now connected with the triage nurse. Otherwise tell them plainly, in one sentence, that the transfer did not complete and that you are requesting an urgent callback for them. Never say they were transferred unless the value is exactly 'connected'. Say this once and then move on immediately. Do not wait for the caller to reply, do not ask a question, and do not repeat yourself."
-      },
-      "transitionRules": [
-        {
-          "conditionType": "always",
           "transitionNodeId": "urgent_callback"
         }
       ]
@@ -190,10 +176,10 @@
     },
     {
       "id": "callback_outcome_notice",
-      "name": "Tell the caller the real callback outcome",
+      "name": "Tell the caller what actually happened",
       "type": "freeform",
       "nodeData": {
-        "prompt": "The callback result was: {{node.urgent_callback.status}}. If that value is exactly 'created', tell the caller a nurse will call them back on the number they gave, and that if their symptoms get worse they should call the office line or emergency services. If it is exactly 'not_needed', say nothing further about a callback and simply close the call warmly. Otherwise tell them plainly that you could not arrange a callback either, and that they should call the office directly, or emergency services if this is an emergency. Never promise a callback unless the value is exactly 'created'. Say this once and then move on immediately. Do not wait for the caller to reply, do not ask a question, and do not repeat yourself."
+        "prompt": "Two results were recorded for this caller. The transfer result was: {{node.transfer.status}}. The callback result was: {{node.urgent_callback.status}}. Tell the caller the truth about both, in at most two short sentences, using these rules. If the transfer result is exactly 'connected', say they are now connected with the triage nurse and say nothing about a callback. Otherwise say plainly that the transfer did not complete. Then, if the callback result is exactly 'created', say a nurse will call them back on the number they gave and that they should call the office line or emergency services if their symptoms get worse. If the callback result is anything else, say plainly that you could not arrange a callback either and that they should call the office directly, or emergency services if this is an emergency. Never say they were transferred unless the transfer result is exactly 'connected'. Never say anyone will call them back unless the callback result is exactly 'created'. Then say goodbye and end the call."
       },
       "transitionRules": [
         {
