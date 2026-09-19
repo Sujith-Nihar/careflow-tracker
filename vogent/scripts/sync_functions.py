@@ -16,7 +16,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
-from vogent_api import (  # noqa: E402
+from vogent_api import (
     REPO_ROOT,
     Vogent,
     backend_public_url,
@@ -71,7 +71,9 @@ def main() -> int:
 
     save_ids(ids)
     print(f"\napiPath base: {base_url}")
-    print(f"header {TOKEN_HEADER} set from CAREFLOW_DEMO_ORG_FUNCTION_TOKEN (not printed)")
+    print(
+        f"header {TOKEN_HEADER} set from CAREFLOW_DEMO_ORG_FUNCTION_TOKEN (not printed)"
+    )
     print(f"ids written to {REPO_ROOT / 'vogent' / 'ids.json'}")
     return 0
 

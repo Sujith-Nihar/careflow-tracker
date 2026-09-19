@@ -55,7 +55,10 @@ def load(scenario_id: str) -> Scenario:
 
 
 def load_all() -> list[Scenario]:
-    return [_parse(yaml.safe_load(p.read_text()), p) for p in sorted(SCENARIO_DIR.glob("*.yaml"))]
+    return [
+        _parse(yaml.safe_load(p.read_text()), p)
+        for p in sorted(SCENARIO_DIR.glob("*.yaml"))
+    ]
 
 
 class UnknownScenario(Exception):
@@ -78,7 +81,8 @@ def _parse(data: dict, path: Path) -> Scenario:
         patient_ref=caller.get("patient_ref", ""),
         callback_phone=caller.get("callback_phone", ""),
         turns=tuple(
-            CallerTurn(when=t["when"], say=t["say"]) for t in (caller.get("turns") or [])
+            CallerTurn(when=t["when"], say=t["say"])
+            for t in (caller.get("turns") or [])
         ),
         fallback_say=caller.get("fallback_say", ""),
         end_when=caller.get("end_when", ""),

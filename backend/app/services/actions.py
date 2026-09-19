@@ -45,16 +45,26 @@ def run_action(
 
     if existing is not None:
         return _handle_repeat(
-            conn, existing=existing, organization_id=organization_id,
-            call_id=str(call["id"]), kind=kind, params=params, request_id=request_id,
+            conn,
+            existing=existing,
+            organization_id=organization_id,
+            call_id=str(call["id"]),
+            kind=kind,
+            params=params,
+            request_id=request_id,
         )
 
     try:
         # A savepoint, so losing the race does not abort the surrounding transaction.
         with conn.transaction():
             execution = repo.insert_requested_execution(
-                conn, call_id=str(call["id"]), organization_id=organization_id, kind=kind,
-                key=key, request_payload=params, request_id=request_id,
+                conn,
+                call_id=str(call["id"]),
+                organization_id=organization_id,
+                kind=kind,
+                key=key,
+                request_payload=params,
+                request_id=request_id,
                 transcript_snapshot=transcript_snapshot,
             )
     except pg_errors.UniqueViolation:
@@ -63,8 +73,13 @@ def run_action(
         if existing is None:
             raise
         return _handle_repeat(
-            conn, existing=existing, organization_id=organization_id,
-            call_id=str(call["id"]), kind=kind, params=params, request_id=request_id,
+            conn,
+            existing=existing,
+            organization_id=organization_id,
+            call_id=str(call["id"]),
+            kind=kind,
+            params=params,
+            request_id=request_id,
         )
 
     execution_id = str(execution["id"])
@@ -75,8 +90,12 @@ def run_action(
 
     for attempt in result.attempts:
         log.info(
-            "action.attempt", kind=kind, action_execution_id=execution_id,
-            attempt_no=attempt.attempt_no, latency_ms=attempt.latency_ms, status=attempt.result,
+            "action.attempt",
+            kind=kind,
+            action_execution_id=execution_id,
+            attempt_no=attempt.attempt_no,
+            latency_ms=attempt.latency_ms,
+            status=attempt.result,
         )
 
     downstream_ref: str | None = None
@@ -85,12 +104,19 @@ def run_action(
 
     body = _response_body(result, downstream_ref=downstream_ref, kind=kind)
     repo.complete_execution(
-        conn, execution_id=execution_id, outcome=str(result.outcome),
-        response_payload=body, attempts=result.attempts_as_dicts(), downstream_ref=downstream_ref,
+        conn,
+        execution_id=execution_id,
+        outcome=str(result.outcome),
+        response_payload=body,
+        attempts=result.attempts_as_dicts(),
+        downstream_ref=downstream_ref,
     )
     log.info(
-        "action.completed", kind=kind, action_execution_id=execution_id,
-        outcome=str(result.outcome), status=result.status,
+        "action.completed",
+        kind=kind,
+        action_execution_id=execution_id,
+        outcome=str(result.outcome),
+        status=result.status,
     )
     return body
 
@@ -117,24 +143,41 @@ def rejected_action(
         return dict(existing["response_payload"])
 
     execution = repo.insert_requested_execution(
-        conn, call_id=str(call["id"]), organization_id=organization_id, kind=kind,
-        key=key, request_payload=params, request_id=request_id,
+        conn,
+        call_id=str(call["id"]),
+        organization_id=organization_id,
+        kind=kind,
+        key=key,
+        request_payload=params,
+        request_id=request_id,
     )
     body = {"status": "invalid_input", "agent_message": agent_message}
     repo.complete_execution(
-        conn, execution_id=str(execution["id"]), outcome=str(ActionOutcome.REJECTED),
-        response_payload=body, attempts=[],
+        conn,
+        execution_id=str(execution["id"]),
+        outcome=str(ActionOutcome.REJECTED),
+        response_payload=body,
+        attempts=[],
     )
     log.info(
-        "action.completed", kind=kind, action_execution_id=str(execution["id"]),
-        outcome=str(ActionOutcome.REJECTED), status="invalid_input",
+        "action.completed",
+        kind=kind,
+        action_execution_id=str(execution["id"]),
+        outcome=str(ActionOutcome.REJECTED),
+        status="invalid_input",
     )
     return body
 
 
 def _handle_repeat(
-    conn: psycopg.Connection, *, existing: dict, organization_id: str, call_id: str,
-    kind: str, params: dict, request_id: str | None,
+    conn: psycopg.Connection,
+    *,
+    existing: dict,
+    organization_id: str,
+    call_id: str,
+    kind: str,
+    params: dict,
+    request_id: str | None,
 ) -> dict[str, Any]:
     """Answer a repeated request without performing the action a second time.
 
@@ -155,19 +198,29 @@ def _handle_repeat(
 
     stored = dict(existing["response_payload"] or {})
     repeat = repo.insert_requested_execution(
-        conn, call_id=call_id, organization_id=organization_id, kind=kind,
+        conn,
+        call_id=call_id,
+        organization_id=organization_id,
+        kind=kind,
         key=f"{existing['idempotency_key']}:repeat:{uuid.uuid4().hex[:8]}",
-        request_payload=params, request_id=request_id,
+        request_payload=params,
+        request_id=request_id,
     )
     repo.complete_execution(
-        conn, execution_id=str(repeat["id"]), outcome=existing["outcome"],
-        response_payload=stored, attempts=[],
+        conn,
+        execution_id=str(repeat["id"]),
+        outcome=existing["outcome"],
+        response_payload=stored,
+        attempts=[],
         downstream_ref=existing["downstream_ref"],
     )
     repo.mark_duplicate(conn, str(repeat["id"]), original_id)
     log.info(
-        "action.completed", kind=kind, action_execution_id=str(repeat["id"]),
-        outcome=existing["outcome"], duplicate=True,
+        "action.completed",
+        kind=kind,
+        action_execution_id=str(repeat["id"]),
+        outcome=existing["outcome"],
+        duplicate=True,
     )
     return stored
 

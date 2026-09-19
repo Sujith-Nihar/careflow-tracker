@@ -33,7 +33,9 @@ Owner of: every HTTP contract the backend exposes. Three surfaces in one app: Vo
 | GET | `/api/calls/by-dial/<dial_id>` | UI, runner | Resolve a Vogent dial to a call id |
 | GET | `/api/calls/<call_id>` | UI, runner | Full evidence bundle + derived status |
 | POST | `/api/calls/<call_id>/staff-actions` | UI | `callback_completed` or `reviewed` |
-| POST | `/api/evaluation-runs` · PATCH `/api/evaluation-runs/<id>` · POST `/api/evaluation-runs/<id>/cases` | Runner, worker | Persist run and case results |
+| POST | `/api/evaluation-runs` | Runner, worker | Open a run (caller supplies the id so artifacts and rows match) |
+| POST | `/api/evaluation-runs/<id>/cases` | Runner, worker | Record one scenario's outcome; upserts on `(run, scenario)` |
+| PATCH | `/api/evaluation-runs/<id>` | Runner, worker | Close the run as completed or failed |
 | GET | `/api/evaluation-runs/<id>` | UI (optional), reviewer | Run summary and cases |
 | GET | `/healthz` | anyone | DB connectivity, git SHA |
 

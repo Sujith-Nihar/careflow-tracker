@@ -67,7 +67,9 @@ def organization_by_webhook_token(conn: psycopg.Connection, token: str) -> dict 
 
 
 def organization_by_id(conn: psycopg.Connection, organization_id: str) -> dict | None:
-    return query_one(conn, "SELECT id, slug, name FROM organizations WHERE id = %s", (organization_id,))
+    return query_one(
+        conn, "SELECT id, slug, name FROM organizations WHERE id = %s", (organization_id,)
+    )
 
 
 def organization_for_agent(conn: psycopg.Connection, vogent_agent_id: str) -> str | None:
@@ -108,11 +110,14 @@ def get_or_create_call(
         "SELECT * FROM calls WHERE organization_id = %s AND dial_id = %s",
         (organization_id, dial_id),
     )
-    profile = query_one(
-        conn,
-        "SELECT scenario_id, evaluation_run_id, true_intent FROM fault_profiles WHERE dial_id = %s",
-        (dial_id,),
-    ) or {}
+    profile = (
+        query_one(
+            conn,
+            "SELECT scenario_id, evaluation_run_id, true_intent FROM fault_profiles WHERE dial_id = %s",
+            (dial_id,),
+        )
+        or {}
+    )
 
     if row:
         # Backfill whatever this caller knows and the row is missing. The vendor's
@@ -131,8 +136,12 @@ def get_or_create_call(
                       updated_at = now()
                 WHERE id = %s""",
             (
-                vogent_agent_id, versioned_prompt_id, profile.get("scenario_id"),
-                profile.get("evaluation_run_id"), profile.get("true_intent"), row["id"],
+                vogent_agent_id,
+                versioned_prompt_id,
+                profile.get("scenario_id"),
+                profile.get("evaluation_run_id"),
+                profile.get("true_intent"),
+                row["id"],
             ),
         )
         return query_one(conn, "SELECT * FROM calls WHERE id = %s", (row["id"],))
@@ -148,8 +157,13 @@ def get_or_create_call(
            ON CONFLICT (dial_id) DO NOTHING
            RETURNING *""",
         (
-            organization_id, dial_id, vogent_agent_id, versioned_prompt_id,
-            profile.get("scenario_id"), profile.get("evaluation_run_id"), profile.get("true_intent"),
+            organization_id,
+            dial_id,
+            vogent_agent_id,
+            versioned_prompt_id,
+            profile.get("scenario_id"),
+            profile.get("evaluation_run_id"),
+            profile.get("true_intent"),
         ),
     )
     if created is not None:
@@ -158,7 +172,8 @@ def get_or_create_call(
     # The other writer won. Take their row, and fill in anything they did not know:
     # a webhook has no scenario, and the runner has no agent id.
     existing = query_one(
-        conn, "SELECT * FROM calls WHERE dial_id = %s AND organization_id = %s",
+        conn,
+        "SELECT * FROM calls WHERE dial_id = %s AND organization_id = %s",
         (dial_id, organization_id),
     )
     if existing is None:
@@ -174,8 +189,12 @@ def get_or_create_call(
                   updated_at = now()
             WHERE id = %s""",
         (
-            vogent_agent_id, versioned_prompt_id, profile.get("scenario_id"),
-            profile.get("evaluation_run_id"), profile.get("true_intent"), existing["id"],
+            vogent_agent_id,
+            versioned_prompt_id,
+            profile.get("scenario_id"),
+            profile.get("evaluation_run_id"),
+            profile.get("true_intent"),
+            existing["id"],
         ),
     )
     return query_one(conn, "SELECT * FROM calls WHERE id = %s", (existing["id"],))
@@ -183,7 +202,9 @@ def get_or_create_call(
 
 def get_call(conn: psycopg.Connection, call_id: str, organization_id: str) -> dict | None:
     return query_one(
-        conn, "SELECT * FROM calls WHERE id = %s AND organization_id = %s", (call_id, organization_id)
+        conn,
+        "SELECT * FROM calls WHERE id = %s AND organization_id = %s",
+        (call_id, organization_id),
     )
 
 
@@ -228,8 +249,14 @@ def finalize_call(
                   updated_at = now()
             WHERE id = %s""",
         (
-            lifecycle, started_at, ended_at, connected_seconds, system_result_type,
-            versioned_prompt_id, json.dumps(transcript) if transcript is not None else None, call_id,
+            lifecycle,
+            started_at,
+            ended_at,
+            connected_seconds,
+            system_result_type,
+            versioned_prompt_id,
+            json.dumps(transcript) if transcript is not None else None,
+            call_id,
         ),
     )
 
@@ -276,8 +303,13 @@ def insert_requested_execution(
            VALUES (%s, %s, %s, %s, %s, %s, %s)
            RETURNING *""",
         (
-            call_id, organization_id, kind, key, json.dumps(request_payload),
-            json.dumps(transcript_snapshot) if transcript_snapshot else None, request_id,
+            call_id,
+            organization_id,
+            kind,
+            key,
+            json.dumps(request_payload),
+            json.dumps(transcript_snapshot) if transcript_snapshot else None,
+            request_id,
         ),
     )
 
@@ -303,15 +335,20 @@ def complete_execution(
 
 def mark_duplicate(conn: psycopg.Connection, execution_id: str, original_id: str) -> None:
     execute(
-        conn, "UPDATE action_executions SET duplicate_of_id = %s WHERE id = %s",
+        conn,
+        "UPDATE action_executions SET duplicate_of_id = %s WHERE id = %s",
         (original_id, execution_id),
     )
 
 
 # ------------------------------------------------- simulated downstream systems
 def insert_appointment(
-    conn: psycopg.Connection, *, organization_id: str, execution_id: str,
-    patient_ref: str, slot: datetime,
+    conn: psycopg.Connection,
+    *,
+    organization_id: str,
+    execution_id: str,
+    patient_ref: str,
+    slot: datetime,
 ) -> dict:
     return query_one(
         conn,
@@ -322,8 +359,13 @@ def insert_appointment(
 
 
 def insert_transfer_session(
-    conn: psycopg.Connection, *, organization_id: str, execution_id: str,
-    status: str, failure_reason: str | None, attempt_no: int = 1,
+    conn: psycopg.Connection,
+    *,
+    organization_id: str,
+    execution_id: str,
+    status: str,
+    failure_reason: str | None,
+    attempt_no: int = 1,
 ) -> dict:
     return query_one(
         conn,
@@ -335,8 +377,13 @@ def insert_transfer_session(
 
 
 def insert_callback_request(
-    conn: psycopg.Connection, *, organization_id: str, execution_id: str,
-    patient_ref: str, priority: str, reason_code: str,
+    conn: psycopg.Connection,
+    *,
+    organization_id: str,
+    execution_id: str,
+    patient_ref: str,
+    priority: str,
+    reason_code: str,
 ) -> dict:
     return query_one(
         conn,
@@ -362,8 +409,15 @@ def complete_callback(
 
 # ------------------------------------------------------------- agent statements
 def insert_statement(
-    conn: psycopg.Connection, *, call_id: str, organization_id: str, kind: str, source: str,
-    sequence_no: int, disposition: str | None = None, evidence_text: str | None = None,
+    conn: psycopg.Connection,
+    *,
+    call_id: str,
+    organization_id: str,
+    kind: str,
+    source: str,
+    sequence_no: int,
+    disposition: str | None = None,
+    evidence_text: str | None = None,
     rules_version: int | None = None,
 ) -> None:
     execute(
@@ -372,14 +426,26 @@ def insert_statement(
                (call_id, organization_id, kind, source, sequence_no, disposition,
                 evidence_text, rules_version)
            VALUES (%s, %s, %s, %s, %s, %s, %s, %s)""",
-        (call_id, organization_id, kind, source, sequence_no, disposition,
-         evidence_text, rules_version),
+        (
+            call_id,
+            organization_id,
+            kind,
+            source,
+            sequence_no,
+            disposition,
+            evidence_text,
+            rules_version,
+        ),
     )
 
 
 def replace_transcript_statements(
-    conn: psycopg.Connection, *, call_id: str, organization_id: str,
-    statements: list[AgentStatement], rules_version: int,
+    conn: psycopg.Connection,
+    *,
+    call_id: str,
+    organization_id: str,
+    statements: list[AgentStatement],
+    rules_version: int,
 ) -> None:
     """Re-scoring a transcript replaces only the rule-derived statements.
 
@@ -393,20 +459,32 @@ def replace_transcript_statements(
     )
     for statement in statements:
         insert_statement(
-            conn, call_id=call_id, organization_id=organization_id, kind=str(statement.kind),
-            source=str(statement.source), sequence_no=statement.sequence_no,
-            evidence_text=statement.evidence_text, rules_version=rules_version,
+            conn,
+            call_id=call_id,
+            organization_id=organization_id,
+            kind=str(statement.kind),
+            source=str(statement.source),
+            sequence_no=statement.sequence_no,
+            evidence_text=statement.evidence_text,
+            rules_version=rules_version,
         )
 
 
 # ----------------------------------------------------------------- vogent events
 def append_event(
-    conn: psycopg.Connection, *, organization_id: str | None, dial_id: str | None,
-    event_type: str, payload: dict, rejected_reason: str | None = None,
+    conn: psycopg.Connection,
+    *,
+    organization_id: str | None,
+    dial_id: str | None,
+    event_type: str,
+    payload: dict,
+    rejected_reason: str | None = None,
 ) -> bool:
     """Append a raw vendor event. Returns False when it is a duplicate delivery."""
     dedupe = hashlib.sha256(
-        json.dumps({"t": event_type, "d": dial_id, "p": payload}, sort_keys=True, default=str).encode()
+        json.dumps(
+            {"t": event_type, "d": dial_id, "p": payload}, sort_keys=True, default=str
+        ).encode()
     ).hexdigest()
     row = query_one(
         conn,
@@ -415,15 +493,29 @@ def append_event(
            VALUES (%s, %s, %s, %s, %s, %s)
            ON CONFLICT (dedupe_key) DO NOTHING
            RETURNING id""",
-        (organization_id, dial_id, event_type, dedupe, json.dumps(payload, default=str), rejected_reason),
+        (
+            organization_id,
+            dial_id,
+            event_type,
+            dedupe,
+            json.dumps(payload, default=str),
+            rejected_reason,
+        ),
     )
     return row is not None
 
 
 # ---------------------------------------------------------------- fault profiles
 def register_fault_profile(
-    conn: psycopg.Connection, *, dial_id: str, organization_id: str, scenario_id: str,
-    scenario_version: int, evaluation_run_id: str | None, true_intent: str | None, profile: dict,
+    conn: psycopg.Connection,
+    *,
+    dial_id: str,
+    organization_id: str,
+    scenario_id: str,
+    scenario_version: int,
+    evaluation_run_id: str | None,
+    true_intent: str | None,
+    profile: dict,
 ) -> None:
     execute(
         conn,
@@ -436,8 +528,15 @@ def register_fault_profile(
                    evaluation_run_id = EXCLUDED.evaluation_run_id,
                    true_intent = EXCLUDED.true_intent,
                    profile = EXCLUDED.profile""",
-        (dial_id, organization_id, scenario_id, scenario_version, evaluation_run_id,
-         true_intent, json.dumps(profile)),
+        (
+            dial_id,
+            organization_id,
+            scenario_id,
+            scenario_version,
+            evaluation_run_id,
+            true_intent,
+            json.dumps(profile),
+        ),
     )
 
 
@@ -448,8 +547,14 @@ def get_fault_profile(conn: psycopg.Connection, dial_id: str) -> dict:
 
 # ----------------------------------------------------------------- staff actions
 def insert_staff_action(
-    conn: psycopg.Connection, *, call_id: str, organization_id: str, actor: str,
-    kind: str, target_callback_id: str | None, note: str | None,
+    conn: psycopg.Connection,
+    *,
+    call_id: str,
+    organization_id: str,
+    actor: str,
+    kind: str,
+    target_callback_id: str | None,
+    note: str | None,
 ) -> dict:
     return query_one(
         conn,
@@ -460,7 +565,9 @@ def insert_staff_action(
 
 
 # -------------------------------------------------------------- evidence bundle
-def load_evidence(conn: psycopg.Connection, call_id: str, organization_id: str) -> CallEvidence | None:
+def load_evidence(
+    conn: psycopg.Connection, call_id: str, organization_id: str
+) -> CallEvidence | None:
     """Assemble everything derivation is allowed to see, scoped to one organization."""
     call_row = get_call(conn, call_id, organization_id)
     if call_row is None:
@@ -481,7 +588,7 @@ def load_evidence(conn: psycopg.Connection, call_id: str, organization_id: str) 
     callbacks: list[dict] = []
     if execution_ids:
         appointments = query_all(
-        conn,
+            conn,
             "SELECT * FROM appointments WHERE organization_id = %s"
             " AND action_execution_id = ANY(%s::uuid[])",
             (organization_id, execution_ids),
@@ -518,7 +625,8 @@ def load_evidence(conn: psycopg.Connection, call_id: str, organization_id: str) 
             lifecycle=Lifecycle(call_row["lifecycle"]),
             agent_classified_intent=(
                 Intent(call_row["agent_classified_intent"])
-                if call_row["agent_classified_intent"] else None
+                if call_row["agent_classified_intent"]
+                else None
             ),
         ),
         action_executions=tuple(
@@ -599,7 +707,8 @@ def load_evidence_bulk(
         return {}
 
     calls = query_all(
-        conn, "SELECT * FROM calls WHERE organization_id = %s AND id = ANY(%s::uuid[])",
+        conn,
+        "SELECT * FROM calls WHERE organization_id = %s AND id = ANY(%s::uuid[])",
         (organization_id, call_ids),
     )
     executions = query_all(
@@ -665,9 +774,7 @@ def load_evidence_bulk(
     for row in staff:
         grouped[str(row["call_id"])]["staff"].append(row)
 
-    return {
-        str(call["id"]): _build_evidence(call, grouped[str(call["id"])]) for call in calls
-    }
+    return {str(call["id"]): _build_evidence(call, grouped[str(call["id"])]) for call in calls}
 
 
 def _build_evidence(call_row: dict, parts: dict[str, list]) -> CallEvidence:
@@ -678,24 +785,35 @@ def _build_evidence(call_row: dict, parts: dict[str, list]) -> CallEvidence:
             lifecycle=Lifecycle(call_row["lifecycle"]),
             agent_classified_intent=(
                 Intent(call_row["agent_classified_intent"])
-                if call_row["agent_classified_intent"] else None
+                if call_row["agent_classified_intent"]
+                else None
             ),
         ),
         action_executions=tuple(_execution(r) for r in parts["exec"]),
         appointments=tuple(
-            Appointment(id=str(r["id"]), action_execution_id=str(r["action_execution_id"]),
-                        status=AppointmentStatus(r["status"]))
+            Appointment(
+                id=str(r["id"]),
+                action_execution_id=str(r["action_execution_id"]),
+                status=AppointmentStatus(r["status"]),
+            )
             for r in parts["appt"]
         ),
         transfer_sessions=tuple(
-            TransferSession(id=str(r["id"]), action_execution_id=str(r["action_execution_id"]),
-                            status=TransferStatus(r["status"]), failure_reason=r["failure_reason"])
+            TransferSession(
+                id=str(r["id"]),
+                action_execution_id=str(r["action_execution_id"]),
+                status=TransferStatus(r["status"]),
+                failure_reason=r["failure_reason"],
+            )
             for r in parts["xfer"]
         ),
         callback_requests=tuple(
-            CallbackRequest(id=str(r["id"]), action_execution_id=str(r["action_execution_id"]),
-                            status=CallbackStatus(r["status"]),
-                            priority=CallbackPriority(r["priority"]))
+            CallbackRequest(
+                id=str(r["id"]),
+                action_execution_id=str(r["action_execution_id"]),
+                status=CallbackStatus(r["status"]),
+                priority=CallbackPriority(r["priority"]),
+            )
             for r in parts["cb"]
         ),
         agent_statements=tuple(_statement(r) for r in parts["stmt"]),
@@ -705,8 +823,11 @@ def _build_evidence(call_row: dict, parts: dict[str, list]) -> CallEvidence:
 
 def _execution(row: dict) -> ActionExecution:
     return ActionExecution(
-        id=str(row["id"]), kind=ActionKind(row["kind"]), outcome=ActionOutcome(row["outcome"]),
-        requested_at=row["requested_at"], completed_at=row["completed_at"],
+        id=str(row["id"]),
+        kind=ActionKind(row["kind"]),
+        outcome=ActionOutcome(row["outcome"]),
+        requested_at=row["requested_at"],
+        completed_at=row["completed_at"],
         downstream_ref=row["downstream_ref"],
         duplicate_of_id=str(row["duplicate_of_id"]) if row["duplicate_of_id"] else None,
     )
@@ -714,8 +835,11 @@ def _execution(row: dict) -> ActionExecution:
 
 def _statement(row: dict) -> AgentStatement:
     return AgentStatement(
-        id=str(row["id"]), kind=StatementKind(row["kind"]), source=StatementSource(row["source"]),
-        observed_at=row["observed_at"], sequence_no=row["sequence_no"],
+        id=str(row["id"]),
+        kind=StatementKind(row["kind"]),
+        source=StatementSource(row["source"]),
+        observed_at=row["observed_at"],
+        sequence_no=row["sequence_no"],
         disposition=Disposition(row["disposition"]) if row["disposition"] else None,
         evidence_text=row["evidence_text"],
     )
@@ -723,13 +847,17 @@ def _statement(row: dict) -> AgentStatement:
 
 def _staff_action(row: dict) -> StaffAction:
     return StaffAction(
-        id=str(row["id"]), kind=StaffActionKind(row["kind"]), created_at=row["created_at"],
+        id=str(row["id"]),
+        kind=StaffActionKind(row["kind"]),
+        created_at=row["created_at"],
         target_callback_id=str(row["target_callback_id"]) if row["target_callback_id"] else None,
         actor=row["actor"],
     )
 
 
-def raw_evidence_rows(conn: psycopg.Connection, call_id: str, organization_id: str) -> dict[str, Any]:
+def raw_evidence_rows(
+    conn: psycopg.Connection, call_id: str, organization_id: str
+) -> dict[str, Any]:
     """The same rows with their payloads, for the investigation UI and artifacts."""
     executions = query_all(
         conn,
@@ -738,3 +866,102 @@ def raw_evidence_rows(conn: psycopg.Connection, call_id: str, organization_id: s
         (call_id, organization_id),
     )
     return {"action_executions": executions}
+
+
+# ------------------------------------------------------------- evaluation runs
+def create_evaluation_run(
+    conn: psycopg.Connection,
+    *,
+    organization_id: str,
+    suite: str,
+    strategy: str,
+    versioned_prompt_id: str | None,
+    backend_git_sha: str | None,
+    rate_usd_per_second: float | None,
+    rate_source: str | None,
+    cost_label: str,
+    job_id: str | None = None,
+    run_id: str | None = None,
+) -> dict:
+    """Open a run. The runner supplies the id so artifacts on disk and rows in the
+    database carry the same identifier without a round trip first."""
+    return query_one(
+        conn,
+        """INSERT INTO evaluation_runs
+               (id, organization_id, suite, strategy, versioned_prompt_id, backend_git_sha,
+                rate_usd_per_second, rate_source, cost_label, job_id)
+           VALUES (COALESCE(%s::uuid, gen_random_uuid()), %s, %s, %s, %s, %s, %s, %s, %s, %s)
+           ON CONFLICT (id) DO UPDATE SET strategy = EXCLUDED.strategy
+           RETURNING *""",
+        (run_id, organization_id, suite, strategy, versioned_prompt_id, backend_git_sha,
+         rate_usd_per_second, rate_source, cost_label, job_id),
+    )
+
+
+def close_evaluation_run(
+    conn: psycopg.Connection, *, run_id: str, organization_id: str,
+    status: str, wall_seconds: float | None, error: str | None = None,
+) -> None:
+    execute(
+        conn,
+        """UPDATE evaluation_runs
+              SET status = %s, wall_seconds = %s, error = %s, ended_at = now()
+            WHERE id = %s AND organization_id = %s""",
+        (status, wall_seconds, error, run_id, organization_id),
+    )
+
+
+def record_evaluation_case(
+    conn: psycopg.Connection,
+    *,
+    run_id: str,
+    organization_id: str,
+    scenario_id: str,
+    scenario_version: int,
+    mode: str,
+    passed: bool | None,
+    metrics: dict,
+    dial_id: str | None = None,
+    call_id: str | None = None,
+    wall_seconds: float | None = None,
+    connected_seconds: int | None = None,
+    cost_usd: float | None = None,
+    artifact_path: str | None = None,
+    cache_key: str | None = None,
+) -> dict:
+    return query_one(
+        conn,
+        """INSERT INTO evaluation_cases
+               (run_id, organization_id, scenario_id, scenario_version, mode, dial_id, call_id,
+                passed, metrics, wall_seconds, connected_seconds, cost_usd, artifact_path,
+                cache_key, started_at, ended_at)
+           VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, now(), now())
+           ON CONFLICT (run_id, scenario_id) DO UPDATE
+               SET passed = EXCLUDED.passed, metrics = EXCLUDED.metrics,
+                   mode = EXCLUDED.mode, dial_id = EXCLUDED.dial_id, call_id = EXCLUDED.call_id,
+                   wall_seconds = EXCLUDED.wall_seconds,
+                   connected_seconds = EXCLUDED.connected_seconds,
+                   cost_usd = EXCLUDED.cost_usd, artifact_path = EXCLUDED.artifact_path,
+                   ended_at = now()
+           RETURNING *""",
+        (run_id, organization_id, scenario_id, scenario_version, mode, dial_id, call_id,
+         passed, json.dumps(metrics, default=str), wall_seconds, connected_seconds, cost_usd,
+         artifact_path, cache_key),
+    )
+
+
+def get_evaluation_run(conn: psycopg.Connection, run_id: str, organization_id: str) -> dict | None:
+    run = query_one(
+        conn,
+        "SELECT * FROM evaluation_runs WHERE id = %s AND organization_id = %s",
+        (run_id, organization_id),
+    )
+    if run is None:
+        return None
+    run["cases"] = query_all(
+        conn,
+        """SELECT * FROM evaluation_cases
+            WHERE run_id = %s AND organization_id = %s ORDER BY scenario_id""",
+        (run_id, organization_id),
+    )
+    return run

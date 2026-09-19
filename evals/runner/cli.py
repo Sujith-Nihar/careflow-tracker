@@ -17,11 +17,11 @@ from pathlib import Path
 REPO_ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(REPO_ROOT / "scripts"))
 
-from _env import load_env, require  # noqa: E402
+from _env import load_env, require
 
-from .metrics import evaluate  # noqa: E402
-from .replay import BackendClient, replay  # noqa: E402
-from .scenarios import UnknownScenario, load, load_all  # noqa: E402
+from .metrics import evaluate
+from .replay import BackendClient, replay
+from .scenarios import UnknownScenario, load, load_all
 
 
 def build_client() -> BackendClient:
@@ -36,13 +36,17 @@ def build_client() -> BackendClient:
 
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description="Replay scenarios through the backend")
-    parser.add_argument("--scenarios", help="comma-separated scenario ids (default: all)")
+    parser.add_argument(
+        "--scenarios", help="comma-separated scenario ids (default: all)"
+    )
     parser.add_argument("--artifacts", help="directory to write per-case evidence into")
     args = parser.parse_args(argv)
 
     try:
         scenarios = (
-            [load(s.strip()) for s in args.scenarios.split(",")] if args.scenarios else load_all()
+            [load(s.strip()) for s in args.scenarios.split(",")]
+            if args.scenarios
+            else load_all()
         )
     except UnknownScenario as exc:
         print(f"error: {exc}", file=sys.stderr)
@@ -73,15 +77,23 @@ def main(argv: list[str] | None = None) -> int:
         if artifacts:
             case_dir = artifacts / run_id / scenario.id
             case_dir.mkdir(parents=True, exist_ok=True)
-            (case_dir / "evidence.json").write_text(json.dumps(outcome["bundle"], indent=2))
-            (case_dir / "functions.json").write_text(json.dumps(outcome["function_calls"], indent=2))
+            (case_dir / "evidence.json").write_text(
+                json.dumps(outcome["bundle"], indent=2)
+            )
+            (case_dir / "functions.json").write_text(
+                json.dumps(outcome["function_calls"], indent=2)
+            )
             (case_dir / "metrics.json").write_text(
                 json.dumps(
                     {
-                        "scenario_id": scenario.id, "scenario_version": scenario.version,
-                        "evaluation_run_id": run_id, "dial_id": outcome["dial_id"],
-                        "mode": "replay", "passed": metrics.passed,
-                        "failures": metrics.failures, "metrics": metrics.values,
+                        "scenario_id": scenario.id,
+                        "scenario_version": scenario.version,
+                        "evaluation_run_id": run_id,
+                        "dial_id": outcome["dial_id"],
+                        "mode": "replay",
+                        "passed": metrics.passed,
+                        "failures": metrics.failures,
+                        "metrics": metrics.values,
                     },
                     indent=2,
                 )
@@ -96,8 +108,17 @@ def main(argv: list[str] | None = None) -> int:
 
 
 def _print_table(rows: list[tuple]) -> None:
-    headers = ("scenario", "result", "derived status", "staff?", "failed metrics", "time")
-    widths = [max(len(str(r[i])) for r in [headers, *rows]) for i in range(len(headers))]
+    headers = (
+        "scenario",
+        "result",
+        "derived status",
+        "staff?",
+        "failed metrics",
+        "time",
+    )
+    widths = [
+        max(len(str(r[i])) for r in [headers, *rows]) for i in range(len(headers))
+    ]
     line = "  ".join(h.ljust(w) for h, w in zip(headers, widths, strict=True))
     print(line)
     print("-" * len(line))

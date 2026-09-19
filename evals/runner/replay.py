@@ -26,28 +26,41 @@ class BackendClient:
     webhook_token: str
     timeout: float = 30.0
 
-    def register_dial(self, scenario: Scenario, dial_id: str, run_id: str | None) -> dict:
-        return self._json("POST", "/api/eval/dials", org=True, json={
-            "dial_id": dial_id,
-            "scenario_id": scenario.id,
-            "scenario_version": scenario.version,
-            "evaluation_run_id": run_id,
-            "true_intent": scenario.true_intent,
-            "fault_profile": scenario.fault_profile,
-        })
+    def register_dial(
+        self, scenario: Scenario, dial_id: str, run_id: str | None
+    ) -> dict:
+        return self._json(
+            "POST",
+            "/api/eval/dials",
+            org=True,
+            json={
+                "dial_id": dial_id,
+                "scenario_id": scenario.id,
+                "scenario_version": scenario.version,
+                "evaluation_run_id": run_id,
+                "true_intent": scenario.true_intent,
+                "fault_profile": scenario.fault_profile,
+            },
+        )
 
-    def call_function(self, name: str, dial_id: str, params: dict,
-                      transcript: list | None = None) -> dict:
+    def call_function(
+        self, name: str, dial_id: str, params: dict, transcript: list | None = None
+    ) -> dict:
         body = {
             "dial_id": dial_id,
-            "dial": {"id": dial_id, "agent": {"id": "agent-replay"},
-                     "versionedPromptId": "replay",
-                     **({"transcript": transcript} if transcript else {})},
+            "dial": {
+                "id": dial_id,
+                "agent": {"id": "agent-replay"},
+                "versionedPromptId": "replay",
+                **({"transcript": transcript} if transcript else {}),
+            },
             "params": params,
         }
         response = requests.post(
-            f"{self.base_url}/vogent/functions/{name}", json=body,
-            headers={"X-CareFlow-Token": self.function_token}, timeout=self.timeout,
+            f"{self.base_url}/vogent/functions/{name}",
+            json=body,
+            headers={"X-CareFlow-Token": self.function_token},
+            timeout=self.timeout,
         )
         response.raise_for_status()
         return response.json()
@@ -55,12 +68,24 @@ class BackendClient:
     def send_webhook(self, event: str, payload: dict) -> None:
         requests.post(
             f"{self.base_url}/vogent/webhooks/{self.webhook_token}",
-            json={"event": event, "payload": payload}, timeout=self.timeout,
+            json={"event": event, "payload": payload},
+            timeout=self.timeout,
         ).raise_for_status()
 
     def sync_dial(self, call_id: str) -> dict:
         """Ask the backend to fetch the dial record now rather than await a webhook."""
         return self._json("POST", f"/api/calls/{call_id}/sync-dial", org=True)
+
+    def open_run(self, **fields) -> str:
+        """Open an evaluation run and return its id."""
+        body = self._json("POST", "/api/evaluation-runs", org=True, json=fields)
+        return body["evaluation_run_id"]
+
+    def record_case(self, run_id: str, **fields) -> None:
+        self._json("POST", f"/api/evaluation-runs/{run_id}/cases", org=True, json=fields)
+
+    def close_run(self, run_id: str, **fields) -> None:
+        self._json("PATCH", f"/api/evaluation-runs/{run_id}", org=True, json=fields)
 
     def bundle_for_dial(self, dial_id: str) -> dict:
         resolved = self._json("GET", f"/api/calls/by-dial/{dial_id}", org=True)
@@ -69,7 +94,11 @@ class BackendClient:
     def _json(self, method: str, path: str, *, org: bool = False, **kwargs) -> dict:
         headers = {"X-Organization-Id": self.organization_id} if org else {}
         response = requests.request(
-            method, f"{self.base_url}{path}", headers=headers, timeout=self.timeout, **kwargs
+            method,
+            f"{self.base_url}{path}",
+            headers=headers,
+            timeout=self.timeout,
+            **kwargs,
         )
         response.raise_for_status()
         return response.json()
@@ -87,7 +116,9 @@ SPEECH = {
 }
 
 
-def replay(client: BackendClient, scenario: Scenario, *, run_id: str | None = None) -> dict[str, Any]:
+def replay(
+    client: BackendClient, scenario: Scenario, *, run_id: str | None = None
+) -> dict[str, Any]:
     """Drive one scenario and return the evidence bundle plus timing."""
     dial_id = f"replay-{scenario.id}-{uuid.uuid4().hex[:8]}"
     started = time.monotonic()
@@ -100,11 +131,16 @@ def replay(client: BackendClient, scenario: Scenario, *, run_id: str | None = No
         transcript.append({"speaker": "AI", "text": text})
 
     if scenario.true_intent == "routine_scheduling":
-        result = client.call_function("schedule_appointment", dial_id, {
-            "patient_ref": scenario.patient_ref,
-            "preferred_date": "next Tuesday",
-            "reason": "routine follow up",
-        }, transcript)
+        result = client.call_function(
+            "schedule_appointment",
+            dial_id,
+            {
+                "patient_ref": scenario.patient_ref,
+                "preferred_date": "next Tuesday",
+                "reason": "routine follow up",
+            },
+            transcript,
+        )
         calls.append({"function": "schedule_appointment", "response": result})
         if result.get("status") == "booked":
             say(SPEECH["booked"])
@@ -112,11 +148,16 @@ def replay(client: BackendClient, scenario: Scenario, *, run_id: str | None = No
 
     else:
         say(SPEECH["transfer_attempt"])
-        transfer = client.call_function("transfer_triage", dial_id, {
-            "patient_ref": scenario.patient_ref,
-            "concern_summary": "post-operative concern",
-            "callback_phone": scenario.callback_phone,
-        }, transcript)
+        transfer = client.call_function(
+            "transfer_triage",
+            dial_id,
+            {
+                "patient_ref": scenario.patient_ref,
+                "concern_summary": "post-operative concern",
+                "callback_phone": scenario.callback_phone,
+            },
+            transcript,
+        )
         calls.append({"function": "transfer_triage", "response": transfer})
 
         if transfer.get("status") == "connected":
@@ -124,23 +165,39 @@ def replay(client: BackendClient, scenario: Scenario, *, run_id: str | None = No
             disposition = "transferred"
         else:
             say(SPEECH["transfer_failed"])
-            callback = client.call_function("create_callback", dial_id, {
-                "patient_ref": scenario.patient_ref,
-                "callback_phone": scenario.callback_phone,
-                "priority": "urgent",
-                "reason_code": "transfer_failed",
-            }, transcript)
-            calls.append({"function": "create_callback", "response": callback})
-
-            if scenario.expected.get("callback_count") == 1:
-                # Scenario E: the vendor delivers the same request twice.
-                repeat = client.call_function("create_callback", dial_id, {
+            callback = client.call_function(
+                "create_callback",
+                dial_id,
+                {
                     "patient_ref": scenario.patient_ref,
                     "callback_phone": scenario.callback_phone,
                     "priority": "urgent",
                     "reason_code": "transfer_failed",
-                }, transcript)
-                calls.append({"function": "create_callback", "response": repeat, "duplicate": True})
+                },
+                transcript,
+            )
+            calls.append({"function": "create_callback", "response": callback})
+
+            if scenario.expected.get("callback_count") == 1:
+                # Scenario E: the vendor delivers the same request twice.
+                repeat = client.call_function(
+                    "create_callback",
+                    dial_id,
+                    {
+                        "patient_ref": scenario.patient_ref,
+                        "callback_phone": scenario.callback_phone,
+                        "priority": "urgent",
+                        "reason_code": "transfer_failed",
+                    },
+                    transcript,
+                )
+                calls.append(
+                    {
+                        "function": "create_callback",
+                        "response": repeat,
+                        "duplicate": True,
+                    }
+                )
 
             if callback.get("status") == "created":
                 say(SPEECH["callback_promise"])
@@ -149,13 +206,20 @@ def replay(client: BackendClient, scenario: Scenario, *, run_id: str | None = No
                 say(SPEECH["callback_failed"])
                 disposition = "escalation_failed"
 
-    client.call_function("report_disposition", dial_id, {
-        "category": scenario.true_intent,
-        "disposition": disposition,
-        "summary": "replay",
-    }, transcript)
+    client.call_function(
+        "report_disposition",
+        dial_id,
+        {
+            "category": scenario.true_intent,
+            "disposition": disposition,
+            "summary": "replay",
+        },
+        transcript,
+    )
 
-    client.send_webhook("dial.transcript", {"dial_id": dial_id, "transcript": transcript})
+    client.send_webhook(
+        "dial.transcript", {"dial_id": dial_id, "transcript": transcript}
+    )
     client.send_webhook("dial.updated", {"dial_id": dial_id, "status": "completed"})
 
     bundle = client.bundle_for_dial(dial_id)

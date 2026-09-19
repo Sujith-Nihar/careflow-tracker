@@ -33,8 +33,8 @@ from .types import (
     Intent,
     Lifecycle,
     Severity,
-    StatementKind,
     StaffActionKind,
+    StatementKind,
     TransferStatus,
 )
 
@@ -53,8 +53,7 @@ def _attempted(executions: list[ActionExecution], kind: ActionKind) -> list[Acti
     action and correctly declined to take one, which is not an attempt.
     """
     return [
-        e for e in executions
-        if e.kind == kind and e.outcome is not ActionOutcome.NOT_APPLICABLE
+        e for e in executions if e.kind == kind and e.outcome is not ActionOutcome.NOT_APPLICABLE
     ]
 
 
@@ -318,9 +317,7 @@ def _promise_stands(
         return True
     last_promise = max(s.sequence_no for s in promises)
     return not any(
-        s.sequence_no > last_promise
-        for s in evidence.agent_statements
-        if s.kind == retraction
+        s.sequence_no > last_promise for s in evidence.agent_statements if s.kind == retraction
     )
 
 
@@ -341,15 +338,21 @@ def _with_overlay(
     has_callback = any(c.status == CallbackStatus.CREATED for c in evidence.callback_requests)
     has_appointment = any(a.status == AppointmentStatus.BOOKED for a in evidence.appointments)
 
-    if _promise_stands(
-        evidence, StatementKind.PROMISED_TRANSFER, StatementKind.DISCLOSED_TRANSFER_FAILED
-    ) and not connected:
+    if (
+        _promise_stands(
+            evidence, StatementKind.PROMISED_TRANSFER, StatementKind.DISCLOSED_TRANSFER_FAILED
+        )
+        and not connected
+    ):
         details.append(
             "The agent told the caller they were being transferred, but no transfer connected."
         )
-    if _promise_stands(
-        evidence, StatementKind.PROMISED_CALLBACK, StatementKind.DISCLOSED_CALLBACK_FAILED
-    ) and not has_callback:
+    if (
+        _promise_stands(
+            evidence, StatementKind.PROMISED_CALLBACK, StatementKind.DISCLOSED_CALLBACK_FAILED
+        )
+        and not has_callback
+    ):
         details.append("The agent promised a callback, but no callback request exists.")
     if _promise_stands(evidence, StatementKind.PROMISED_APPOINTMENT, None) and not has_appointment:
         details.append("The agent told the caller an appointment was made, but none exists.")

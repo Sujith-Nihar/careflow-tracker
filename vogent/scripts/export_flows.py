@@ -14,7 +14,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
-from vogent_api import REPO_ROOT, Vogent, load_ids  # noqa: E402
+from vogent_api import REPO_ROOT, Vogent, load_ids
 
 EXPORT_DIR = REPO_ROOT / "vogent" / "export"
 REDACTED = "<redacted: set from CAREFLOW_DEMO_ORG_FUNCTION_TOKEN at sync time>"
@@ -25,7 +25,11 @@ def main() -> int:
     ids = load_ids()
     agent_id = ids.get("agent")
     if not agent_id:
-        agents = [a for a in client.list_all("/agents") if a["name"] == "CareFlow Demo Surgical"]
+        agents = [
+            a
+            for a in client.list_all("/agents")
+            if a["name"] == "CareFlow Demo Surgical"
+        ]
         agent_id = agents[0]["id"]
 
     EXPORT_DIR.mkdir(parents=True, exist_ok=True)
@@ -34,11 +38,16 @@ def main() -> int:
     for function in client.list_all("/functions"):
         detail = client.get(f"/functions/{function['id']}")
         detail["headers"] = [
-            {"key": h.get("key"), "value": REDACTED} for h in (detail.get("headers") or [])
+            {"key": h.get("key"), "value": REDACTED}
+            for h in (detail.get("headers") or [])
         ]
         functions.append(detail)
-    (EXPORT_DIR / "functions.json").write_text(json.dumps(functions, indent=2, sort_keys=True) + "\n")
-    print(f"  functions.json          {len(functions)} functions (header values redacted)")
+    (EXPORT_DIR / "functions.json").write_text(
+        json.dumps(functions, indent=2, sort_keys=True) + "\n"
+    )
+    print(
+        f"  functions.json          {len(functions)} functions (header values redacted)"
+    )
 
     prompts = client.list_all(f"/agents/{agent_id}/versioned_prompts")
     published = {"careflow-v1-baseline": "v1", "careflow-v2-evidence-aware": "v2"}
@@ -62,9 +71,13 @@ def main() -> int:
             "nodes": len(nodes),
             "outcome_conditioned_transitions": conditioned,
         }
-        print(f"  {short}.json                 {prompt['id']}  {len(nodes)} nodes, {conditioned} conditioned")
+        print(
+            f"  {short}.json                 {prompt['id']}  {len(nodes)} nodes, {conditioned} conditioned"
+        )
 
-    (EXPORT_DIR / "index.json").write_text(json.dumps(index, indent=2, sort_keys=True) + "\n")
+    (EXPORT_DIR / "index.json").write_text(
+        json.dumps(index, indent=2, sort_keys=True) + "\n"
+    )
     print(f"\nexported to {EXPORT_DIR}")
     return 0
 

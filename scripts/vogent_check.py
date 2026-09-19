@@ -10,9 +10,8 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
-import requests  # noqa: E402
-
-from _env import fail, load_env, require  # noqa: E402
+import requests
+from _env import fail, load_env, require
 
 
 def main() -> int:
@@ -36,7 +35,9 @@ def main() -> int:
     for agent in agents:
         print(f"  {agent.get('id')}  {agent.get('name')}")
     if not agents:
-        print("  (none yet — vogent/scripts/sync.py creates the CareFlow agent in Phase 4)")
+        print(
+            "  (none yet — vogent/scripts/sync.py creates the CareFlow agent in Phase 4)"
+        )
     return 0
 
 

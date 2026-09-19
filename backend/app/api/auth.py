@@ -14,7 +14,7 @@ from flask import Request
 
 from ..persistence import repositories as repo
 
-FUNCTION_TOKEN_HEADER = "X-CareFlow-Token"
+FUNCTION_TOKEN_HEADER = "X-CareFlow-Token"  # noqa: S105 - a header name, not a secret
 ORGANIZATION_HEADER = "X-Organization-Id"
 
 
@@ -61,7 +61,9 @@ def from_organization_header(conn: psycopg.Connection, request: Request) -> Prin
     return Principal(organization_id=str(org["id"]), slug=org["slug"])
 
 
-def assert_agent_belongs(conn: psycopg.Connection, agent_id: str | None, principal: Principal) -> None:
+def assert_agent_belongs(
+    conn: psycopg.Connection, agent_id: str | None, principal: Principal
+) -> None:
     """Reject a token and a dial that belong to different practices.
 
     The token alone would be enough to answer the request. This second check means

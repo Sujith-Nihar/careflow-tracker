@@ -91,7 +91,12 @@ class CreateCallbackParams(Strict):
 class ReportDispositionParams(Strict):
     category: Literal["routine_scheduling", "post_operative_concern", "other"] = "other"
     disposition: Literal[
-        "scheduled", "transferred", "callback_pending", "escalation_failed", "unresolved", "resolved"
+        "scheduled",
+        "transferred",
+        "callback_pending",
+        "escalation_failed",
+        "unresolved",
+        "resolved",
     ] = "unresolved"
     summary: str = Field(default="", max_length=MAX_SUMMARY)
 
@@ -110,6 +115,39 @@ class RegisterDialRequest(Strict):
     fault_profile: dict[str, str] = Field(default_factory=dict)
 
 
+class EvaluationRunRequest(Strict):
+    run_id: str | None = None
+    suite: str = Field(default="careflow", max_length=64)
+    strategy: Literal["naive_voice", "optimized", "replay"]
+    versioned_prompt_id: str | None = Field(default=None, max_length=128)
+    backend_git_sha: str | None = Field(default=None, max_length=64)
+    rate_usd_per_second: float | None = None
+    rate_source: str | None = Field(default=None, max_length=256)
+    cost_label: Literal["ACTUAL_BILLED", "CALCULATED_ESTIMATE"] = "CALCULATED_ESTIMATE"
+    job_id: str | None = Field(default=None, max_length=128)
+
+
+class EvaluationRunClose(Strict):
+    status: Literal["completed", "failed"]
+    wall_seconds: float | None = None
+    error: str | None = Field(default=None, max_length=2000)
+
+
+class EvaluationCaseRequest(Strict):
+    scenario_id: str = Field(min_length=1, max_length=128)
+    scenario_version: int = 1
+    mode: Literal["voice", "replay", "structural"]
+    passed: bool | None = None
+    metrics: dict[str, Any] = Field(default_factory=dict)
+    dial_id: str | None = Field(default=None, max_length=128)
+    call_id: str | None = None
+    wall_seconds: float | None = None
+    connected_seconds: int | None = None
+    cost_usd: float | None = None
+    artifact_path: str | None = Field(default=None, max_length=512)
+    cache_key: str | None = Field(default=None, max_length=256)
+
+
 class StaffActionRequest(Strict):
     kind: Literal["callback_completed", "reviewed"]
     actor: str = Field(min_length=1, max_length=120)
@@ -118,7 +156,12 @@ class StaffActionRequest(Strict):
 
 
 __all__ = [
-    "FunctionEnvelope", "ScheduleAppointmentParams", "TransferTriageParams",
-    "CreateCallbackParams", "ReportDispositionParams", "RegisterDialRequest",
-    "StaffActionRequest", "ValidationError",
+    "CreateCallbackParams",
+    "FunctionEnvelope",
+    "RegisterDialRequest",
+    "ReportDispositionParams",
+    "ScheduleAppointmentParams",
+    "StaffActionRequest",
+    "TransferTriageParams",
+    "ValidationError",
 ]

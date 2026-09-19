@@ -13,16 +13,17 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "backend"))
 
-import psycopg  # noqa: E402
-
-from _env import fail, load_env, require  # noqa: E402
-from app.persistence.repositories import token_hash  # noqa: E402
+import psycopg
+from _env import fail, load_env, require
+from app.persistence.repositories import token_hash
 
 DEMO_SLUG = "demo-surgical"
 OTHER_SLUG = "other-practice"
 
 
-def upsert(conn: psycopg.Connection, slug: str, name: str, fn_token: str, wh_token: str) -> str:
+def upsert(
+    conn: psycopg.Connection, slug: str, name: str, fn_token: str, wh_token: str
+) -> str:
     with conn.cursor() as cur:
         cur.execute(
             """INSERT INTO organizations (slug, name, function_token_hash, webhook_token_hash)
@@ -46,17 +47,24 @@ def main() -> int:
         fail("the function token and the webhook token must be different values")
 
     with psycopg.connect(url, connect_timeout=15) as conn:
-        demo_id = upsert(conn, DEMO_SLUG, "Demo Surgical Associates", fn_token, wh_token)
+        demo_id = upsert(
+            conn, DEMO_SLUG, "Demo Surgical Associates", fn_token, wh_token
+        )
         other_id = upsert(
-            conn, OTHER_SLUG, "Other Practice (isolation tests only)",
-            f"other-{fn_token}", f"other-{wh_token}",
+            conn,
+            OTHER_SLUG,
+            "Other Practice (isolation tests only)",
+            f"other-{fn_token}",
+            f"other-{wh_token}",
         )
         conn.commit()
 
     print(f"organization {DEMO_SLUG:16} {demo_id}")
     print(f"organization {OTHER_SLUG:16} {other_id}")
     print()
-    print("Add this line to .env so the dashboard and eval runner know which practice to use:")
+    print(
+        "Add this line to .env so the dashboard and eval runner know which practice to use:"
+    )
     print(f"  DEMO_ORGANIZATION_ID={demo_id}")
     return 0
 

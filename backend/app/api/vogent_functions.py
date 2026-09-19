@@ -7,7 +7,6 @@ and tell the caller about. Only authentication and malformed envelopes get 4xx.
 
 from __future__ import annotations
 
-from datetime import UTC, datetime
 from typing import Any
 
 import psycopg
@@ -34,7 +33,9 @@ bp = Blueprint("vogent_functions", __name__, url_prefix="/vogent/functions")
 log = get_logger(__name__)
 
 
-def _open_call(conn: psycopg.Connection, envelope: FunctionEnvelope, principal: auth.Principal) -> dict:
+def _open_call(
+    conn: psycopg.Connection, envelope: FunctionEnvelope, principal: auth.Principal
+) -> dict:
     auth.assert_agent_belongs(conn, envelope.vogent_agent_id, principal)
     call = repo.get_or_create_call(
         conn,
@@ -73,22 +74,40 @@ def schedule_appointment() -> Any:
         try:
             params = ScheduleAppointmentParams.model_validate(envelope.params)
         except ValidationError:
-            return _finish(conn, call, principal, rejected_action(
-                conn, organization_id=principal.organization_id, call=call,
-                dial_id=envelope.dial_id, kind="schedule_appointment", params=envelope.params,
-                request_id=g.get("request_id"),
-                agent_message="I could not read those appointment details.",
-            ))
+            return _finish(
+                conn,
+                call,
+                principal,
+                rejected_action(
+                    conn,
+                    organization_id=principal.organization_id,
+                    call=call,
+                    dial_id=envelope.dial_id,
+                    kind="schedule_appointment",
+                    params=envelope.params,
+                    request_id=g.get("request_id"),
+                    agent_message="I could not read those appointment details.",
+                ),
+            )
 
         patient_ref = envelope.resolved("patient_ref", params.patient_ref)
         slot = parsing.parse_preferred_date(params.preferred_date)
         if slot is None:
-            return _finish(conn, call, principal, rejected_action(
-                conn, organization_id=principal.organization_id, call=call,
-                dial_id=envelope.dial_id, kind="schedule_appointment",
-                params=params.model_dump(), request_id=g.get("request_id"),
-                agent_message="I could not work out which day you meant.",
-            ))
+            return _finish(
+                conn,
+                call,
+                principal,
+                rejected_action(
+                    conn,
+                    organization_id=principal.organization_id,
+                    call=call,
+                    dial_id=envelope.dial_id,
+                    kind="schedule_appointment",
+                    params=params.model_dump(),
+                    request_id=g.get("request_id"),
+                    agent_message="I could not work out which day you meant.",
+                ),
+            )
 
         def simulate(profile: dict) -> SimulatorResult:
             return scheduler.book_appointment(
@@ -97,16 +116,24 @@ def schedule_appointment() -> Any:
 
         def persist(conn: psycopg.Connection, execution_id: str, result: SimulatorResult) -> str:
             row = repo.insert_appointment(
-                conn, organization_id=principal.organization_id, execution_id=execution_id,
-                patient_ref=patient_ref or "unknown", slot=slot,
+                conn,
+                organization_id=principal.organization_id,
+                execution_id=execution_id,
+                patient_ref=patient_ref or "unknown",
+                slot=slot,
             )
             return str(row["id"])
 
         body = run_action(
-            conn, organization_id=principal.organization_id, call=call, dial_id=envelope.dial_id,
+            conn,
+            organization_id=principal.organization_id,
+            call=call,
+            dial_id=envelope.dial_id,
             kind="schedule_appointment",
             params=params.model_dump() | {"patient_ref": patient_ref},
-            request_id=g.get("request_id"), simulate=simulate, persist_downstream=persist,
+            request_id=g.get("request_id"),
+            simulate=simulate,
+            persist_downstream=persist,
             transcript_snapshot=envelope.transcript_snapshot,
         )
         return _finish(conn, call, principal, body)
@@ -124,12 +151,21 @@ def transfer_triage() -> Any:
         try:
             params = TransferTriageParams.model_validate(envelope.params)
         except ValidationError:
-            return _finish(conn, call, principal, rejected_action(
-                conn, organization_id=principal.organization_id, call=call,
-                dial_id=envelope.dial_id, kind="transfer_triage", params=envelope.params,
-                request_id=g.get("request_id"),
-                agent_message="I could not read those details.",
-            ))
+            return _finish(
+                conn,
+                call,
+                principal,
+                rejected_action(
+                    conn,
+                    organization_id=principal.organization_id,
+                    call=call,
+                    dial_id=envelope.dial_id,
+                    kind="transfer_triage",
+                    params=envelope.params,
+                    request_id=g.get("request_id"),
+                    agent_message="I could not read those details.",
+                ),
+            )
 
         patient_ref = envelope.resolved("patient_ref", params.patient_ref)
 
@@ -140,16 +176,25 @@ def transfer_triage() -> Any:
 
         def persist(conn: psycopg.Connection, execution_id: str, result: SimulatorResult) -> str:
             row = repo.insert_transfer_session(
-                conn, organization_id=principal.organization_id, execution_id=execution_id,
-                status="connected", failure_reason=None,
+                conn,
+                organization_id=principal.organization_id,
+                execution_id=execution_id,
+                status="connected",
+                failure_reason=None,
             )
             return str(row["id"])
 
         stored = params.model_dump() | {"patient_ref": patient_ref}
         body = run_action(
-            conn, organization_id=principal.organization_id, call=call, dial_id=envelope.dial_id,
-            kind="transfer_triage", params=stored, request_id=g.get("request_id"),
-            simulate=simulate, persist_downstream=persist,
+            conn,
+            organization_id=principal.organization_id,
+            call=call,
+            dial_id=envelope.dial_id,
+            kind="transfer_triage",
+            params=stored,
+            request_id=g.get("request_id"),
+            simulate=simulate,
+            persist_downstream=persist,
             transcript_snapshot=envelope.transcript_snapshot,
         )
 
@@ -162,8 +207,12 @@ def transfer_triage() -> Any:
 
 
 def _record_failed_transfer(
-    conn: psycopg.Connection, principal: auth.Principal, call: dict,
-    envelope: FunctionEnvelope, params: dict, body: dict,
+    conn: psycopg.Connection,
+    principal: auth.Principal,
+    call: dict,
+    envelope: FunctionEnvelope,
+    params: dict,
+    body: dict,
 ) -> None:
     """Persist the call-detail record for a transfer that did not connect.
 
@@ -180,8 +229,11 @@ def _record_failed_transfer(
     ):
         return
     repo.insert_transfer_session(
-        conn, organization_id=principal.organization_id, execution_id=str(execution["id"]),
-        status=body["status"], failure_reason=body.get("failure_reason"),
+        conn,
+        organization_id=principal.organization_id,
+        execution_id=str(execution["id"]),
+        status=body["status"],
+        failure_reason=body.get("failure_reason"),
     )
 
 
@@ -197,24 +249,40 @@ def create_callback() -> Any:
         try:
             params = CreateCallbackParams.model_validate(envelope.params)
         except ValidationError:
-            return _finish(conn, call, principal, rejected_action(
-                conn, organization_id=principal.organization_id, call=call,
-                dial_id=envelope.dial_id, kind="create_callback", params=envelope.params,
-                request_id=g.get("request_id"),
-                agent_message="I could not read those callback details.",
-            ))
+            return _finish(
+                conn,
+                call,
+                principal,
+                rejected_action(
+                    conn,
+                    organization_id=principal.organization_id,
+                    call=call,
+                    dial_id=envelope.dial_id,
+                    kind="create_callback",
+                    params=envelope.params,
+                    request_id=g.get("request_id"),
+                    agent_message="I could not read those callback details.",
+                ),
+            )
 
         patient_ref = envelope.resolved("patient_ref", params.patient_ref)
-        phone = parsing.normalize_phone(
-            envelope.resolved("callback_phone", params.callback_phone)
-        )
+        phone = parsing.normalize_phone(envelope.resolved("callback_phone", params.callback_phone))
         if phone is None:
-            return _finish(conn, call, principal, rejected_action(
-                conn, organization_id=principal.organization_id, call=call,
-                dial_id=envelope.dial_id, kind="create_callback", params=params.model_dump(),
-                request_id=g.get("request_id"),
-                agent_message="I could not read that phone number back correctly.",
-            ))
+            return _finish(
+                conn,
+                call,
+                principal,
+                rejected_action(
+                    conn,
+                    organization_id=principal.organization_id,
+                    call=call,
+                    dial_id=envelope.dial_id,
+                    kind="create_callback",
+                    params=params.model_dump(),
+                    request_id=g.get("request_id"),
+                    agent_message="I could not read that phone number back correctly.",
+                ),
+            )
 
         # The flow asks for a callback after every transfer attempt, because Vogent
         # function nodes cannot branch on a function result. The decision therefore
@@ -229,7 +297,12 @@ def create_callback() -> Any:
                 "agent_message": "No callback is needed; the caller reached the triage nurse.",
             }
             _record_not_applicable(
-                conn, principal, call, envelope, params.model_dump() | {"callback_phone": phone}, body
+                conn,
+                principal,
+                call,
+                envelope,
+                params.model_dump() | {"callback_phone": phone},
+                body,
             )
             return _finish(conn, call, principal, body)
 
@@ -242,17 +315,26 @@ def create_callback() -> Any:
 
         def persist(conn: psycopg.Connection, execution_id: str, result: SimulatorResult) -> str:
             row = repo.insert_callback_request(
-                conn, organization_id=principal.organization_id, execution_id=execution_id,
-                patient_ref=patient_ref or "unknown", priority=params.priority,
+                conn,
+                organization_id=principal.organization_id,
+                execution_id=execution_id,
+                patient_ref=patient_ref or "unknown",
+                priority=params.priority,
                 reason_code=params.reason_code,
             )
             return str(row["id"])
 
         stored = params.model_dump() | {"callback_phone": phone, "patient_ref": patient_ref}
         body = run_action(
-            conn, organization_id=principal.organization_id, call=call, dial_id=envelope.dial_id,
-            kind="create_callback", params=stored, request_id=g.get("request_id"),
-            simulate=simulate, persist_downstream=persist,
+            conn,
+            organization_id=principal.organization_id,
+            call=call,
+            dial_id=envelope.dial_id,
+            kind="create_callback",
+            params=stored,
+            request_id=g.get("request_id"),
+            simulate=simulate,
+            persist_downstream=persist,
             transcript_snapshot=envelope.transcript_snapshot,
         )
         body["priority"] = params.priority
@@ -260,8 +342,12 @@ def create_callback() -> Any:
 
 
 def _record_not_applicable(
-    conn: psycopg.Connection, principal: auth.Principal, call: dict,
-    envelope: FunctionEnvelope, params: dict, body: dict,
+    conn: psycopg.Connection,
+    principal: auth.Principal,
+    call: dict,
+    envelope: FunctionEnvelope,
+    params: dict,
+    body: dict,
 ) -> None:
     """Record that a fallback was asked for and correctly not taken.
 
@@ -272,17 +358,27 @@ def _record_not_applicable(
     if repo.find_execution_by_key(conn, key, principal.organization_id) is not None:
         return
     execution = repo.insert_requested_execution(
-        conn, call_id=str(call["id"]), organization_id=principal.organization_id,
-        kind="create_callback", key=key, request_payload=params,
+        conn,
+        call_id=str(call["id"]),
+        organization_id=principal.organization_id,
+        kind="create_callback",
+        key=key,
+        request_payload=params,
         request_id=g.get("request_id"),
     )
     repo.complete_execution(
-        conn, execution_id=str(execution["id"]), outcome="not_applicable",
-        response_payload=body, attempts=[],
+        conn,
+        execution_id=str(execution["id"]),
+        outcome="not_applicable",
+        response_payload=body,
+        attempts=[],
     )
     log.info(
-        "action.completed", kind="create_callback", action_execution_id=str(execution["id"]),
-        outcome="not_applicable", status="not_needed",
+        "action.completed",
+        kind="create_callback",
+        action_execution_id=str(execution["id"]),
+        outcome="not_applicable",
+        status="not_needed",
     )
 
 
@@ -305,23 +401,34 @@ def report_disposition() -> Any:
             from ..domain.types import ActionOutcome
 
             return SimulatorResult(
-                outcome=ActionOutcome.SUCCEEDED, status="recorded", agent_message="",
+                outcome=ActionOutcome.SUCCEEDED,
+                status="recorded",
+                agent_message="",
             )
 
         def persist(conn: psycopg.Connection, execution_id: str, _result: SimulatorResult) -> None:
             repo.set_agent_classified_intent(conn, str(call["id"]), params.category)
             repo.insert_statement(
-                conn, call_id=str(call["id"]), organization_id=principal.organization_id,
-                kind="reported_disposition", source="function_param",
+                conn,
+                call_id=str(call["id"]),
+                organization_id=principal.organization_id,
+                kind="reported_disposition",
+                source="function_param",
                 sequence_no=_next_sequence(conn, str(call["id"]), principal.organization_id),
-                disposition=params.disposition, evidence_text=params.summary or None,
+                disposition=params.disposition,
+                evidence_text=params.summary or None,
             )
-            return None
 
         body = run_action(
-            conn, organization_id=principal.organization_id, call=call, dial_id=envelope.dial_id,
-            kind="report_disposition", params=params.model_dump(), request_id=g.get("request_id"),
-            simulate=simulate, persist_downstream=persist,
+            conn,
+            organization_id=principal.organization_id,
+            call=call,
+            dial_id=envelope.dial_id,
+            kind="report_disposition",
+            params=params.model_dump(),
+            request_id=g.get("request_id"),
+            simulate=simulate,
+            persist_downstream=persist,
         )
         return _finish(conn, call, principal, body)
 

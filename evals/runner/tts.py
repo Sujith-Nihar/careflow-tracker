@@ -35,19 +35,32 @@ def ensure_available() -> None:
         )
 
 
-def clip_for(text: str, *, voice: str = DEFAULT_VOICE, rate: int = DEFAULT_RATE) -> Path:
+def clip_for(
+    text: str, *, voice: str = DEFAULT_VOICE, rate: int = DEFAULT_RATE
+) -> Path:
     """Return a WAV file for this line, rendering it only if not already cached."""
     ensure_available()
     CACHE_DIR.mkdir(parents=True, exist_ok=True)
 
-    digest = hashlib.sha256(f"{voice}|{rate}|{SAMPLE_RATE}|{text}".encode()).hexdigest()[:16]
+    digest = hashlib.sha256(
+        f"{voice}|{rate}|{SAMPLE_RATE}|{text}".encode()
+    ).hexdigest()[:16]
     path = CACHE_DIR / f"{digest}.wav"
     if path.exists() and path.stat().st_size > 0:
         return path
 
     subprocess.run(
-        ["say", "-v", voice, "-r", str(rate), "-o", str(path),
-         f"--data-format=LEI16@{SAMPLE_RATE}", text],
+        [
+            "say",
+            "-v",
+            voice,
+            "-r",
+            str(rate),
+            "-o",
+            str(path),
+            f"--data-format=LEI16@{SAMPLE_RATE}",
+            text,
+        ],
         check=True,
         capture_output=True,
     )

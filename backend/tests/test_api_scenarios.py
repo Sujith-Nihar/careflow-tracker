@@ -18,16 +18,30 @@ def test_routine_scheduling_books_an_appointment(client, demo_org):
     dial = dial_id()
     register_dial(client, demo_org, dial, "A_routine_scheduling", {}, "routine_scheduling")
 
-    response = call_function(client, "schedule_appointment", dial, {
-        "patient_ref": "PT-SYN-0001", "preferred_date": "next Tuesday", "reason": "routine follow up",
-    })
+    response = call_function(
+        client,
+        "schedule_appointment",
+        dial,
+        {
+            "patient_ref": "PT-SYN-0001",
+            "preferred_date": "next Tuesday",
+            "reason": "routine follow up",
+        },
+    )
     assert response.status_code == 200
     assert response.json["status"] == "booked"
     assert response.json["appointment_id"]
 
-    call_function(client, "report_disposition", dial, {
-        "category": "routine_scheduling", "disposition": "scheduled", "summary": "booked",
-    })
+    call_function(
+        client,
+        "report_disposition",
+        dial,
+        {
+            "category": "routine_scheduling",
+            "disposition": "scheduled",
+            "summary": "booked",
+        },
+    )
 
     bundle = bundle_for(client, demo_org, dial)
     assert bundle["derived"]["status"] == "completed_scheduled"
@@ -38,13 +52,25 @@ def test_routine_scheduling_books_an_appointment(client, demo_org):
 # --- Scenario B: transfer connects --------------------------------------------------
 def test_successful_transfer_completes_the_call(client, demo_org):
     dial = dial_id()
-    register_dial(client, demo_org, dial, "B_postop_transfer_ok",
-                  {"transfer": "connect"}, "post_operative_concern")
+    register_dial(
+        client,
+        demo_org,
+        dial,
+        "B_postop_transfer_ok",
+        {"transfer": "connect"},
+        "post_operative_concern",
+    )
 
-    response = call_function(client, "transfer_triage", dial, {
-        "patient_ref": "PT-SYN-0002", "concern_summary": "incision question",
-        "callback_phone": "+15555550102",
-    })
+    response = call_function(
+        client,
+        "transfer_triage",
+        dial,
+        {
+            "patient_ref": "PT-SYN-0002",
+            "concern_summary": "incision question",
+            "callback_phone": "+15555550102",
+        },
+    )
     assert response.json["status"] == "connected"
 
     bundle = bundle_for(client, demo_org, dial)
@@ -56,22 +82,41 @@ def test_successful_transfer_completes_the_call(client, demo_org):
 # --- Scenario C: transfer fails, callback catches the caller ------------------------
 def test_failed_transfer_then_callback_is_pending_not_resolved(client, demo_org):
     dial = dial_id()
-    register_dial(client, demo_org, dial, "C_postop_transfer_fail_callback",
-                  {"transfer": "fail", "callback": "create"}, "post_operative_concern")
+    register_dial(
+        client,
+        demo_org,
+        dial,
+        "C_postop_transfer_fail_callback",
+        {"transfer": "fail", "callback": "create"},
+        "post_operative_concern",
+    )
 
-    transfer = call_function(client, "transfer_triage", dial, {
-        "patient_ref": "PT-SYN-0003", "concern_summary": "bleeding",
-        "callback_phone": "+15555550103",
-    })
+    transfer = call_function(
+        client,
+        "transfer_triage",
+        dial,
+        {
+            "patient_ref": "PT-SYN-0003",
+            "concern_summary": "bleeding",
+            "callback_phone": "+15555550103",
+        },
+    )
     assert transfer.json["status"] == "failed"
     assert transfer.json["failure_reason"] == "no_answer"
     # The failure is reported as a normal response so the flow can branch on it.
     assert transfer.status_code == 200
 
-    callback = call_function(client, "create_callback", dial, {
-        "patient_ref": "PT-SYN-0003", "callback_phone": "+15555550103",
-        "priority": "urgent", "reason_code": "transfer_failed",
-    })
+    callback = call_function(
+        client,
+        "create_callback",
+        dial,
+        {
+            "patient_ref": "PT-SYN-0003",
+            "callback_phone": "+15555550103",
+            "priority": "urgent",
+            "reason_code": "transfer_failed",
+        },
+    )
     assert callback.json["status"] == "created"
 
     bundle = bundle_for(client, demo_org, dial)
@@ -85,17 +130,36 @@ def test_failed_transfer_then_callback_is_pending_not_resolved(client, demo_org)
 # --- Scenario D: the subtle one, the fallback itself fails ---------------------------
 def test_failed_transfer_and_failed_callback_leaves_nothing_queued(client, demo_org):
     dial = dial_id()
-    register_dial(client, demo_org, dial, "D_postop_double_failure",
-                  {"transfer": "fail", "callback": "fail"}, "post_operative_concern")
+    register_dial(
+        client,
+        demo_org,
+        dial,
+        "D_postop_double_failure",
+        {"transfer": "fail", "callback": "fail"},
+        "post_operative_concern",
+    )
 
-    call_function(client, "transfer_triage", dial, {
-        "patient_ref": "PT-SYN-0004", "concern_summary": "fever",
-        "callback_phone": "+15555550104",
-    })
-    callback = call_function(client, "create_callback", dial, {
-        "patient_ref": "PT-SYN-0004", "callback_phone": "+15555550104",
-        "priority": "urgent", "reason_code": "transfer_failed",
-    })
+    call_function(
+        client,
+        "transfer_triage",
+        dial,
+        {
+            "patient_ref": "PT-SYN-0004",
+            "concern_summary": "fever",
+            "callback_phone": "+15555550104",
+        },
+    )
+    callback = call_function(
+        client,
+        "create_callback",
+        dial,
+        {
+            "patient_ref": "PT-SYN-0004",
+            "callback_phone": "+15555550104",
+            "priority": "urgent",
+            "reason_code": "transfer_failed",
+        },
+    )
     assert callback.json["status"] == "failed"
 
     bundle = bundle_for(client, demo_org, dial)
@@ -110,17 +174,32 @@ def test_failed_transfer_and_failed_callback_leaves_nothing_queued(client, demo_
 def test_agent_claiming_resolution_after_a_failure_is_flagged(client, demo_org):
     """The customer's reported bug, reproduced through the real boundary."""
     dial = dial_id()
-    register_dial(client, demo_org, dial, "V1_reproduction",
-                  {"transfer": "fail"}, "post_operative_concern")
+    register_dial(
+        client, demo_org, dial, "V1_reproduction", {"transfer": "fail"}, "post_operative_concern"
+    )
 
-    call_function(client, "transfer_triage", dial, {
-        "patient_ref": "PT-SYN-0005", "concern_summary": "swelling",
-        "callback_phone": "+15555550105",
-    }, transcript=[{"speaker": "AI", "text": "I'm connecting you to our triage nurse now."}])
+    call_function(
+        client,
+        "transfer_triage",
+        dial,
+        {
+            "patient_ref": "PT-SYN-0005",
+            "concern_summary": "swelling",
+            "callback_phone": "+15555550105",
+        },
+        transcript=[{"speaker": "AI", "text": "I'm connecting you to our triage nurse now."}],
+    )
 
-    call_function(client, "report_disposition", dial, {
-        "category": "post_operative_concern", "disposition": "resolved", "summary": "transferred",
-    })
+    call_function(
+        client,
+        "report_disposition",
+        dial,
+        {
+            "category": "post_operative_concern",
+            "disposition": "resolved",
+            "summary": "transferred",
+        },
+    )
 
     bundle = bundle_for(client, demo_org, dial)
     assert bundle["derived"]["status"] == "escalation_failed"
@@ -131,13 +210,25 @@ def test_agent_claiming_resolution_after_a_failure_is_flagged(client, demo_org):
 # --- Unverified outcomes are not successes -------------------------------------------
 def test_unverified_transfer_is_not_treated_as_connected(client, demo_org):
     dial = dial_id()
-    register_dial(client, demo_org, dial, "F_transfer_unverified",
-                  {"transfer": "unverified"}, "post_operative_concern")
+    register_dial(
+        client,
+        demo_org,
+        dial,
+        "F_transfer_unverified",
+        {"transfer": "unverified"},
+        "post_operative_concern",
+    )
 
-    response = call_function(client, "transfer_triage", dial, {
-        "patient_ref": "PT-SYN-0006", "concern_summary": "pain",
-        "callback_phone": "+15555550106",
-    })
+    response = call_function(
+        client,
+        "transfer_triage",
+        dial,
+        {
+            "patient_ref": "PT-SYN-0006",
+            "concern_summary": "pain",
+            "callback_phone": "+15555550106",
+        },
+    )
     assert response.json["status"] == "unverified"
 
     bundle = bundle_for(client, demo_org, dial)
@@ -156,24 +247,46 @@ def test_a_call_with_no_actions_is_not_treated_as_finished(client, demo_org):
 # --- Staff closing the loop -----------------------------------------------------------
 def test_staff_completing_the_callback_closes_the_call(client, demo_org):
     dial = dial_id()
-    register_dial(client, demo_org, dial, "C_postop_transfer_fail_callback",
-                  {"transfer": "fail", "callback": "create"}, "post_operative_concern")
-    call_function(client, "transfer_triage", dial, {
-        "patient_ref": "PT-SYN-0007", "concern_summary": "bleeding",
-        "callback_phone": "+15555550107",
-    })
-    call_function(client, "create_callback", dial, {
-        "patient_ref": "PT-SYN-0007", "callback_phone": "+15555550107",
-        "priority": "urgent", "reason_code": "transfer_failed",
-    })
+    register_dial(
+        client,
+        demo_org,
+        dial,
+        "C_postop_transfer_fail_callback",
+        {"transfer": "fail", "callback": "create"},
+        "post_operative_concern",
+    )
+    call_function(
+        client,
+        "transfer_triage",
+        dial,
+        {
+            "patient_ref": "PT-SYN-0007",
+            "concern_summary": "bleeding",
+            "callback_phone": "+15555550107",
+        },
+    )
+    call_function(
+        client,
+        "create_callback",
+        dial,
+        {
+            "patient_ref": "PT-SYN-0007",
+            "callback_phone": "+15555550107",
+            "priority": "urgent",
+            "reason_code": "transfer_failed",
+        },
+    )
 
     bundle = bundle_for(client, demo_org, dial)
     callback_id = bundle["downstream"]["callback_requests"][0]["id"]
 
     response = client.post(
         f"/api/calls/{bundle['call']['id']}/staff-actions",
-        json={"kind": "callback_completed", "actor": "front-desk",
-              "target_callback_id": callback_id},
+        json={
+            "kind": "callback_completed",
+            "actor": "front-desk",
+            "target_callback_id": callback_id,
+        },
         headers={"X-Organization-Id": demo_org},
     )
     assert response.status_code == 201
@@ -183,8 +296,11 @@ def test_staff_completing_the_callback_closes_the_call(client, demo_org):
     # Completing it twice is refused rather than silently repeated.
     repeat = client.post(
         f"/api/calls/{bundle['call']['id']}/staff-actions",
-        json={"kind": "callback_completed", "actor": "front-desk",
-              "target_callback_id": callback_id},
+        json={
+            "kind": "callback_completed",
+            "actor": "front-desk",
+            "target_callback_id": callback_id,
+        },
         headers={"X-Organization-Id": demo_org},
     )
     assert repeat.status_code == 409
@@ -202,13 +318,15 @@ def test_a_webhook_and_the_runner_can_create_the_same_call_concurrently(client, 
         "/vogent/webhooks/test-webhook-token-demo",
         json={"event": "dial.created", "payload": {"dial_id": dial, "status": "in_progress"}},
     )
-    response = register_dial(client, demo_org, dial, "race_check",
-                             {"transfer": "connect"}, "post_operative_concern")
+    response = register_dial(
+        client, demo_org, dial, "race_check", {"transfer": "connect"}, "post_operative_concern"
+    )
     assert response.status_code == 201
 
     resolved = client.get(f"/api/calls/by-dial/{dial}", headers={"X-Organization-Id": demo_org})
-    detail = client.get(f"/api/calls/{resolved.json['call_id']}",
-                        headers={"X-Organization-Id": demo_org}).json
+    detail = client.get(
+        f"/api/calls/{resolved.json['call_id']}", headers={"X-Organization-Id": demo_org}
+    ).json
     assert detail["call"]["scenario_id"] == "race_check"
     assert detail["intent"]["true_intent"] == "post_operative_concern"
 
@@ -216,11 +334,23 @@ def test_a_webhook_and_the_runner_can_create_the_same_call_concurrently(client, 
 def test_a_failed_transfer_still_leaves_a_call_detail_record(client, demo_org):
     """The attempt is evidence. Staff must see that the line was tried and did not answer."""
     dial = dial_id()
-    register_dial(client, demo_org, dial, "failed_transfer_record",
-                  {"transfer": "fail"}, "post_operative_concern")
-    response = call_function(client, "transfer_triage", dial, {
-        "concern_summary": "bleeding", "callback_phone": "+15555550150",
-    })
+    register_dial(
+        client,
+        demo_org,
+        dial,
+        "failed_transfer_record",
+        {"transfer": "fail"},
+        "post_operative_concern",
+    )
+    response = call_function(
+        client,
+        "transfer_triage",
+        dial,
+        {
+            "concern_summary": "bleeding",
+            "callback_phone": "+15555550150",
+        },
+    )
     assert response.json["status"] == "failed"
 
     bundle = bundle_for(client, demo_org, dial)
@@ -228,3 +358,63 @@ def test_a_failed_transfer_still_leaves_a_call_detail_record(client, demo_org):
     assert len(sessions) == 1
     assert sessions[0]["status"] == "failed"
     assert sessions[0]["failure_reason"] == "no_answer"
+
+
+def test_an_evaluation_run_and_its_cases_are_persisted(client, demo_org):
+    """A run is a database row, not only a directory of files.
+
+    Artifacts on disk and rows in the database share one identifier, so a result can
+    be queried next to the calls it produced and an async worker has somewhere to
+    report to.
+    """
+    headers = {"X-Organization-Id": demo_org}
+    opened = client.post(
+        "/api/evaluation-runs",
+        json={"strategy": "replay", "suite": "test", "cost_label": "CALCULATED_ESTIMATE"},
+        headers=headers,
+    )
+    assert opened.status_code == 201
+    run_id = opened.json["evaluation_run_id"]
+
+    recorded = client.post(
+        f"/api/evaluation-runs/{run_id}/cases",
+        json={
+            "scenario_id": "C_postop_transfer_fail_callback", "mode": "voice", "passed": True,
+            "metrics": {"derived_status_expected": True}, "connected_seconds": 30,
+            "cost_usd": 0.045,
+        },
+        headers=headers,
+    )
+    assert recorded.status_code == 201
+
+    # Recording the same scenario twice updates it rather than duplicating it.
+    client.post(
+        f"/api/evaluation-runs/{run_id}/cases",
+        json={"scenario_id": "C_postop_transfer_fail_callback", "mode": "voice", "passed": False,
+              "metrics": {}},
+        headers=headers,
+    )
+
+    client.patch(
+        f"/api/evaluation-runs/{run_id}",
+        json={"status": "completed", "wall_seconds": 42.5},
+        headers=headers,
+    )
+
+    run = client.get(f"/api/evaluation-runs/{run_id}", headers=headers).json
+    assert run["status"] == "completed"
+    assert float(run["wall_seconds"]) == 42.5
+    assert len(run["cases"]) == 1
+    assert run["cases"][0]["passed"] is False
+
+
+def test_another_practice_cannot_read_an_evaluation_run(client, demo_org, other_org):
+    opened = client.post(
+        "/api/evaluation-runs", json={"strategy": "replay"},
+        headers={"X-Organization-Id": demo_org},
+    )
+    run_id = opened.json["evaluation_run_id"]
+    denied = client.get(
+        f"/api/evaluation-runs/{run_id}", headers={"X-Organization-Id": other_org}
+    )
+    assert denied.status_code == 404

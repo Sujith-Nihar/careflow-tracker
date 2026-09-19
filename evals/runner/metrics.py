@@ -46,16 +46,22 @@ class MetricResult:
         return not self.failures
 
     def check(self, name: str, ok: bool, detail: Any = None) -> None:
-        self.values[name] = {"ok": bool(ok), "detail": detail} if detail is not None else bool(ok)
+        self.values[name] = (
+            {"ok": bool(ok), "detail": detail} if detail is not None else bool(ok)
+        )
         if name in REQUIRED and not ok:
             self.failures.append(name)
 
 
-def evaluate(scenario: Scenario, bundle: dict, *, dial: dict | None = None) -> MetricResult:
+def evaluate(
+    scenario: Scenario, bundle: dict, *, dial: dict | None = None
+) -> MetricResult:
     result = MetricResult()
     expected = scenario.expected
     derived = bundle.get("derived") or {}
-    executions = [e for e in bundle.get("action_executions", []) if not e.get("duplicate_of_id")]
+    executions = [
+        e for e in bundle.get("action_executions", []) if not e.get("duplicate_of_id")
+    ]
     kinds = [e["kind"] for e in executions]
     downstream = bundle.get("downstream", {})
     transfers = downstream.get("transfer_sessions", [])
@@ -88,15 +94,21 @@ def evaluate(scenario: Scenario, bundle: dict, *, dial: dict | None = None) -> M
     )
 
     forbidden = _forbidden_kinds(scenario.true_intent)
-    result.check("no_unexpected_executions", not (forbidden & set(kinds)), sorted(forbidden & set(kinds)))
+    result.check(
+        "no_unexpected_executions",
+        not (forbidden & set(kinds)),
+        sorted(forbidden & set(kinds)),
+    )
 
     # The injected fault must actually be what the simulated systems recorded,
     # otherwise the scenario did not test what it claims to test.
     result.check(
         "fault_reflected",
         _fault_reflected(scenario, transfers, callbacks, appointments),
-        {"transfers": [t["status"] for t in transfers],
-         "callbacks": [c["status"] for c in callbacks]},
+        {
+            "transfers": [t["status"] for t in transfers],
+            "callbacks": [c["status"] for c in callbacks],
+        },
     )
 
     result.check("fallback_correct", _fallback_correct(scenario, transfers, callbacks))
@@ -114,29 +126,35 @@ def evaluate(scenario: Scenario, bundle: dict, *, dial: dict | None = None) -> M
     result.check(
         "staff_action_expected",
         derived.get("requires_staff_action") == expected.get("requires_staff_action"),
-        {"expected": expected.get("requires_staff_action"),
-         "actual": derived.get("requires_staff_action")},
+        {
+            "expected": expected.get("requires_staff_action"),
+            "actual": derived.get("requires_staff_action"),
+        },
     )
 
     allowed = set(expected.get("disposition_allowed") or [])
-    reported = [s["disposition"] for s in statements if s["kind"] == "reported_disposition"]
+    reported = [
+        s["disposition"] for s in statements if s["kind"] == "reported_disposition"
+    ]
     result.check(
         "disposition_truthful",
         not reported or (allowed and set(reported) <= allowed),
         {"allowed": sorted(allowed), "reported": reported},
     )
 
-    result.check("promise_consistent", derived.get("promise_mismatch") is False,
-                 derived.get("mismatch_details"))
+    result.check(
+        "promise_consistent",
+        derived.get("promise_mismatch") is False,
+        derived.get("mismatch_details"),
+    )
 
     # The agent must not deny an action the system actually completed. Scenario A
     # once passed while the agent said the booking had failed: the state was right
     # and the speech was not, and nothing caught it.
     contradiction = (scenario.truthfulness or {}).get("must_not_contradict") or {}
     forbidden = set(contradiction.get("forbidden_statements") or [])
-    applies = (
-        not contradiction
-        or derived.get("status") == contradiction.get("when_status")
+    applies = not contradiction or derived.get("status") == contradiction.get(
+        "when_status"
     )
     spoken_kinds = {s["kind"] for s in statements}
     result.check(
@@ -153,9 +171,12 @@ def evaluate(scenario: Scenario, bundle: dict, *, dial: dict | None = None) -> M
     )
 
     # Informational only, never decides pass or fail.
-    patterns = ((scenario.truthfulness or {}).get("informational_regex") or {}).get("must_not_say", [])
+    patterns = ((scenario.truthfulness or {}).get("informational_regex") or {}).get(
+        "must_not_say", []
+    )
     spoken = " ".join(
-        seg.get("text", "") for seg in (bundle.get("transcript") or {}).get("segments", [])
+        seg.get("text", "")
+        for seg in (bundle.get("transcript") or {}).get("segments", [])
         if str(seg.get("speaker", "")).upper() == "AI"
     )
     hits = [p for p in patterns if re.search(p, spoken, re.IGNORECASE)]
@@ -163,7 +184,8 @@ def evaluate(scenario: Scenario, bundle: dict, *, dial: dict | None = None) -> M
 
     if expected.get("callback_count") is not None:
         result.check(
-            "callback_count", len(callbacks) == expected["callback_count"],
+            "callback_count",
+            len(callbacks) == expected["callback_count"],
             {"expected": expected["callback_count"], "actual": len(callbacks)},
         )
 
@@ -180,15 +202,17 @@ def _forbidden_kinds(true_intent: str) -> set[str]:
 
 def _fault_reflected(scenario: Scenario, transfers, callbacks, appointments) -> bool:
     profile = scenario.fault_profile
-    if profile.get("transfer") == "connect" and not any(t["status"] == "connected" for t in transfers):
+    if profile.get("transfer") == "connect" and not any(
+        t["status"] == "connected" for t in transfers
+    ):
         return False
-    if profile.get("transfer") == "fail" and any(t["status"] == "connected" for t in transfers):
+    if profile.get("transfer") == "fail" and any(
+        t["status"] == "connected" for t in transfers
+    ):
         return False
     if profile.get("callback") == "fail" and callbacks:
         return False
-    if profile.get("scheduler") == "unavailable" and appointments:
-        return False
-    return True
+    return not (profile.get("scheduler") == "unavailable" and appointments)
 
 
 def _fallback_correct(scenario: Scenario, transfers, callbacks) -> bool:
@@ -209,11 +233,10 @@ def _no_false_success(executions, transfers, callbacks, appointments) -> bool:
     refs = {t["action_execution_id"] for t in transfers if t["status"] == "connected"}
     refs |= {c["action_execution_id"] for c in callbacks}
     refs |= {a["action_execution_id"] for a in appointments if a["status"] == "booked"}
-    for execution in executions:
-        if execution["outcome"] != "succeeded":
-            continue
-        if execution["kind"] == "report_disposition":
-            continue  # a recorded claim has no downstream system
-        if execution["id"] not in refs:
-            return False
-    return True
+    return all(
+        execution["id"] in refs
+        for execution in executions
+        # A recorded claim has no downstream system to point at.
+        if execution["outcome"] == "succeeded"
+        and execution["kind"] != "report_disposition"
+    )

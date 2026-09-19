@@ -80,7 +80,7 @@ class _Handler(http.server.SimpleHTTPRequestHandler):
     def translate_path(self, path: str) -> str:
         clean = path.split("?", 1)[0].split("#", 1)[0]
         if clean.startswith("/clips/"):
-            return str(CACHE_DIR / Path(clean[len("/clips/"):]).name)
+            return str(CACHE_DIR / Path(clean[len("/clips/") :]).name)
         return str(PAGE_DIR / clean.lstrip("/") or "index.html")
 
     def log_message(self, *_args: Any) -> None:  # keep the runner's output readable
@@ -169,7 +169,9 @@ def _let_the_agent_finish(page, *, limit_seconds: float = 12.0) -> None:
         time.sleep(1.5)
 
 
-def _converse(page, scenario: Scenario, clips: dict[str, Path], origin: str, outcome: CallOutcome):
+def _converse(
+    page, scenario: Scenario, clips: dict[str, Path], origin: str, outcome: CallOutcome
+):
     """Reply to the agent until the call reaches an ending or a limit."""
     import re
 
@@ -197,7 +199,9 @@ def _converse(page, scenario: Scenario, clips: dict[str, Path], origin: str, out
                 opening = _next_line(scenario, "", spoken)
                 clip = clips.get(opening or "")
                 if clip is not None:
-                    page.evaluate("url => window.caller.say(url)", f"{origin}/clips/{clip.name}")
+                    page.evaluate(
+                        "url => window.caller.say(url)", f"{origin}/clips/{clip.name}"
+                    )
                     outcome.turns_taken += 1
                     time.sleep(1.0)
                     continue
@@ -209,7 +213,11 @@ def _converse(page, scenario: Scenario, clips: dict[str, Path], origin: str, out
             time.sleep(POLL_SECONDS)
             continue
 
-        if scenario.end_when and text and re.search(scenario.end_when, text, re.IGNORECASE):
+        if (
+            scenario.end_when
+            and text
+            and re.search(scenario.end_when, text, re.IGNORECASE)
+        ):
             # Let the agent finish its closing sentence before hanging up.
             time.sleep(2.0)
             break
@@ -219,7 +227,11 @@ def _converse(page, scenario: Scenario, clips: dict[str, Path], origin: str, out
             time.sleep(POLL_SECONDS)
             continue
 
-        if not text or stable_since is None or time.monotonic() - stable_since < SETTLE_SECONDS:
+        if (
+            not text
+            or stable_since is None
+            or time.monotonic() - stable_since < SETTLE_SECONDS
+        ):
             time.sleep(POLL_SECONDS)
             continue
 

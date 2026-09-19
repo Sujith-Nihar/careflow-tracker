@@ -17,8 +17,8 @@ def _load_dotenv() -> None:
     env_file = REPO_ROOT / ".env"
     if not env_file.exists():
         return
-    for line in env_file.read_text().splitlines():
-        line = line.strip()
+    for raw_line in env_file.read_text().splitlines():
+        line = raw_line.strip()
         if line and not line.startswith("#") and "=" in line:
             key, value = line.split("=", 1)
             value = value.strip().strip('"').strip("'")

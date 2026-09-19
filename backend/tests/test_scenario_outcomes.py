@@ -112,7 +112,9 @@ def test_scenario_c_v2_catches_the_caller_with_an_urgent_callback():
             f.call(intent=Intent.POST_OPERATIVE_CONCERN),
             executions=[transfer_exec, callback_exec],
             transfers=[f.transfer(TransferStatus.FAILED, transfer_exec.id, "no_answer")],
-            callbacks=[f.callback(CallbackStatus.CREATED, callback_exec.id, CallbackPriority.URGENT)],
+            callbacks=[
+                f.callback(CallbackStatus.CREATED, callback_exec.id, CallbackPriority.URGENT)
+            ],
             statements=[
                 f.said(StatementKind.DISCLOSED_TRANSFER_FAILED, 1),
                 f.said(StatementKind.PROMISED_CALLBACK, 2),
@@ -184,7 +186,9 @@ def test_scenario_d_v2_records_that_the_fallback_was_attempted_but_does_not_exis
 def test_scenario_e_duplicate_callback_leaves_exactly_one_queued_callback():
     transfer_exec = f.execution(ActionKind.TRANSFER_TRIAGE, ActionOutcome.FAILED)
     callback_exec = f.execution(ActionKind.CREATE_CALLBACK, seconds=12)
-    duplicate = f.execution(ActionKind.CREATE_CALLBACK, seconds=13, duplicate_of_id=callback_exec.id)
+    duplicate = f.execution(
+        ActionKind.CREATE_CALLBACK, seconds=13, duplicate_of_id=callback_exec.id
+    )
     bundle = f.evidence(
         f.call(intent=Intent.POST_OPERATIVE_CONCERN),
         executions=[transfer_exec, callback_exec, duplicate],

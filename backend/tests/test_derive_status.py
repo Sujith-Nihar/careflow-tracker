@@ -161,7 +161,9 @@ def test_post_operative_call_with_no_transfer_is_a_routing_gap():
         f.evidence(
             f.call(intent=Intent.POST_OPERATIVE_CONCERN),
             executions=[f.execution(ActionKind.REPORT_DISPOSITION)],
-            statements=[f.said(StatementKind.REPORTED_DISPOSITION, disposition=Disposition.UNRESOLVED)],
+            statements=[
+                f.said(StatementKind.REPORTED_DISPOSITION, disposition=Disposition.UNRESOLVED)
+            ],
         )
     )
     assert result.status is CallStatus.ROUTING_GAP
@@ -221,7 +223,9 @@ def test_scheduling_failure_with_followup_callback_mentions_it():
     result = derive_status(
         f.evidence(
             executions=[schedule_exec, callback_exec],
-            callbacks=[f.callback(CallbackStatus.CREATED, callback_exec.id, CallbackPriority.NORMAL)],
+            callbacks=[
+                f.callback(CallbackStatus.CREATED, callback_exec.id, CallbackPriority.NORMAL)
+            ],
         )
     )
     assert result.status is CallStatus.SCHEDULING_INCOMPLETE
@@ -262,7 +266,9 @@ def test_a_disposition_report_alone_is_not_an_action():
         f.evidence(
             f.call(intent=Intent.ROUTINE_SCHEDULING),
             executions=[f.execution(ActionKind.REPORT_DISPOSITION)],
-            statements=[f.said(StatementKind.REPORTED_DISPOSITION, disposition=Disposition.RESOLVED)],
+            statements=[
+                f.said(StatementKind.REPORTED_DISPOSITION, disposition=Disposition.RESOLVED)
+            ],
         )
     )
     assert result.status is CallStatus.NO_ACTION_RECORDED
@@ -394,9 +400,7 @@ def test_unrecognised_evidence_pattern_is_flagged_rather_than_assumed_fine():
     # Simulate an action kind the decision table does not yet know how to read.
     module.ACTION_KINDS = original | {ActionKind.REPORT_DISPOSITION}
     try:
-        result = derive_status(
-            f.evidence(executions=[f.execution(ActionKind.REPORT_DISPOSITION)])
-        )
+        result = derive_status(f.evidence(executions=[f.execution(ActionKind.REPORT_DISPOSITION)]))
     finally:
         module.ACTION_KINDS = original
 

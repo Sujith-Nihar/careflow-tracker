@@ -26,8 +26,16 @@ def envelope(dial: str, params: dict, *, agent_id: str = "agent-demo", transcrip
     }
 
 
-def call_function(client, name: str, dial: str, params: dict, *, token: str = DEMO_FUNCTION_TOKEN,
-                  agent_id: str = "agent-demo", transcript=None) -> Any:
+def call_function(
+    client,
+    name: str,
+    dial: str,
+    params: dict,
+    *,
+    token: str = DEMO_FUNCTION_TOKEN,
+    agent_id: str = "agent-demo",
+    transcript=None,
+) -> Any:
     return client.post(
         f"/vogent/functions/{name}",
         json=envelope(dial, params, agent_id=agent_id, transcript=transcript),
@@ -35,13 +43,21 @@ def call_function(client, name: str, dial: str, params: dict, *, token: str = DE
     )
 
 
-def register_dial(client, org_id: str, dial: str, scenario_id: str, fault_profile: dict,
-                  true_intent: str | None = None) -> Any:
+def register_dial(
+    client,
+    org_id: str,
+    dial: str,
+    scenario_id: str,
+    fault_profile: dict,
+    true_intent: str | None = None,
+) -> Any:
     return client.post(
         "/api/eval/dials",
         json={
-            "dial_id": dial, "scenario_id": scenario_id,
-            "fault_profile": fault_profile, "true_intent": true_intent,
+            "dial_id": dial,
+            "scenario_id": scenario_id,
+            "fault_profile": fault_profile,
+            "true_intent": true_intent,
         },
         headers={"X-Organization-Id": org_id},
     )
@@ -51,8 +67,9 @@ def get_call(client, org_id: str, call_id: str) -> Any:
     return client.get(f"/api/calls/{call_id}", headers={"X-Organization-Id": org_id})
 
 
-def end_call(client, dial: str, *, token: str = "test-webhook-token-demo",
-             status: str = "completed") -> Any:
+def end_call(
+    client, dial: str, *, token: str = "test-webhook-token-demo", status: str = "completed"
+) -> Any:
     """Deliver the vendor event that ends the call."""
     return client.post(
         f"/vogent/webhooks/{token}",
@@ -60,8 +77,9 @@ def end_call(client, dial: str, *, token: str = "test-webhook-token-demo",
     )
 
 
-def send_transcript(client, dial: str, segments: list[dict],
-                    token: str = "test-webhook-token-demo") -> Any:
+def send_transcript(
+    client, dial: str, segments: list[dict], token: str = "test-webhook-token-demo"
+) -> Any:
     return client.post(
         f"/vogent/webhooks/{token}",
         json={"event": "dial.transcript", "payload": {"dial_id": dial, "transcript": segments}},

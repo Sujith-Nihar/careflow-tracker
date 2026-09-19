@@ -18,7 +18,7 @@ from ..observability.logging import bind, get_logger
 from ..persistence import repositories as repo
 from ..persistence.db import transaction
 from ..services.status import derive_for_call
-from ..services.vogent_client import VogentUnavailable, get_dial
+from ..services.vogent_client import get_dial
 from . import auth
 
 bp = Blueprint("vogent_webhooks", __name__, url_prefix="/vogent/webhooks")
@@ -41,8 +41,11 @@ def receive(webhook_token: str) -> Any:
         bind(organization_id=principal.organization_id, dial_id=dial_id, event_type=event)
 
         fresh = repo.append_event(
-            conn, organization_id=principal.organization_id, dial_id=dial_id,
-            event_type=event, payload=body,
+            conn,
+            organization_id=principal.organization_id,
+            dial_id=dial_id,
+            event_type=event,
+            payload=body,
         )
         log.info("vogent.webhook.received", event_type=event, duplicate=not fresh)
         if not fresh:
@@ -71,8 +74,11 @@ def _apply_transcript(
 ) -> None:
     statements = extract_statements(transcript, observed_at=datetime.now().astimezone())
     repo.replace_transcript_statements(
-        conn, call_id=str(call["id"]), organization_id=principal.organization_id,
-        statements=statements, rules_version=STATEMENT_RULES_VERSION,
+        conn,
+        call_id=str(call["id"]),
+        organization_id=principal.organization_id,
+        statements=statements,
+        rules_version=STATEMENT_RULES_VERSION,
     )
     repo.finalize_call(
         conn, call_id=str(call["id"]), lifecycle=call["lifecycle"], transcript=transcript
@@ -98,7 +104,7 @@ def sync_dial_record(conn: psycopg.Connection, call: dict, principal: auth.Princ
     """
     try:
         dial = get_dial(call["dial_id"])
-    except (VogentUnavailable, Exception) as exc:  # noqa: BLE001 - reported, not raised
+    except Exception as exc:
         log.info("call.finalized", lifecycle="ended_unconfirmed", error_type=type(exc).__name__)
         repo.finalize_call(conn, call_id=str(call["id"]), lifecycle="ended_unconfirmed")
         return "ended_unconfirmed"
@@ -107,8 +113,11 @@ def sync_dial_record(conn: psycopg.Connection, call: dict, principal: auth.Princ
     if transcript:
         statements = extract_statements(transcript, observed_at=datetime.now().astimezone())
         repo.replace_transcript_statements(
-            conn, call_id=str(call["id"]), organization_id=principal.organization_id,
-            statements=statements, rules_version=STATEMENT_RULES_VERSION,
+            conn,
+            call_id=str(call["id"]),
+            organization_id=principal.organization_id,
+            statements=statements,
+            rules_version=STATEMENT_RULES_VERSION,
         )
 
     repo.finalize_call(
@@ -123,7 +132,8 @@ def sync_dial_record(conn: psycopg.Connection, call: dict, principal: auth.Princ
         transcript=transcript or None,
     )
     log.info(
-        "call.finalized", lifecycle="ended",
+        "call.finalized",
+        lifecycle="ended",
         connected_seconds=dial.get("aiDurationSeconds"),
         system_result_type=dial.get("systemResultType"),
     )
@@ -134,6 +144,6 @@ def _parse_time(value: Any) -> datetime | None:
     if not value:
         return None
     try:
-        return datetime.fromisoformat(str(value).replace("Z", "+00:00"))
+        return datetime.fromisoformat(str(value))
     except ValueError:
         return None

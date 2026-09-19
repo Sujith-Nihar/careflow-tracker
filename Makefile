@@ -17,6 +17,16 @@ setup: $(VENV)/bin/python ## install backend deps (dev extras included)
 	$(PIP) install -q -e "backend[dev]"
 	@echo "backend deps installed. Frontend and eval deps are installed in their own phases."
 
+lint: ## static analysis over every Python source
+	$(VENV)/bin/ruff check backend evals vogent scripts
+	$(VENV)/bin/ruff format --check backend evals vogent scripts
+
+format: ## apply formatting
+	$(VENV)/bin/ruff format backend evals vogent scripts
+
+typecheck-ui: ## typecheck the dashboard
+	cd frontend && npx tsc --noEmit
+
 test: ## run backend tests (db-marked tests skip without DATABASE_URL)
 	$(PYTEST) backend -q
 
@@ -32,7 +42,17 @@ vogent-check: ## verify VOGENT_API_KEY by listing agents (prints no secrets)
 migrate: ## apply backend/migrations/*.sql to DATABASE_URL
 	$(PY) scripts/migrate.py
 
-migrate-test: ## apply migrations to the careflow_test schema
+migrate-lint: ## static analysis over every Python source
+	$(VENV)/bin/ruff check backend evals vogent scripts
+	$(VENV)/bin/ruff format --check backend evals vogent scripts
+
+format: ## apply formatting
+	$(VENV)/bin/ruff format backend evals vogent scripts
+
+typecheck-ui: ## typecheck the dashboard
+	cd frontend && npx tsc --noEmit
+
+test: ## apply migrations to the careflow_test schema
 	$(PY) scripts/migrate.py --test-schema
 
 seed: ## create the synthetic organizations
@@ -71,4 +91,4 @@ structural: ## cheap flow lint, no calls, no cost
 secret-scan: ## fail if anything that looks like a credential is tracked by git
 	@scripts/secret_scan.sh
 
-.PHONY: help setup test test-cov db-check vogent-check migrate migrate-test seed api api-restart tunnel replay eval structural ui ui-install secret-scan
+.PHONY: help setup lint format typecheck-ui test test-cov db-check vogent-check migrate migrate-test seed api api-restart tunnel replay eval structural ui ui-install secret-scan

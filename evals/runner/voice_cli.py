@@ -17,12 +17,12 @@ from pathlib import Path
 REPO_ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(REPO_ROOT / "scripts"))
 
-from _env import load_env  # noqa: E402
+from _env import load_env
 
-from .cli import build_client  # noqa: E402
-from .scenarios import UnknownScenario, load, load_all  # noqa: E402
-from .voice import DEFAULT_RATE_USD_PER_SECOND, run_voice_case  # noqa: E402
-from .vogent import VogentClient  # noqa: E402
+from .cli import build_client
+from .scenarios import UnknownScenario, load, load_all
+from .vogent import VogentClient
+from .voice import DEFAULT_RATE_USD_PER_SECOND, run_voice_case
 
 ARTIFACT_ROOT = REPO_ROOT / "artifacts"
 
@@ -30,11 +30,17 @@ ARTIFACT_ROOT = REPO_ROOT / "artifacts"
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description="Run real Vogent voice evaluations")
     parser.add_argument("--version", default="v2", help="agent version: v1 or v2")
-    parser.add_argument("--scenarios", help="comma-separated scenario ids (default: voice-eligible)")
-    parser.add_argument("--bucket", help="artifact sub-directory (default: the version)")
+    parser.add_argument(
+        "--scenarios", help="comma-separated scenario ids (default: voice-eligible)"
+    )
+    parser.add_argument(
+        "--bucket", help="artifact sub-directory (default: the version)"
+    )
     parser.add_argument("--headed", action="store_true", help="show the browser")
     parser.add_argument(
-        "--strategy", default="naive_voice", choices=["naive_voice", "optimized"],
+        "--strategy",
+        default="naive_voice",
+        choices=["naive_voice", "optimized"],
         help="naive_voice: a full voice call per scenario. optimized: risk-based mix.",
     )
     args = parser.parse_args(argv)
@@ -62,12 +68,26 @@ def main(argv: list[str] | None = None) -> int:
     vogent = VogentClient()
     run_id = str(uuid.uuid4())
     root = ARTIFACT_ROOT / (args.bucket or args.version)
+    versioned_prompt_id = vogent.versioned_prompt_id(args.version)
+
+    # The run is persisted under the same id the artifacts use on disk, so a row in
+    # the database and a directory of evidence are the same run.
+    backend.open_run(
+        run_id=run_id, suite="careflow", strategy="naive_voice",
+        versioned_prompt_id=versioned_prompt_id,
+        rate_usd_per_second=DEFAULT_RATE_USD_PER_SECOND,
+        rate_source="https://docs.vogent.ai/platform-overview/billing (read 2026-09-18)",
+        cost_label="CALCULATED_ESTIMATE",
+    )
 
     if args.strategy == "optimized":
         from .optimized import run_optimised
 
         summary = run_optimised(
-            scenarios, version=args.version, backend=backend, vogent=vogent,
+            scenarios,
+            version=args.version,
+            backend=backend,
+            vogent=vogent,
             artifacts_root=ARTIFACT_ROOT / (args.bucket or "efficiency/optimized"),
             headless=not args.headed,
         )
@@ -79,11 +99,27 @@ def main(argv: list[str] | None = None) -> int:
     for scenario in scenarios:
         print(f"  {scenario.id} ... ", end="", flush=True)
         case = run_voice_case(
-            scenario, version=args.version, run_id=run_id, backend=backend, vogent=vogent,
-            artifacts_root=root, headless=not args.headed,
+            scenario,
+            version=args.version,
+            run_id=run_id,
+            backend=backend,
+            vogent=vogent,
+            artifacts_root=root,
+            headless=not args.headed,
         )
         cases.append(case)
-        verdict = "ERROR" if case.error and not case.metrics else ("PASS" if case.passed else "FAIL")
+        backend.record_case(
+            run_id, scenario_id=case.scenario_id, scenario_version=case.scenario_version,
+            mode="voice", passed=case.passed, metrics=case.metrics, dial_id=case.dial_id,
+            call_id=case.call_id, wall_seconds=case.wall_seconds,
+            connected_seconds=case.connected_seconds, cost_usd=case.cost_usd,
+            artifact_path=case.artifact_path,
+        )
+        verdict = (
+            "ERROR"
+            if case.error and not case.metrics
+            else ("PASS" if case.passed else "FAIL")
+        )
         print(
             f"{verdict:5} {case.derived_status or '-':22} "
             f"dial {case.dial_id[:8]}  {case.connected_seconds or 0}s  "
@@ -95,7 +131,12 @@ def main(argv: list[str] | None = None) -> int:
             print(f"          error: {case.error}")
 
     summary = _summarise(run_id, args.version, cases)
-    (root / run_id / "run_summary.json").write_text(json.dumps(summary, indent=2, default=str))
+    backend.close_run(
+        run_id, status="completed", wall_seconds=summary["totals"]["wall_seconds"]
+    )
+    (root / run_id / "run_summary.json").write_text(
+        json.dumps(summary, indent=2, default=str)
+    )
     _print_summary(summary)
     print(f"\nartifacts: {root / run_id}")
     return 0 if all(c.passed for c in cases) else 1

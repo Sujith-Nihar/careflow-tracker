@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-import os
 import sys
 from pathlib import Path
 from typing import Any
@@ -12,7 +11,7 @@ import requests
 REPO_ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(REPO_ROOT / "scripts"))
 
-from _env import load_env, require  # noqa: E402
+from _env import load_env, require
 
 
 class Vogent:
@@ -23,7 +22,10 @@ class Vogent:
 
     @property
     def _headers(self) -> dict[str, str]:
-        return {"Authorization": f"Bearer {self._key}", "Content-Type": "application/json"}
+        return {
+            "Authorization": f"Bearer {self._key}",
+            "Content-Type": "application/json",
+        }
 
     def request(self, method: str, path: str, **kwargs: Any) -> Any:
         response = requests.request(
@@ -31,7 +33,9 @@ class Vogent:
         )
         if not response.ok:
             # Show the server's complaint, never the key.
-            raise VogentError(f"{method} {path} -> {response.status_code}: {response.text[:500]}")
+            raise VogentError(
+                f"{method} {path} -> {response.status_code}: {response.text[:500]}"
+            )
         return response.json() if response.content else {}
 
     def get(self, path: str, **kwargs: Any) -> Any:

@@ -55,7 +55,8 @@ class StructuralReport:
             "nodes": self.nodes,
             "passed": self.passed,
             "findings": [
-                {"rule": f.rule, "node": f.node, "detail": f.detail} for f in self.findings
+                {"rule": f.rule, "node": f.node, "detail": f.detail}
+                for f in self.findings
             ],
         }
 

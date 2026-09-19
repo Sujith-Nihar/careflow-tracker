@@ -33,3 +33,31 @@ filterwarnings = ["error::DeprecationWarning"]
 [tool.ruff]
 line-length = 100
 target-version = "py312"
+
+[tool.ruff.lint]
+# Correctness and safety first, then the readability rules that actually catch bugs.
+select = ["E", "F", "W", "I", "B", "SIM", "RET", "RUF", "S", "PL", "FURB", "UP", "C4"]
+ignore = [
+    "S101",     # asserts are the point in tests
+    "PLR0913",  # explicit keyword arguments beat bundling into an options object
+    "PLR0917",  # same: these are keyword-only call sites, not positional sprawl
+    "PLR2004",  # comparing against a literal status is clearer than naming every one
+    "E501",     # line length is handled by the formatter
+    # derive_status is a decision table. Its returns and branches are the design, and
+    # collapsing them would hide the thing the whole project is about.
+    "PLR0911",
+    "PLR0912",
+    # Lazy imports are deliberate: Playwright and the optimised strategy are heavy and
+    # only needed on the voice path, so importing them at module scope would make
+    # `make replay` pay for a browser driver it never uses.
+    "PLC0415",
+    # The connection pool is a process-level singleton by design, reset explicitly in tests.
+    "PLW0603",
+]
+
+[tool.ruff.lint.per-file-ignores]
+# Fixture and default values that look like credentials to a scanner but are not:
+# test tokens, and the "actor" default on a staff action.
+"tests/*" = ["S105", "S106", "S107"]
+"app/api/*" = ["S107"]
+"app/persistence/*" = ["S107"]

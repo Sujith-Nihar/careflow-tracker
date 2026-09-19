@@ -13,19 +13,33 @@ from tests.helpers import bundle_for, call_function, dial_id, register_dial
 pytestmark = pytest.mark.db
 
 CALLBACK_PARAMS = {
-    "patient_ref": "PT-SYN-0010", "callback_phone": "+15555550110",
-    "priority": "urgent", "reason_code": "transfer_failed",
+    "patient_ref": "PT-SYN-0010",
+    "callback_phone": "+15555550110",
+    "priority": "urgent",
+    "reason_code": "transfer_failed",
 }
 
 
 def test_repeated_callback_request_creates_exactly_one_callback(client, demo_org):
     dial = dial_id()
-    register_dial(client, demo_org, dial, "E_duplicate_callback_request",
-                  {"transfer": "fail", "callback": "create"}, "post_operative_concern")
-    call_function(client, "transfer_triage", dial, {
-        "patient_ref": "PT-SYN-0010", "concern_summary": "bleeding",
-        "callback_phone": "+15555550110",
-    })
+    register_dial(
+        client,
+        demo_org,
+        dial,
+        "E_duplicate_callback_request",
+        {"transfer": "fail", "callback": "create"},
+        "post_operative_concern",
+    )
+    call_function(
+        client,
+        "transfer_triage",
+        dial,
+        {
+            "patient_ref": "PT-SYN-0010",
+            "concern_summary": "bleeding",
+            "callback_phone": "+15555550110",
+        },
+    )
 
     first = call_function(client, "create_callback", dial, CALLBACK_PARAMS)
     second = call_function(client, "create_callback", dial, CALLBACK_PARAMS)
@@ -46,10 +60,19 @@ def test_repeated_callback_request_creates_exactly_one_callback(client, demo_org
 
 def test_a_repeated_transfer_does_not_ring_the_triage_line_twice(client, demo_org):
     dial = dial_id()
-    register_dial(client, demo_org, dial, "duplicate_transfer",
-                  {"transfer": "connect"}, "post_operative_concern")
-    params = {"patient_ref": "PT-SYN-0011", "concern_summary": "question",
-              "callback_phone": "+15555550111"}
+    register_dial(
+        client,
+        demo_org,
+        dial,
+        "duplicate_transfer",
+        {"transfer": "connect"},
+        "post_operative_concern",
+    )
+    params = {
+        "patient_ref": "PT-SYN-0011",
+        "concern_summary": "question",
+        "callback_phone": "+15555550111",
+    }
 
     call_function(client, "transfer_triage", dial, params)
     call_function(client, "transfer_triage", dial, params)
@@ -62,12 +85,24 @@ def test_a_repeated_transfer_does_not_ring_the_triage_line_twice(client, demo_or
 def test_different_parameters_are_a_different_action(client, demo_org):
     """De-duplication keys on the parameters, so a corrected request still runs."""
     dial = dial_id()
-    register_dial(client, demo_org, dial, "corrected_callback",
-                  {"transfer": "fail", "callback": "create"}, "post_operative_concern")
-    call_function(client, "transfer_triage", dial, {
-        "patient_ref": "PT-SYN-0012", "concern_summary": "pain",
-        "callback_phone": "+15555550112",
-    })
+    register_dial(
+        client,
+        demo_org,
+        dial,
+        "corrected_callback",
+        {"transfer": "fail", "callback": "create"},
+        "post_operative_concern",
+    )
+    call_function(
+        client,
+        "transfer_triage",
+        dial,
+        {
+            "patient_ref": "PT-SYN-0012",
+            "concern_summary": "pain",
+            "callback_phone": "+15555550112",
+        },
+    )
     call_function(client, "create_callback", dial, CALLBACK_PARAMS)
     call_function(client, "create_callback", dial, CALLBACK_PARAMS | {"priority": "normal"})
 

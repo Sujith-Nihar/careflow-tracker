@@ -62,12 +62,56 @@ Rationale: identical functions and context isolate the flow change; `versionedMo
 attributable; the efficiency experiment freezes one version trivially. Tradeoff: version IDs are
 workspace-specific and live in `.env`/export, not in code. Revisit: no.
 
-### D12 — Async path demonstrated with a local SQS emulator and Terraform, not a live deployment
-Rationale: the assignment makes live AWS optional; the judgment being evaluated is the shape (queue →
-worker → result, DLQ, correlation, least privilege, teardown). Tradeoff: `terraform validate` only.
-Revisit: if a safe sandbox and spare hours exist after Phase 10.
+### D12 — Async path designed but not built
+Context: the plan was a local SQS emulator plus Terraform. Options: build it, cut it, or fake it.
+Decision: **cut it, and say so.** The voice work overran and something had to give. Rationale: the brief
+marks live AWS optional, and real voice evidence on the high-risk path is weighted far more heavily
+than a queue demo. Tradeoff: the one core expectation with no running code; `docs/ASYNC_INFRA_PLAN.md`
+is a design, not a demonstration. Revisit: first thing with any further time.
 
 ### D13 — Scenarios A and B move to replay in the optimized strategy; C and D stay on voice
 Rationale: risk-based selection: their flow paths contain no failure branch and their backend behavior is
 fully exercised by replay; the high-risk path must keep real voice. Tradeoff: documented coverage loss on
 the scheduling path (STT, invocation). Revisit: if the disagreement table shows replay and voice disagreeing.
+
+### D14 — The escalation decision lives in the backend, not in the conversation flow
+Context: V2's original design branched on the transfer result with an outcome-conditioned edge. Isolated
+probes showed Vogent function nodes never match `equal` or `in` rules against their own result, with or
+without a field name, although the value *is* readable downstream as `{{node.fn.status}}`
+(`INVESTIGATIONS.md` INV-4). Options: (a) push harder on prompt wording so the model reliably decides to
+escalate; (b) restructure the graph around the limitation; (c) move the decision out of the conversation
+entirely. Decision: **(c)**. The flow now always requests a callback after a transfer attempt, and the
+backend consults the persisted transfer sessions to decide whether one is warranted, returning
+`not_needed` when a transfer actually connected. Rationale: the guarantee that a post-operative caller
+is not abandoned should not depend on a language model reading a string correctly. Escalation is now a
+property of persisted state, and the flow cannot be talked out of it because it no longer makes the
+choice. Tradeoff: one extra function round trip per post-operative call, and the graph no longer encodes
+the policy branch, so the structural check had to be rewritten to test what the flow *says* rather than
+what it *routes*. Revisit: if Vogent adds working outcome-conditioned edges, the branch could move back —
+but the backend version is safer and I would keep it.
+
+### D15 — A fourth action outcome, `not_applicable`
+Context: D14 means `create_callback` is called on every post-operative call, including ones where the
+transfer connected. Options: record it as `succeeded` (false: nothing was created), as `failed` (false:
+nothing went wrong), or add a state. Decision: add `not_applicable` — asked for, correctly declined.
+Rationale: collapsing it into either existing state would corrupt the metric that no `succeeded` action
+lacks a downstream record, which is one of the suite's strongest assertions. Tradeoff: one more state in
+the vocabulary and a migration. Revisit: no.
+
+### D16 — The browser transcript is the primary record of what was said
+Context: `GET /dials/{id}` truncates the agent's final utterance. Scenario D failed its disclosure check
+three times on calls where the agent had said exactly the right thing; the Web SDK's live transcript held
+the full sentence while the stored dial record kept four words of it. Decision: the evaluation runner
+feeds the browser transcript to the backend, which re-scores statements from it. Rationale: scoring
+truthfulness from a record known to be incomplete produces false failures on correct calls, which is
+worse than no check. Tradeoff: the richer record exists only when the harness captured it; a call
+observed only through webhooks still relies on the vendor's copy. This changes no action state —
+transcripts remain evidence of speech, never of action. Revisit: if the vendor's transcript becomes complete.
+
+### D17 — Evaluation runs are persisted, not only written to disk
+Context: run results lived only as JSON artifacts, while `evaluation_runs` and `evaluation_cases` sat
+unused in the schema. Options: delete the tables, or write to them. Decision: write to them, with the
+runner supplying the run id so the directory on disk and the row in the database are the same run.
+Rationale: a result should be queryable next to the calls it produced, and an async worker needs
+somewhere to report to. Dead tables alongside documented-but-missing endpoints is how a codebase starts
+lying about itself. Tradeoff: three more endpoints to maintain. Revisit: no.

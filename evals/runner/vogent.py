@@ -12,7 +12,7 @@ import requests
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "scripts"))
 
-from _env import load_env, require  # noqa: E402
+from _env import load_env, require
 
 
 @dataclass(frozen=True, slots=True)
@@ -31,7 +31,10 @@ class VogentClient:
 
     @property
     def _headers(self) -> dict[str, str]:
-        return {"Authorization": f"Bearer {self._key}", "Content-Type": "application/json"}
+        return {
+            "Authorization": f"Bearer {self._key}",
+            "Content-Type": "application/json",
+        }
 
     def versioned_prompt_id(self, version: str) -> str:
         return require(f"VOGENT_{version.upper()}_VERSIONED_PROMPT_ID")
@@ -66,10 +69,14 @@ class VogentClient:
             f"{self.base}/dials", headers=self._headers, json=payload, timeout=45
         )
         if not response.ok:
-            raise VogentDialError(f"create dial -> {response.status_code}: {response.text[:400]}")
+            raise VogentDialError(
+                f"create dial -> {response.status_code}: {response.text[:400]}"
+            )
         body = response.json()
         return Dial(
-            dial_id=body["dialId"], session_id=body["sessionId"], token=body["dialToken"]
+            dial_id=body["dialId"],
+            session_id=body["sessionId"],
+            token=body["dialToken"],
         )
 
     def get_dial(self, dial_id: str) -> dict[str, Any]:
@@ -77,11 +84,15 @@ class VogentClient:
             f"{self.base}/dials/{dial_id}", headers=self._headers, timeout=30
         )
         if not response.ok:
-            raise VogentDialError(f"get dial -> {response.status_code}: {response.text[:300]}")
+            raise VogentDialError(
+                f"get dial -> {response.status_code}: {response.text[:300]}"
+            )
         return response.json()
 
     def hangup(self, dial_id: str) -> None:
-        requests.post(f"{self.base}/dials/{dial_id}/hangup", headers=self._headers, timeout=20)
+        requests.post(
+            f"{self.base}/dials/{dial_id}/hangup", headers=self._headers, timeout=20
+        )
 
 
 class VogentDialError(Exception):

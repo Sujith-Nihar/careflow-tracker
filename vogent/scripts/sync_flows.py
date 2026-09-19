@@ -19,7 +19,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
-from vogent_api import REPO_ROOT, Vogent, VogentError, load_ids, save_ids  # noqa: E402
+from vogent_api import REPO_ROOT, Vogent, VogentError, load_ids, save_ids
 
 FLOW_DIR = REPO_ROOT / "vogent" / "flows"
 AGENT_NAME = "CareFlow Demo Surgical"
@@ -44,7 +44,9 @@ def resolve_flow(flow: dict, shared: dict, function_ids: dict[str, str]) -> dict
                 raise VogentError(f"node {node['id']} has an unresolved functionId")
             name = match.group(1)
             if name not in function_ids:
-                raise VogentError(f"function {name!r} is not in the workspace; run sync_functions.py")
+                raise VogentError(
+                    f"function {name!r} is not in the workspace; run sync_functions.py"
+                )
             data["functionId"] = function_ids[name]
 
             out_match = OUTPUT_PLACEHOLDER.match(str(data.get("outputs", "")))
@@ -74,7 +76,9 @@ def resolve_flow(flow: dict, shared: dict, function_ids: dict[str, str]) -> dict
 
 def main() -> int:
     parser = argparse.ArgumentParser()
-    parser.add_argument("--versions", default="v1,v2", help="which flow files to publish")
+    parser.add_argument(
+        "--versions", default="v1,v2", help="which flow files to publish"
+    )
     args = parser.parse_args()
 
     client = Vogent()
@@ -106,7 +110,10 @@ def main() -> int:
         created = client.post(f"/agents/{agent_id}/versioned_prompts", payload)
         ids[f"versioned_prompt.{version}"] = created["id"]
         conditioned = sum(
-            1 for n in definition["nodes"] for r in n["transitionRules"] if r.get("field")
+            1
+            for n in definition["nodes"]
+            for r in n["transitionRules"]
+            if r.get("field")
         )
         print(
             f"  published {version}  {created['id']}  "

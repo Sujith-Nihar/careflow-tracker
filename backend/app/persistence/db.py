@@ -66,18 +66,21 @@ def reset_pool() -> None:
 @contextmanager
 def transaction() -> Iterator[psycopg.Connection]:
     """One unit of work. Rolls back on any exception."""
-    with pool().connection() as conn:
-        with conn.transaction():
-            yield conn
+    with pool().connection() as conn, conn.transaction():
+        yield conn
 
 
-def query_all(conn: psycopg.Connection, sql: str, params: tuple | dict = ()) -> list[dict[str, Any]]:
+def query_all(
+    conn: psycopg.Connection, sql: str, params: tuple | dict = ()
+) -> list[dict[str, Any]]:
     with conn.cursor() as cur:
         cur.execute(sql, params)
         return cur.fetchall()
 
 
-def query_one(conn: psycopg.Connection, sql: str, params: tuple | dict = ()) -> dict[str, Any] | None:
+def query_one(
+    conn: psycopg.Connection, sql: str, params: tuple | dict = ()
+) -> dict[str, Any] | None:
     with conn.cursor() as cur:
         cur.execute(sql, params)
         return cur.fetchone()

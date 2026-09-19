@@ -12,7 +12,9 @@ ROOT = Path(__file__).resolve().parents[1]
 def load_env() -> None:
     env_file = ROOT / ".env"
     if not env_file.exists():
-        fail(".env not found. Copy .env.example to .env and fill it in (docs/HUMAN_SETUP.md).")
+        fail(
+            ".env not found. Copy .env.example to .env and fill it in (docs/HUMAN_SETUP.md)."
+        )
     for line in env_file.read_text().splitlines():
         line = line.strip()
         if not line or line.startswith("#") or "=" not in line:

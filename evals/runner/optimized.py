@@ -31,8 +31,8 @@ from .metrics import evaluate
 from .replay import BackendClient, replay
 from .scenarios import Scenario
 from .structural import check as structural_check
-from .voice import DEFAULT_RATE_USD_PER_SECOND, run_voice_case
 from .vogent import VogentClient
+from .voice import DEFAULT_RATE_USD_PER_SECOND, run_voice_case
 
 #: Scenarios whose flow path has no failure branch: replay covers them.
 #: Anything else keeps a real voice call. This list is the coverage decision, and
@@ -81,19 +81,25 @@ def run_optimised(
         for scenario in scenarios:
             cases.append(
                 OptimisedCase(
-                    scenario_id=scenario.id, mode="structural", passed=False,
+                    scenario_id=scenario.id,
+                    mode="structural",
+                    passed=False,
                     reason="structural preflight failed; voice calls skipped",
                     failures=[f.rule for f in report.findings],
                 )
             )
-        return _summarise(run_id, version, cases, started, preflight_seconds, report, root)
+        return _summarise(
+            run_id, version, cases, started, preflight_seconds, report, root
+        )
 
     for scenario in scenarios:
         if scenario.id in REPLAY_ELIGIBLE:
             cases.append(_replay_case(scenario, backend, run_id, root))
         else:
             cases.append(
-                _voice_case(scenario, version, run_id, backend, vogent, artifacts_root, headless)
+                _voice_case(
+                    scenario, version, run_id, backend, vogent, artifacts_root, headless
+                )
             )
 
     return _summarise(run_id, version, cases, started, preflight_seconds, report, root)
@@ -113,36 +119,60 @@ def _replay_case(
     (case_dir / "functions.json").write_text(_dumps(outcome["function_calls"]))
 
     return OptimisedCase(
-        scenario_id=scenario.id, mode="replay", passed=metrics.passed,
+        scenario_id=scenario.id,
+        mode="replay",
+        passed=metrics.passed,
         derived_status=derived.get("status"),
         wall_seconds=round(time.monotonic() - started, 2),
-        connected_seconds=0, cost_usd=0.0, failures=metrics.failures,
+        connected_seconds=0,
+        cost_usd=0.0,
+        failures=metrics.failures,
         reason="no failure branch on this path; backend behaviour fully exercised without voice",
         artifact_path=str(case_dir),
     )
 
 
 def _voice_case(
-    scenario: Scenario, version: str, run_id: str, backend: BackendClient,
-    vogent: VogentClient, artifacts_root: Path, headless: bool,
+    scenario: Scenario,
+    version: str,
+    run_id: str,
+    backend: BackendClient,
+    vogent: VogentClient,
+    artifacts_root: Path,
+    headless: bool,
 ) -> OptimisedCase:
     case = run_voice_case(
-        scenario, version=version, run_id=run_id, backend=backend, vogent=vogent,
-        artifacts_root=artifacts_root, headless=headless,
+        scenario,
+        version=version,
+        run_id=run_id,
+        backend=backend,
+        vogent=vogent,
+        artifacts_root=artifacts_root,
+        headless=headless,
     )
     return OptimisedCase(
-        scenario_id=scenario.id, mode="voice", passed=case.passed,
-        derived_status=case.derived_status, wall_seconds=case.wall_seconds,
-        connected_seconds=case.connected_seconds or 0, cost_usd=case.cost_usd or 0.0,
-        dial_id=case.dial_id, failures=case.failures,
+        scenario_id=scenario.id,
+        mode="voice",
+        passed=case.passed,
+        derived_status=case.derived_status,
+        wall_seconds=case.wall_seconds,
+        connected_seconds=case.connected_seconds or 0,
+        cost_usd=case.cost_usd or 0.0,
+        dial_id=case.dial_id,
+        failures=case.failures,
         reason="high-risk transfer and callback path; keeps real voice coverage",
         artifact_path=case.artifact_path,
     )
 
 
 def _summarise(
-    run_id: str, version: str, cases: list[OptimisedCase], started: float,
-    preflight_seconds: float, report, root: Path,
+    run_id: str,
+    version: str,
+    cases: list[OptimisedCase],
+    started: float,
+    preflight_seconds: float,
+    report,
+    root: Path,
 ) -> dict[str, Any]:
     summary = {
         "evaluation_run_id": run_id,

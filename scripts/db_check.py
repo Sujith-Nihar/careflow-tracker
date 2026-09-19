@@ -7,9 +7,8 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
-import psycopg  # noqa: E402
-
-from _env import fail, load_env, require  # noqa: E402
+import psycopg
+from _env import fail, load_env, require
 
 
 def main() -> int:
@@ -44,7 +43,9 @@ def _probe(url: str) -> int:
             "SELECT count(*) FROM information_schema.tables WHERE table_schema = current_schema()"
         )
         (tables,) = cur.fetchone()
-        cur.execute("SELECT 1")  # write path is exercised by migrate; this is a liveness probe
+        cur.execute(
+            "SELECT 1"
+        )  # write path is exercised by migrate; this is a liveness probe
     print(f"connected to {database} as {user}")
     print(f"  {version.split(',')[0]}")
     print(f"  {tables} tables in the current schema")

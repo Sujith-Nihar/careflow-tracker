@@ -65,7 +65,9 @@ def execution(
     )
 
 
-def transfer(status: TransferStatus, execution_id: str, reason: str | None = None) -> TransferSession:
+def transfer(
+    status: TransferStatus, execution_id: str, reason: str | None = None
+) -> TransferSession:
     return TransferSession(
         id=_id("transfer"), action_execution_id=execution_id, status=status, failure_reason=reason
     )
@@ -90,7 +92,9 @@ def appointment(
     return Appointment(id=_id("appt"), action_execution_id=execution_id, status=status)
 
 
-def said(kind: StatementKind, sequence_no: int = 0, disposition: Disposition | None = None) -> AgentStatement:
+def said(
+    kind: StatementKind, sequence_no: int = 0, disposition: Disposition | None = None
+) -> AgentStatement:
     return AgentStatement(
         id=_id("stmt"),
         kind=kind,
@@ -107,8 +111,11 @@ def said(kind: StatementKind, sequence_no: int = 0, disposition: Disposition | N
 
 def staff(kind: StaffActionKind, target_callback_id: str | None = None) -> StaffAction:
     return StaffAction(
-        id=_id("staff"), kind=kind, created_at=T0 + timedelta(minutes=5),
-        target_callback_id=target_callback_id, actor="front-desk",
+        id=_id("staff"),
+        kind=kind,
+        created_at=T0 + timedelta(minutes=5),
+        target_callback_id=target_callback_id,
+        actor="front-desk",
     )
 
 

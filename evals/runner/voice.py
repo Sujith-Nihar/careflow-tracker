@@ -24,7 +24,7 @@ from .harness import run_call
 from .metrics import MetricResult, evaluate
 from .replay import BackendClient
 from .scenarios import Scenario
-from .vogent import Dial, VogentClient, webhook_url_for_backend
+from .vogent import VogentClient, webhook_url_for_backend
 
 #: Standard-voice rate, docs.vogent.ai/platform-overview/billing, read 2026-09-18.
 #: Every dollar figure derived from it is a CALCULATED_ESTIMATE, never a billed charge.
@@ -114,8 +114,11 @@ def run_voice_case(
                 "dial.transcript",
                 {"dial_id": dial.dial_id, "transcript": outcome.transcript},
             )
-        except Exception:  # noqa: BLE001 - scoring continues on the vendor's copy
-            pass
+        except Exception as exc:  # noqa: BLE001
+            # Non-fatal: scoring falls back to the vendor's transcript, which is
+            # less complete. Recorded on the case so a reviewer can see that the
+            # truthfulness metrics were scored from the weaker source.
+            case.error = f"browser transcript not delivered ({type(exc).__name__})"
 
     dial_record = _read_dial(vogent, dial.dial_id)
     case.connected_seconds = _connected_seconds(dial_record)
@@ -175,7 +178,9 @@ def _read_dial(vogent: VogentClient, dial_id: str, *, attempts: int = 8) -> dict
         try:
             candidate = vogent.get_dial(dial_id)
         except Exception:  # noqa: BLE001
-            continue
+            # A transient read failure must not lose an expensive completed call.
+            # Keep the best record so far and stop growing it.
+            break
         if _transcript_length(candidate) > _transcript_length(best):
             best = candidate
         else:
@@ -196,7 +201,9 @@ def _connected_seconds(dial_record: dict) -> int | None:
     return None
 
 
-def _read_bundle(backend: BackendClient, dial_id: str, *, attempts: int = 6) -> dict | None:
+def _read_bundle(
+    backend: BackendClient, dial_id: str, *, attempts: int = 6
+) -> dict | None:
     """Give late webhooks a moment, then ask the backend to finalise if needed."""
     for attempt in range(attempts):
         try:
@@ -219,7 +226,12 @@ def _read_bundle(backend: BackendClient, dial_id: str, *, attempts: int = 6) -> 
 
 
 def _write_artifacts(
-    root: Path, case: VoiceCase, scenario: Scenario, outcome, dial_record: dict, bundle: dict | None
+    root: Path,
+    case: VoiceCase,
+    scenario: Scenario,
+    outcome,
+    dial_record: dict,
+    bundle: dict | None,
 ) -> Path:
     directory = root / case.evaluation_run_id / case.scenario_id
     directory.mkdir(parents=True, exist_ok=True)
@@ -227,6 +239,10 @@ def _write_artifacts(
     (directory / "transcript.json").write_text(json.dumps(outcome.transcript, indent=2))
     (directory / "timeline.json").write_text(json.dumps(outcome.timeline, indent=2))
     if bundle is not None:
-        (directory / "evidence.json").write_text(json.dumps(bundle, indent=2, default=str))
-    (directory / "metrics.json").write_text(json.dumps(asdict(case), indent=2, default=str))
+        (directory / "evidence.json").write_text(
+            json.dumps(bundle, indent=2, default=str)
+        )
+    (directory / "metrics.json").write_text(
+        json.dumps(asdict(case), indent=2, default=str)
+    )
     return directory

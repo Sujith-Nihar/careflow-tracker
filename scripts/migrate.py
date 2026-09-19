@@ -14,9 +14,8 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
-import psycopg  # noqa: E402
-
-from _env import ROOT, load_env, require  # noqa: E402
+import psycopg
+from _env import ROOT, load_env, require
 
 MIGRATIONS = ROOT / "backend" / "migrations"
 TEST_SCHEMA = "careflow_test"
@@ -32,7 +31,9 @@ CREATE TABLE IF NOT EXISTS schema_migrations (
 
 def main() -> int:
     parser = argparse.ArgumentParser()
-    parser.add_argument("--test-schema", action="store_true", help=f"apply into {TEST_SCHEMA}")
+    parser.add_argument(
+        "--test-schema", action="store_true", help=f"apply into {TEST_SCHEMA}"
+    )
     args = parser.parse_args()
 
     load_env()
@@ -55,11 +56,16 @@ def main() -> int:
             with conn.cursor() as cur:
                 if args.test_schema:
                     cur.execute(f"SET search_path TO {TEST_SCHEMA}, public")
-                cur.execute("SELECT checksum FROM schema_migrations WHERE filename = %s", (path.name,))
+                cur.execute(
+                    "SELECT checksum FROM schema_migrations WHERE filename = %s",
+                    (path.name,),
+                )
                 row = cur.fetchone()
                 if row:
                     if row[0] != checksum:
-                        print(f"warning: {path.name} changed since it was applied ({row[0]} -> {checksum})")
+                        print(
+                            f"warning: {path.name} changed since it was applied ({row[0]} -> {checksum})"
+                        )
                     print(f"  skip {path.name} (already applied)")
                     continue
                 cur.execute(sql)

@@ -15,12 +15,20 @@ pytestmark = pytest.mark.db
 
 def test_an_unreadable_phone_number_is_refused_rather_than_guessed(client, demo_org):
     dial = dial_id()
-    register_dial(client, demo_org, dial, "bad_phone", {"callback": "create"},
-                  "post_operative_concern")
-    response = call_function(client, "create_callback", dial, {
-        "patient_ref": "PT", "callback_phone": "my usual number",
-        "priority": "urgent", "reason_code": "transfer_failed",
-    })
+    register_dial(
+        client, demo_org, dial, "bad_phone", {"callback": "create"}, "post_operative_concern"
+    )
+    response = call_function(
+        client,
+        "create_callback",
+        dial,
+        {
+            "patient_ref": "PT",
+            "callback_phone": "my usual number",
+            "priority": "urgent",
+            "reason_code": "transfer_failed",
+        },
+    )
     assert response.status_code == 200
     assert response.json["status"] == "invalid_input"
 
@@ -33,9 +41,16 @@ def test_an_unreadable_phone_number_is_refused_rather_than_guessed(client, demo_
 def test_an_unreadable_date_is_refused(client, demo_org):
     dial = dial_id()
     register_dial(client, demo_org, dial, "bad_date", {}, "routine_scheduling")
-    response = call_function(client, "schedule_appointment", dial, {
-        "patient_ref": "PT", "preferred_date": "whenever works", "reason": "checkup",
-    })
+    response = call_function(
+        client,
+        "schedule_appointment",
+        dial,
+        {
+            "patient_ref": "PT",
+            "preferred_date": "whenever works",
+            "reason": "checkup",
+        },
+    )
     assert response.json["status"] == "invalid_input"
 
     bundle = bundle_for(client, demo_org, dial)
@@ -46,43 +61,74 @@ def test_an_unreadable_date_is_refused(client, demo_org):
 def test_a_date_in_the_past_is_refused(client, demo_org):
     dial = dial_id()
     register_dial(client, demo_org, dial, "past_date", {}, "routine_scheduling")
-    response = call_function(client, "schedule_appointment", dial, {
-        "patient_ref": "PT", "preferred_date": "2020-01-01", "reason": "checkup",
-    })
+    response = call_function(
+        client,
+        "schedule_appointment",
+        dial,
+        {
+            "patient_ref": "PT",
+            "preferred_date": "2020-01-01",
+            "reason": "checkup",
+        },
+    )
     assert response.json["status"] == "invalid_input"
 
 
 def test_spoken_digits_are_understood(client, demo_org):
     """STT often yields words, not digits. Refusing those would break real calls."""
     dial = dial_id()
-    register_dial(client, demo_org, dial, "spoken_phone", {"callback": "create"},
-                  "post_operative_concern")
-    response = call_function(client, "create_callback", dial, {
-        "patient_ref": "PT", "callback_phone": "five five five five five five zero one two three",
-        "priority": "urgent", "reason_code": "transfer_failed",
-    })
+    register_dial(
+        client, demo_org, dial, "spoken_phone", {"callback": "create"}, "post_operative_concern"
+    )
+    response = call_function(
+        client,
+        "create_callback",
+        dial,
+        {
+            "patient_ref": "PT",
+            "callback_phone": "five five five five five five zero one two three",
+            "priority": "urgent",
+            "reason_code": "transfer_failed",
+        },
+    )
     assert response.json["status"] == "created"
 
 
 def test_an_oversized_field_does_not_crash_the_endpoint(client, demo_org):
     dial = dial_id()
-    register_dial(client, demo_org, dial, "oversized", {"transfer": "connect"},
-                  "post_operative_concern")
-    response = call_function(client, "transfer_triage", dial, {
-        "patient_ref": "PT", "concern_summary": "x" * 5000, "callback_phone": "+15555550130",
-    })
+    register_dial(
+        client, demo_org, dial, "oversized", {"transfer": "connect"}, "post_operative_concern"
+    )
+    response = call_function(
+        client,
+        "transfer_triage",
+        dial,
+        {
+            "patient_ref": "PT",
+            "concern_summary": "x" * 5000,
+            "callback_phone": "+15555550130",
+        },
+    )
     assert response.status_code == 200
     assert response.json["status"] == "invalid_input"
 
 
 def test_unknown_parameters_are_ignored_not_stored(client, demo_org):
     dial = dial_id()
-    register_dial(client, demo_org, dial, "extra_params", {"transfer": "connect"},
-                  "post_operative_concern")
-    call_function(client, "transfer_triage", dial, {
-        "patient_ref": "PT", "concern_summary": "ok", "callback_phone": "+15555550131",
-        "surprise_field": "should not be stored",
-    })
+    register_dial(
+        client, demo_org, dial, "extra_params", {"transfer": "connect"}, "post_operative_concern"
+    )
+    call_function(
+        client,
+        "transfer_triage",
+        dial,
+        {
+            "patient_ref": "PT",
+            "concern_summary": "ok",
+            "callback_phone": "+15555550131",
+            "surprise_field": "should not be stored",
+        },
+    )
     bundle = bundle_for(client, demo_org, dial)
     stored = bundle["action_executions"][0]["request_payload"]
     assert "surprise_field" not in stored
@@ -90,7 +136,8 @@ def test_unknown_parameters_are_ignored_not_stored(client, demo_org):
 
 def test_an_empty_body_is_rejected_cleanly(client):
     response = client.post(
-        "/vogent/functions/transfer_triage", json={},
+        "/vogent/functions/transfer_triage",
+        json={},
         headers={"X-CareFlow-Token": "test-function-token-demo"},
     )
     assert response.status_code in {400, 500}
@@ -104,8 +151,9 @@ def test_dial_level_identifiers_beat_what_the_model_repeats_back(client, demo_or
     identifier set at dial creation is the more trustworthy of the two.
     """
     dial = dial_id()
-    register_dial(client, demo_org, dial, "dial_inputs", {"callback": "create"},
-                  "post_operative_concern")
+    register_dial(
+        client, demo_org, dial, "dial_inputs", {"callback": "create"}, "post_operative_concern"
+    )
     body = {
         "dial_id": dial,
         "dial": {
@@ -114,15 +162,23 @@ def test_dial_level_identifiers_beat_what_the_model_repeats_back(client, demo_or
             "inputs": {"patient_ref": "PT-SYN-FIXED", "callback_phone": "+15555550140"},
         },
         # The flow template never resolved, and the model echoed nothing useful.
-        "params": {"patient_ref": "{{patient_ref}}", "callback_phone": "",
-                   "priority": "urgent", "reason_code": "transfer_failed"},
+        "params": {
+            "patient_ref": "{{patient_ref}}",
+            "callback_phone": "",
+            "priority": "urgent",
+            "reason_code": "transfer_failed",
+        },
     }
-    response = client.post("/vogent/functions/create_callback", json=body,
-                           headers={"X-CareFlow-Token": "test-function-token-demo"})
+    response = client.post(
+        "/vogent/functions/create_callback",
+        json=body,
+        headers={"X-CareFlow-Token": "test-function-token-demo"},
+    )
     assert response.json["status"] == "created"
 
     bundle = bundle_for(client, demo_org, dial)
-    stored = next(e for e in bundle["action_executions"]
-                  if e["kind"] == "create_callback")["request_payload"]
+    stored = next(e for e in bundle["action_executions"] if e["kind"] == "create_callback")[
+        "request_payload"
+    ]
     assert stored["patient_ref"] == "PT-SYN-FIXED"
     assert stored["callback_phone"] == "+15555550140"
