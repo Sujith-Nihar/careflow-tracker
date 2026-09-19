@@ -1,0 +1,105 @@
+"""Request validation for the Vogent-facing boundary.
+
+Bounds are tight on purpose. These fields carry whatever a speech model produced,
+so an unbounded string is both a storage risk and a signal that something went
+wrong upstream. Unknown keys are ignored rather than stored.
+"""
+
+from __future__ import annotations
+
+from typing import Any, Literal
+
+from pydantic import BaseModel, ConfigDict, Field, ValidationError, field_validator
+
+MAX_SHORT = 200
+MAX_REASON = 500
+MAX_SUMMARY = 300
+
+
+class Strict(BaseModel):
+    model_config = ConfigDict(extra="ignore", str_strip_whitespace=True)
+
+
+class FunctionEnvelope(Strict):
+    """The body Vogent posts to an API function."""
+
+    dial_id: str = Field(min_length=1, max_length=128)
+    params: dict[str, Any] = Field(default_factory=dict)
+    dial: dict[str, Any] = Field(default_factory=dict)
+
+    @property
+    def vogent_agent_id(self) -> str | None:
+        agent = self.dial.get("agent")
+        return str(agent.get("id")) if isinstance(agent, dict) and agent.get("id") else None
+
+    @property
+    def versioned_prompt_id(self) -> str | None:
+        value = self.dial.get("versionedPromptId")
+        return str(value) if value else None
+
+    @property
+    def transcript_snapshot(self) -> list | None:
+        value = self.dial.get("transcript")
+        return value if isinstance(value, list) and value else None
+
+
+class ScheduleAppointmentParams(Strict):
+    patient_ref: str = Field(default="", max_length=64)
+    preferred_date: str = Field(default="", max_length=MAX_SHORT)
+    reason: str = Field(default="", max_length=MAX_REASON)
+
+
+class TransferTriageParams(Strict):
+    patient_ref: str = Field(default="", max_length=64)
+    concern_summary: str = Field(default="", max_length=MAX_REASON)
+    callback_phone: str = Field(default="", max_length=MAX_SHORT)
+
+
+class CreateCallbackParams(Strict):
+    patient_ref: str = Field(default="", max_length=64)
+    callback_phone: str = Field(default="", max_length=MAX_SHORT)
+    priority: Literal["urgent", "normal"] = "urgent"
+    reason_code: Literal["transfer_failed", "unsupported_request", "caller_requested"] = (
+        "transfer_failed"
+    )
+
+    @field_validator("priority", "reason_code", mode="before")
+    @classmethod
+    def _lowercase(cls, value: Any) -> Any:
+        return value.strip().lower() if isinstance(value, str) else value
+
+
+class ReportDispositionParams(Strict):
+    category: Literal["routine_scheduling", "post_operative_concern", "other"] = "other"
+    disposition: Literal[
+        "scheduled", "transferred", "callback_pending", "escalation_failed", "unresolved", "resolved"
+    ] = "unresolved"
+    summary: str = Field(default="", max_length=MAX_SUMMARY)
+
+    @field_validator("category", "disposition", mode="before")
+    @classmethod
+    def _lowercase(cls, value: Any) -> Any:
+        return value.strip().lower().replace(" ", "_") if isinstance(value, str) else value
+
+
+class RegisterDialRequest(Strict):
+    dial_id: str = Field(min_length=1, max_length=128)
+    scenario_id: str = Field(min_length=1, max_length=128)
+    scenario_version: int = 1
+    evaluation_run_id: str | None = None
+    true_intent: str | None = None
+    fault_profile: dict[str, str] = Field(default_factory=dict)
+
+
+class StaffActionRequest(Strict):
+    kind: Literal["callback_completed", "reviewed"]
+    actor: str = Field(min_length=1, max_length=120)
+    target_callback_id: str | None = None
+    note: str | None = Field(default=None, max_length=1000)
+
+
+__all__ = [
+    "FunctionEnvelope", "ScheduleAppointmentParams", "TransferTriageParams",
+    "CreateCallbackParams", "ReportDispositionParams", "RegisterDialRequest",
+    "StaffActionRequest", "ValidationError",
+]
