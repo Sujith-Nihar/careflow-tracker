@@ -3,7 +3,7 @@
 Kyron Medical full-stack take-home. A healthcare voice-agent workflow where a call counts as complete
 only when persisted function and downstream-system evidence says so, never because the agent said so.
 Assignment: `docs/ASSIGNMENT.md`. Limits: 16 active hours (`TIME_LOG.md`), 48-hour window from
-2026-09-18 22:00 local. All data is synthetic. Nothing is committed yet; commit only when asked.
+2026-09-18 22:00 local. All data is synthetic. Commit only when asked, in small topic-grouped commits with short plain messages and no AI attribution trailer.
 
 ## Read in this order
 
