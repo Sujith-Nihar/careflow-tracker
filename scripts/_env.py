@@ -18,7 +18,12 @@ def load_env() -> None:
         if not line or line.startswith("#") or "=" not in line:
             continue
         key, value = line.split("=", 1)
-        os.environ.setdefault(key.strip(), value.strip().strip('"').strip("'"))
+        value = value.strip().strip('"').strip("'")
+        # A value that begins with '#' is a commented-out placeholder, not a value.
+        # Mid-value '#' is left alone: passwords and URLs may contain one.
+        if value.startswith("#"):
+            value = ""
+        os.environ.setdefault(key.strip(), value)
 
 
 def require(name: str) -> str:
