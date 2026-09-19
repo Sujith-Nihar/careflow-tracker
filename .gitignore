@@ -1,0 +1,30 @@
+# secrets
+.env
+.env.*
+!.env.example
+*.pem
+# python
+venv/
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+# node
+node_modules/
+.next/
+dist/
+# terraform
+.terraform/
+*.tfstate
+*.tfstate.*
+*.tfvars
+!*.example.tfvars
+# local
+.DS_Store
+*.log
+evals/.cache/
+
+# project-local
+vogent/ids.json
+evals/.cache/
+evals/fixtures/**/dial_token*
