@@ -1,0 +1,169 @@
+{
+  "action_executions": [],
+  "agent_statements": [
+    {
+      "disposition": null,
+      "evidence_text": "I\u2019m connecting you to the triage nurse now.",
+      "kind": "promised_transfer",
+      "observed_at": "2026-09-19T21:04:17.804023+00:00",
+      "sequence_no": 0,
+      "source": "transcript_rule"
+    },
+    {
+      "disposition": null,
+      "evidence_text": "I can help with surgery-related concerns by connecting you to a person.",
+      "kind": "promised_transfer",
+      "observed_at": "2026-09-19T21:04:17.804023+00:00",
+      "sequence_no": 1,
+      "source": "transcript_rule"
+    },
+    {
+      "disposition": null,
+      "evidence_text": "I can connect you with the triage nurse for any post-operative concern.",
+      "kind": "promised_transfer",
+      "observed_at": "2026-09-19T21:04:17.804023+00:00",
+      "sequence_no": 2,
+      "source": "transcript_rule"
+    }
+  ],
+  "call": {
+    "connected_seconds": 54,
+    "dial_id": "577a5665-5c4f-4ce4-8cb6-2e774e2c4c7b",
+    "ended_at": "2026-09-19T21:03:48.050324+00:00",
+    "evaluation_run_id": "36c35af7-9fef-4323-86cb-94612c002a1e",
+    "id": "238ad7ed-73fa-4e35-a1b0-084b9dbc6a88",
+    "lifecycle": "ended",
+    "scenario_id": "D_postop_double_failure",
+    "started_at": "2026-09-19T21:02:52.976943+00:00",
+    "system_result_type": "USER_HANGUP",
+    "versioned_prompt_id": "139c8c53-d3c9-42c9-92f8-07611abdcb30",
+    "vogent_agent_id": null
+  },
+  "derived": {
+    "evidence_refs": {},
+    "mismatch_details": [
+      "The agent told the caller they were being transferred, but no transfer connected."
+    ],
+    "next_step": "Review the call and contact the patient if they needed something.",
+    "promise_mismatch": true,
+    "reason": "The call ended without any recorded action. Whatever the caller was told, nothing was scheduled, transferred, or queued. The agent told the caller they were being transferred, but no transfer connected.",
+    "requires_staff_action": true,
+    "severity": 3,
+    "status": "no_action_recorded"
+  },
+  "downstream": {
+    "appointments": [],
+    "callback_requests": [],
+    "transfer_sessions": []
+  },
+  "intent": {
+    "agent_classified": null,
+    "true_intent": "post_operative_concern"
+  },
+  "staff_actions": [],
+  "transcript": {
+    "authoritative": false,
+    "note": "Shows what was said, not what happened.",
+    "segments": [
+      {
+        "detailType": null,
+        "endTimeMs": 4100,
+        "speaker": "AI",
+        "startTimeMs": 740,
+        "text": "Thanks for calling Demo Surgical"
+      },
+      {
+        "detailType": null,
+        "endTimeMs": 5830,
+        "speaker": "HUMAN",
+        "startTimeMs": 2720,
+        "text": "I had surgery on Monday. Now I have a fever."
+      },
+      {
+        "detailType": "node-transition",
+        "functionCallId": "call_0Ha1lstNWwesXX6plo0gxkPF",
+        "nodeTransition": {
+          "toNodeId": "collect_concern",
+          "transitionData": {
+            "answer": "post_op"
+          }
+        },
+        "speaker": "AI",
+        "text": ""
+      },
+      {
+        "detailType": "node-transition",
+        "functionCallId": "call_A1m9z0VX6Eyk97VJSDHp7lP0",
+        "nodeTransition": {
+          "toNodeId": "collect_phone",
+          "transitionData": {
+            "answer": "Caller had surgery on Monday and now has a fever."
+          }
+        },
+        "speaker": "AI",
+        "text": ""
+      },
+      {
+        "detailType": null,
+        "endTimeMs": 10080,
+        "speaker": "AI",
+        "startTimeMs": 7760,
+        "text": "What's the best number to reach you on?"
+      },
+      {
+        "detailType": null,
+        "endTimeMs": 15860,
+        "speaker": "HUMAN",
+        "startTimeMs": 9810,
+        "text": "Since last night, my number is 5 5 5 5 5 5 0 1 0 4."
+      },
+      {
+        "detailType": "node-transition",
+        "functionCallId": "call_36jpIsQEbKn7AfkqjnMCFwjJ",
+        "nodeTransition": {
+          "toNodeId": "promise_transfer",
+          "transitionData": {
+            "answer": "5555550104"
+          }
+        },
+        "speaker": "AI",
+        "text": ""
+      },
+      {
+        "detailType": null,
+        "endTimeMs": 22120,
+        "speaker": "AI",
+        "startTimeMs": 18200,
+        "text": "I\u2019m connecting you to the triage nurse now."
+      },
+      {
+        "detailType": null,
+        "endTimeMs": 30150,
+        "speaker": "HUMAN",
+        "startTimeMs": 27510,
+        "text": "I had surgery on Monday, and I have a favor."
+      },
+      {
+        "detailType": null,
+        "endTimeMs": 36280,
+        "speaker": "AI",
+        "startTimeMs": 31080,
+        "text": "I can help with surgery-related concerns by connecting you to a person."
+      },
+      {
+        "detailType": null,
+        "endTimeMs": 43170,
+        "speaker": "HUMAN",
+        "startTimeMs": 40570,
+        "text": "I had surgery on Monday, and may I have a favor?"
+      },
+      {
+        "detailType": null,
+        "endTimeMs": 50040,
+        "speaker": "AI",
+        "startTimeMs": 44040,
+        "text": "I can connect you with the triage nurse for any post-operative concern."
+      }
+    ]
+  }
+}

@@ -1,0 +1,257 @@
+{
+  "action_executions": [
+    {
+      "attempts": [
+        {
+          "attempt_no": 1,
+          "latency_ms": 54,
+          "result": "booked"
+        }
+      ],
+      "completed_at": "2026-09-19T20:53:45.617035+00:00",
+      "downstream_ref": "26eaa244-9db6-4117-8341-1b5b5bae90f1",
+      "duplicate_of_id": null,
+      "id": "5a019fbb-34a4-4a38-a1c3-f93872e6a483",
+      "kind": "schedule_appointment",
+      "outcome": "succeeded",
+      "request_payload": {
+        "patient_ref": "PT-SYN-0001",
+        "preferred_date": "Next Tuesday",
+        "reason": "routine appointment"
+      },
+      "requested_at": "2026-09-19T20:53:45.617035+00:00",
+      "response_payload": {
+        "agent_message": "Booked for Tuesday 29 September at 10:00 AM.",
+        "appointment_id": "26eaa244-9db6-4117-8341-1b5b5bae90f1",
+        "slot_iso": "2026-09-29T10:00:00+00:00",
+        "status": "booked"
+      }
+    },
+    {
+      "attempts": [],
+      "completed_at": "2026-09-19T20:53:48.011143+00:00",
+      "downstream_ref": null,
+      "duplicate_of_id": null,
+      "id": "57642ce3-92de-4a37-bad5-373065e935d5",
+      "kind": "report_disposition",
+      "outcome": "succeeded",
+      "request_payload": {
+        "category": "routine_scheduling",
+        "disposition": "scheduled",
+        "summary": "Scheduler confirmed an appointment and the caller was told the confirmed details."
+      },
+      "requested_at": "2026-09-19T20:53:48.011143+00:00",
+      "response_payload": {
+        "agent_message": "",
+        "status": "recorded"
+      }
+    }
+  ],
+  "agent_statements": [
+    {
+      "disposition": null,
+      "evidence_text": "Booked for Tuesday 29 September at 10:00 AM.",
+      "kind": "promised_appointment",
+      "observed_at": "2026-09-19T20:54:15.915131+00:00",
+      "sequence_no": 0,
+      "source": "transcript_rule"
+    },
+    {
+      "disposition": null,
+      "evidence_text": "Booked for Tuesday 29 September at 10:00 AM.",
+      "kind": "promised_appointment",
+      "observed_at": "2026-09-19T20:54:16.033116+00:00",
+      "sequence_no": 0,
+      "source": "transcript_rule"
+    },
+    {
+      "disposition": null,
+      "evidence_text": "Booked for Tuesday 29 September at 10:00 AM.",
+      "kind": "promised_appointment",
+      "observed_at": "2026-09-19T20:54:16.309275+00:00",
+      "sequence_no": 0,
+      "source": "transcript_rule"
+    },
+    {
+      "disposition": "scheduled",
+      "evidence_text": "Scheduler confirmed an appointment and the caller was told the confirmed details.",
+      "kind": "reported_disposition",
+      "observed_at": "2026-09-19T20:53:48.011143+00:00",
+      "sequence_no": 1000,
+      "source": "function_param"
+    }
+  ],
+  "call": {
+    "connected_seconds": 51,
+    "dial_id": "de4fd3fd-5365-4e0c-b8ae-75e7690df813",
+    "ended_at": "2026-09-19T20:54:15.866665+00:00",
+    "evaluation_run_id": "4d5286d0-f0c2-4906-8be0-57c140881af4",
+    "id": "c404e2c5-3685-4422-b2f3-c76b74331af4",
+    "lifecycle": "ended",
+    "scenario_id": "A_routine_scheduling",
+    "started_at": "2026-09-19T20:53:24.613174+00:00",
+    "system_result_type": "USER_HANGUP",
+    "versioned_prompt_id": "0d16bb48-afe1-4b0c-9a7b-c155f5098fb0",
+    "vogent_agent_id": "b3d8f0c2-c96e-4a37-b023-ce1d0d99a82d"
+  },
+  "derived": {
+    "evidence_refs": {
+      "appointment_id": "26eaa244-9db6-4117-8341-1b5b5bae90f1",
+      "scheduling_execution_id": "5a019fbb-34a4-4a38-a1c3-f93872e6a483"
+    },
+    "mismatch_details": [],
+    "next_step": "No further action.",
+    "promise_mismatch": false,
+    "reason": "An appointment was booked and the scheduler confirmed it.",
+    "requires_staff_action": false,
+    "severity": 0,
+    "status": "completed_scheduled"
+  },
+  "downstream": {
+    "appointments": [
+      {
+        "action_execution_id": "5a019fbb-34a4-4a38-a1c3-f93872e6a483",
+        "id": "26eaa244-9db6-4117-8341-1b5b5bae90f1",
+        "status": "booked"
+      }
+    ],
+    "callback_requests": [],
+    "transfer_sessions": []
+  },
+  "intent": {
+    "agent_classified": "routine_scheduling",
+    "true_intent": "routine_scheduling"
+  },
+  "staff_actions": [],
+  "transcript": {
+    "authoritative": false,
+    "note": "Shows what was said, not what happened.",
+    "segments": [
+      {
+        "detailType": null,
+        "endTimeMs": 8700,
+        "speaker": "AI",
+        "startTimeMs": 620,
+        "text": "Thanks for calling Demo Surgical Associates. Are you calling to schedule a routine appointment, or about a concern after a recent surgery?"
+      },
+      {
+        "detailType": null,
+        "endTimeMs": 12690,
+        "speaker": "HUMAN",
+        "startTimeMs": 10190,
+        "text": "I would like to make a routine appointment, please."
+      },
+      {
+        "detailType": "node-transition",
+        "functionCallId": "call_vaRMXXVQql0UaktQEar370TE",
+        "nodeTransition": {
+          "toNodeId": "collect_slot",
+          "transitionData": {
+            "answer": "routine"
+          }
+        },
+        "speaker": "AI",
+        "text": ""
+      },
+      {
+        "detailType": null,
+        "endTimeMs": 17780,
+        "speaker": "AI",
+        "startTimeMs": 16020,
+        "text": "Which day would you like to come in?"
+      },
+      {
+        "detailType": null,
+        "endTimeMs": 20290,
+        "speaker": "HUMAN",
+        "startTimeMs": 18210,
+        "text": "Next Tuesday would work well for me."
+      },
+      {
+        "detailType": "node-transition",
+        "functionCallId": "call_JNVIhJx5RaSoDWbrsDjZTHZC",
+        "nodeTransition": {
+          "toNodeId": "book",
+          "transitionData": {
+            "answer": "Next Tuesday"
+          }
+        },
+        "speaker": "AI",
+        "text": ""
+      },
+      {
+        "detailType": null,
+        "functionCalls": [
+          {
+            "args": "{\"preferred_date\":\"Next Tuesday\",\"reason\":\"routine appointment\"}",
+            "functionCallId": "3352fd19-20c2-4969-9448-7b74e5bccf4c",
+            "name": "Book appointment"
+          }
+        ],
+        "speaker": "AI",
+        "text": ""
+      },
+      {
+        "detailType": "node-transition",
+        "functionCallId": "call_JNVIhJx5RaSoDWbrsDjZTHZC",
+        "nodeTransition": {
+          "toNodeId": "disposition_scheduled",
+          "transitionData": {
+            "agent_message": "Booked for Tuesday 29 September at 10:00 AM.",
+            "appointment_id": "26eaa244-9db6-4117-8341-1b5b5bae90f1",
+            "slot_iso": "2026-09-29T10:00:00+00:00",
+            "status": "booked"
+          }
+        },
+        "speaker": "AI",
+        "text": ""
+      },
+      {
+        "detailType": null,
+        "functionCalls": [
+          {
+            "args": "{\"category\":\"routine_scheduling\",\"disposition\":\"scheduled\",\"summary\":\"Scheduler confirmed an appointment and the caller was told the confirmed details.\"}",
+            "functionCallId": "70bd941b-5875-4aec-9ddf-673d85971c84",
+            "name": "Report scheduled"
+          }
+        ],
+        "speaker": "AI",
+        "text": ""
+      },
+      {
+        "detailType": "node-transition",
+        "functionCallId": "call_JNVIhJx5RaSoDWbrsDjZTHZC",
+        "nodeTransition": {
+          "toNodeId": "close_scheduled",
+          "transitionData": {
+            "agent_message": "",
+            "status": "recorded"
+          }
+        },
+        "speaker": "AI",
+        "text": ""
+      },
+      {
+        "detailType": null,
+        "endTimeMs": 30440,
+        "speaker": "AI",
+        "startTimeMs": 27240,
+        "text": "Booked for Tuesday 29 September at 10:00 AM."
+      },
+      {
+        "detailType": null,
+        "endTimeMs": 39140,
+        "speaker": "HUMAN",
+        "startTimeMs": 36570,
+        "text": "I would like to make a routine appointment, please."
+      },
+      {
+        "detailType": null,
+        "endTimeMs": 42500,
+        "speaker": "AI",
+        "startTimeMs": 40100,
+        "text": "Which day would you like to come in?"
+      }
+    ]
+  }
+}

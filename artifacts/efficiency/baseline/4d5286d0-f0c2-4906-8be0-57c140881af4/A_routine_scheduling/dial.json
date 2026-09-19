@@ -1,0 +1,208 @@
+{
+  "agent": {
+    "defaultExtractorId": null,
+    "defaultVersionedPromptId": "b27a8ced-35c7-4d44-bb63-a0469bcde061",
+    "defaultVoiceId": "94c32748-865f-42e1-bb1a-3a6b4abc7d11",
+    "endpointDetectorConfig": {
+      "mode": "DEFAULT",
+      "type": "SEMANTIC"
+    },
+    "fillEmptyStringVariables": false,
+    "id": "b3d8f0c2-c96e-4a37-b023-ce1d0d99a82d",
+    "idleMessageConfig": {
+      "enabled": false,
+      "idleDurationMilliseconds": 0,
+      "maxIdleMessages": 0
+    },
+    "ivrConfiguration": null,
+    "ivrSilenceHangupConfiguration": null,
+    "language": "en",
+    "maxDurationSeconds": 10800,
+    "name": "CareFlow Demo Surgical",
+    "silenceHangupConfiguration": {
+      "silenceDurationSeconds": 0,
+      "type": "DISABLED"
+    },
+    "timeoutBehaviorConfiguration": {
+      "behavior": "HANGUP",
+      "transferNumber": null
+    },
+    "timeoutMessage": null,
+    "transcriberParams": {
+      "type": "deepgram"
+    },
+    "utteranceDetectorConfig": {
+      "interruptionPlayTimeMs": 1000,
+      "sensitivity": "MEDIUM"
+    },
+    "voicemailConfig": {
+      "detection": "DISABLE",
+      "message": null
+    }
+  },
+  "aiDurationSeconds": 51,
+  "aiResult": {
+    "book": {
+      "agent_message": "Booked for Tuesday 29 September at 10:00 AM.",
+      "appointment_id": "26eaa244-9db6-4117-8341-1b5b5bae90f1",
+      "slot_iso": "2026-09-29T10:00:00+00:00",
+      "status": "booked"
+    },
+    "collect_slot": {
+      "answer": "Next Tuesday"
+    },
+    "disposition_scheduled": {
+      "agent_message": "",
+      "status": "recorded"
+    },
+    "greet_intake": {
+      "answer": "routine"
+    }
+  },
+  "durationSeconds": 51,
+  "endedAt": "2026-09-19T20:54:15.866665Z",
+  "id": "de4fd3fd-5365-4e0c-b8ae-75e7690df813",
+  "inputs": {
+    "callback_phone": "+15555550101",
+    "evaluation_run_id": "4d5286d0-f0c2-4906-8be0-57c140881af4",
+    "patient_ref": "PT-SYN-0001",
+    "scenario_id": "A_routine_scheduling"
+  },
+  "recordings": [
+    {
+      "url": "https://api.vogent.ai/api/recordings/e1c8012a-faba-4c74-a4f4-044d2db519f9"
+    }
+  ],
+  "startedAt": "2026-09-19T20:53:24.613174Z",
+  "status": "completed",
+  "systemResultType": "USER_HANGUP",
+  "transcript": [
+    {
+      "detailType": null,
+      "endTimeMs": 8700,
+      "speaker": "AI",
+      "startTimeMs": 620,
+      "text": "Thanks for calling Demo Surgical Associates. Are you calling to schedule a routine appointment, or about a concern after a recent surgery?"
+    },
+    {
+      "detailType": null,
+      "endTimeMs": 12690,
+      "speaker": "HUMAN",
+      "startTimeMs": 10190,
+      "text": "I would like to make a routine appointment, please."
+    },
+    {
+      "detailType": "node-transition",
+      "functionCallId": "call_vaRMXXVQql0UaktQEar370TE",
+      "nodeTransition": {
+        "toNodeId": "collect_slot",
+        "transitionData": {
+          "answer": "routine"
+        }
+      },
+      "speaker": "AI",
+      "text": ""
+    },
+    {
+      "detailType": null,
+      "endTimeMs": 17780,
+      "speaker": "AI",
+      "startTimeMs": 16020,
+      "text": "Which day would you like to come in?"
+    },
+    {
+      "detailType": null,
+      "endTimeMs": 20290,
+      "speaker": "HUMAN",
+      "startTimeMs": 18210,
+      "text": "Next Tuesday would work well for me."
+    },
+    {
+      "detailType": "node-transition",
+      "functionCallId": "call_JNVIhJx5RaSoDWbrsDjZTHZC",
+      "nodeTransition": {
+        "toNodeId": "book",
+        "transitionData": {
+          "answer": "Next Tuesday"
+        }
+      },
+      "speaker": "AI",
+      "text": ""
+    },
+    {
+      "detailType": null,
+      "functionCalls": [
+        {
+          "args": "{\"preferred_date\":\"Next Tuesday\",\"reason\":\"routine appointment\"}",
+          "functionCallId": "3352fd19-20c2-4969-9448-7b74e5bccf4c",
+          "name": "Book appointment"
+        }
+      ],
+      "speaker": "AI",
+      "text": ""
+    },
+    {
+      "detailType": "node-transition",
+      "functionCallId": "call_JNVIhJx5RaSoDWbrsDjZTHZC",
+      "nodeTransition": {
+        "toNodeId": "disposition_scheduled",
+        "transitionData": {
+          "agent_message": "Booked for Tuesday 29 September at 10:00 AM.",
+          "appointment_id": "26eaa244-9db6-4117-8341-1b5b5bae90f1",
+          "slot_iso": "2026-09-29T10:00:00+00:00",
+          "status": "booked"
+        }
+      },
+      "speaker": "AI",
+      "text": ""
+    },
+    {
+      "detailType": null,
+      "functionCalls": [
+        {
+          "args": "{\"category\":\"routine_scheduling\",\"disposition\":\"scheduled\",\"summary\":\"Scheduler confirmed an appointment and the caller was told the confirmed details.\"}",
+          "functionCallId": "70bd941b-5875-4aec-9ddf-673d85971c84",
+          "name": "Report scheduled"
+        }
+      ],
+      "speaker": "AI",
+      "text": ""
+    },
+    {
+      "detailType": "node-transition",
+      "functionCallId": "call_JNVIhJx5RaSoDWbrsDjZTHZC",
+      "nodeTransition": {
+        "toNodeId": "close_scheduled",
+        "transitionData": {
+          "agent_message": "",
+          "status": "recorded"
+        }
+      },
+      "speaker": "AI",
+      "text": ""
+    },
+    {
+      "detailType": null,
+      "endTimeMs": 30440,
+      "speaker": "AI",
+      "startTimeMs": 27240,
+      "text": "Booked for Tuesday 29 September at 10:00 AM."
+    },
+    {
+      "detailType": null,
+      "endTimeMs": 39140,
+      "speaker": "HUMAN",
+      "startTimeMs": 36570,
+      "text": "I would like to make a routine appointment, please."
+    },
+    {
+      "detailType": null,
+      "endTimeMs": 42500,
+      "speaker": "AI",
+      "startTimeMs": 40100,
+      "text": "Which day would you like to come in?"
+    }
+  ],
+  "versionedPromptId": "0d16bb48-afe1-4b0c-9a7b-c155f5098fb0",
+  "voiceId": "94c32748-865f-42e1-bb1a-3a6b4abc7d11"
+}

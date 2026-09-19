@@ -1,0 +1,175 @@
+{
+  "agent": {
+    "defaultExtractorId": null,
+    "defaultVersionedPromptId": "b27a8ced-35c7-4d44-bb63-a0469bcde061",
+    "defaultVoiceId": "94c32748-865f-42e1-bb1a-3a6b4abc7d11",
+    "endpointDetectorConfig": {
+      "mode": "DEFAULT",
+      "type": "SEMANTIC"
+    },
+    "fillEmptyStringVariables": false,
+    "id": "b3d8f0c2-c96e-4a37-b023-ce1d0d99a82d",
+    "idleMessageConfig": {
+      "enabled": false,
+      "idleDurationMilliseconds": 0,
+      "maxIdleMessages": 0
+    },
+    "ivrConfiguration": null,
+    "ivrSilenceHangupConfiguration": null,
+    "language": "en",
+    "maxDurationSeconds": 10800,
+    "name": "CareFlow Demo Surgical",
+    "silenceHangupConfiguration": {
+      "silenceDurationSeconds": 0,
+      "type": "DISABLED"
+    },
+    "timeoutBehaviorConfiguration": {
+      "behavior": "HANGUP",
+      "transferNumber": null
+    },
+    "timeoutMessage": null,
+    "transcriberParams": {
+      "type": "deepgram"
+    },
+    "utteranceDetectorConfig": {
+      "interruptionPlayTimeMs": 1000,
+      "sensitivity": "MEDIUM"
+    },
+    "voicemailConfig": {
+      "detection": "DISABLE",
+      "message": null
+    }
+  },
+  "aiDurationSeconds": 54,
+  "aiResult": {
+    "collect_concern": {
+      "answer": "Caller had surgery on Monday and now has a fever."
+    },
+    "collect_phone": {
+      "answer": "5555550104"
+    },
+    "greet_intake": {
+      "answer": "post_op"
+    }
+  },
+  "durationSeconds": 54,
+  "endedAt": "2026-09-19T21:03:48.050324Z",
+  "id": "577a5665-5c4f-4ce4-8cb6-2e774e2c4c7b",
+  "inputs": {
+    "callback_phone": "+15555550104",
+    "evaluation_run_id": "36c35af7-9fef-4323-86cb-94612c002a1e",
+    "patient_ref": "PT-SYN-0004",
+    "scenario_id": "D_postop_double_failure"
+  },
+  "recordings": [
+    {
+      "url": "https://api.vogent.ai/api/recordings/e647ab88-2686-4ab3-ad1b-6a74aaa48be0"
+    }
+  ],
+  "startedAt": "2026-09-19T21:02:52.976943Z",
+  "status": "completed",
+  "systemResultType": "USER_HANGUP",
+  "transcript": [
+    {
+      "detailType": null,
+      "endTimeMs": 4100,
+      "speaker": "AI",
+      "startTimeMs": 740,
+      "text": "Thanks for calling Demo Surgical"
+    },
+    {
+      "detailType": null,
+      "endTimeMs": 5830,
+      "speaker": "HUMAN",
+      "startTimeMs": 2720,
+      "text": "I had surgery on Monday. Now I have a fever."
+    },
+    {
+      "detailType": "node-transition",
+      "functionCallId": "call_0Ha1lstNWwesXX6plo0gxkPF",
+      "nodeTransition": {
+        "toNodeId": "collect_concern",
+        "transitionData": {
+          "answer": "post_op"
+        }
+      },
+      "speaker": "AI",
+      "text": ""
+    },
+    {
+      "detailType": "node-transition",
+      "functionCallId": "call_A1m9z0VX6Eyk97VJSDHp7lP0",
+      "nodeTransition": {
+        "toNodeId": "collect_phone",
+        "transitionData": {
+          "answer": "Caller had surgery on Monday and now has a fever."
+        }
+      },
+      "speaker": "AI",
+      "text": ""
+    },
+    {
+      "detailType": null,
+      "endTimeMs": 10080,
+      "speaker": "AI",
+      "startTimeMs": 7760,
+      "text": "What's the best number to reach you on?"
+    },
+    {
+      "detailType": null,
+      "endTimeMs": 15860,
+      "speaker": "HUMAN",
+      "startTimeMs": 9810,
+      "text": "Since last night, my number is 5 5 5 5 5 5 0 1 0 4."
+    },
+    {
+      "detailType": "node-transition",
+      "functionCallId": "call_36jpIsQEbKn7AfkqjnMCFwjJ",
+      "nodeTransition": {
+        "toNodeId": "promise_transfer",
+        "transitionData": {
+          "answer": "5555550104"
+        }
+      },
+      "speaker": "AI",
+      "text": ""
+    },
+    {
+      "detailType": null,
+      "endTimeMs": 22120,
+      "speaker": "AI",
+      "startTimeMs": 18200,
+      "text": "I\u2019m connecting you to the triage nurse now."
+    },
+    {
+      "detailType": null,
+      "endTimeMs": 30150,
+      "speaker": "HUMAN",
+      "startTimeMs": 27510,
+      "text": "I had surgery on Monday, and I have a favor."
+    },
+    {
+      "detailType": null,
+      "endTimeMs": 36280,
+      "speaker": "AI",
+      "startTimeMs": 31080,
+      "text": "I can help with surgery-related concerns by connecting you to a person."
+    },
+    {
+      "detailType": null,
+      "endTimeMs": 43170,
+      "speaker": "HUMAN",
+      "startTimeMs": 40570,
+      "text": "I had surgery on Monday, and may I have a favor?"
+    },
+    {
+      "detailType": null,
+      "endTimeMs": 50040,
+      "speaker": "AI",
+      "startTimeMs": 44040,
+      "text": "I can connect you with the triage nurse for any post-operative concern."
+    }
+  ],
+  "versionedPromptId": "139c8c53-d3c9-42c9-92f8-07611abdcb30",
+  "voiceId": "94c32748-865f-42e1-bb1a-3a6b4abc7d11"
+}

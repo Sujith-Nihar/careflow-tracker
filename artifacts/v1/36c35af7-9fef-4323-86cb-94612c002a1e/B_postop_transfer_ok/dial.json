@@ -1,0 +1,147 @@
+{
+  "agent": {
+    "defaultExtractorId": null,
+    "defaultVersionedPromptId": "b27a8ced-35c7-4d44-bb63-a0469bcde061",
+    "defaultVoiceId": "94c32748-865f-42e1-bb1a-3a6b4abc7d11",
+    "endpointDetectorConfig": {
+      "mode": "DEFAULT",
+      "type": "SEMANTIC"
+    },
+    "fillEmptyStringVariables": false,
+    "id": "b3d8f0c2-c96e-4a37-b023-ce1d0d99a82d",
+    "idleMessageConfig": {
+      "enabled": false,
+      "idleDurationMilliseconds": 0,
+      "maxIdleMessages": 0
+    },
+    "ivrConfiguration": null,
+    "ivrSilenceHangupConfiguration": null,
+    "language": "en",
+    "maxDurationSeconds": 10800,
+    "name": "CareFlow Demo Surgical",
+    "silenceHangupConfiguration": {
+      "silenceDurationSeconds": 0,
+      "type": "DISABLED"
+    },
+    "timeoutBehaviorConfiguration": {
+      "behavior": "HANGUP",
+      "transferNumber": null
+    },
+    "timeoutMessage": null,
+    "transcriberParams": {
+      "type": "deepgram"
+    },
+    "utteranceDetectorConfig": {
+      "interruptionPlayTimeMs": 1000,
+      "sensitivity": "MEDIUM"
+    },
+    "voicemailConfig": {
+      "detection": "DISABLE",
+      "message": null
+    }
+  },
+  "aiDurationSeconds": 31,
+  "aiResult": {
+    "collect_concern": {
+      "answer": "It looks a bit right around the edges."
+    },
+    "collect_phone": {
+      "answer": "5555550102"
+    },
+    "greet_intake": {
+      "answer": "post_op"
+    }
+  },
+  "durationSeconds": 31,
+  "endedAt": "2026-09-19T21:00:14.878685Z",
+  "id": "4bd36bad-bb0d-450b-95ab-8b169a968fde",
+  "inputs": {
+    "callback_phone": "+15555550102",
+    "evaluation_run_id": "36c35af7-9fef-4323-86cb-94612c002a1e",
+    "patient_ref": "PT-SYN-0002",
+    "scenario_id": "B_postop_transfer_ok"
+  },
+  "recordings": [
+    {
+      "url": "https://api.vogent.ai/api/recordings/8ce973ba-3b01-4ef8-a4f8-d9bdc58d855c"
+    }
+  ],
+  "startedAt": "2026-09-19T20:59:42.850489Z",
+  "status": "completed",
+  "systemResultType": "USER_HANGUP",
+  "transcript": [
+    {
+      "detailType": null,
+      "endTimeMs": 9600,
+      "speaker": "AI",
+      "startTimeMs": 720,
+      "text": "Thanks for calling Demo Surgical Associates. Are you calling to schedule a routine appointment, or about a concern after a recent surgery?"
+    },
+    {
+      "detailType": null,
+      "endTimeMs": 14390,
+      "speaker": "HUMAN",
+      "startTimeMs": 10110,
+      "text": "I had surgery last week. I have a concern about my surgery wound."
+    },
+    {
+      "detailType": "node-transition",
+      "functionCallId": "call_NvJNzPWgRy0eOqTu5BPo2Wc0",
+      "nodeTransition": {
+        "toNodeId": "collect_concern",
+        "transitionData": {
+          "answer": "post_op"
+        }
+      },
+      "speaker": "AI",
+      "text": ""
+    },
+    {
+      "detailType": null,
+      "endTimeMs": 19560,
+      "speaker": "AI",
+      "startTimeMs": 15720,
+      "text": "I'm sorry to hear that. Can you tell"
+    },
+    {
+      "detailType": null,
+      "endTimeMs": 24670,
+      "speaker": "HUMAN",
+      "startTimeMs": 17730,
+      "text": "It looks a bit right around the edges. My number is 5 5 5 5 5 5 0 1 0 2."
+    },
+    {
+      "detailType": "node-transition",
+      "functionCallId": "call_5my7bPqw8vDVTe4ClhEzLfJO",
+      "nodeTransition": {
+        "toNodeId": "collect_phone",
+        "transitionData": {
+          "answer": "It looks a bit right around the edges."
+        }
+      },
+      "speaker": "AI",
+      "text": ""
+    },
+    {
+      "detailType": "node-transition",
+      "functionCallId": "call_3QB5guDC3lJ95Dklwx44OBlD",
+      "nodeTransition": {
+        "toNodeId": "promise_transfer",
+        "transitionData": {
+          "answer": "5555550102"
+        }
+      },
+      "speaker": "AI",
+      "text": ""
+    },
+    {
+      "detailType": null,
+      "endTimeMs": 31080,
+      "speaker": "AI",
+      "startTimeMs": 27800,
+      "text": "I\u2019m connecting you to the triage nurse now."
+    }
+  ],
+  "versionedPromptId": "139c8c53-d3c9-42c9-92f8-07611abdcb30",
+  "voiceId": "94c32748-865f-42e1-bb1a-3a6b4abc7d11"
+}

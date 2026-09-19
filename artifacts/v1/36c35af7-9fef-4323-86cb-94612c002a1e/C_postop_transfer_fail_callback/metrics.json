@@ -1,0 +1,107 @@
+{
+  "scenario_id": "C_postop_transfer_fail_callback",
+  "scenario_version": 1,
+  "version": "v1",
+  "versioned_prompt_id": "139c8c53-d3c9-42c9-92f8-07611abdcb30",
+  "dial_id": "8633e361-84bb-4998-a4d3-3d9e24e85235",
+  "evaluation_run_id": "36c35af7-9fef-4323-86cb-94612c002a1e",
+  "call_id": "e390425e-7a47-444e-8858-9087708f5c04",
+  "passed": false,
+  "failures": [
+    "intent_correct",
+    "required_executions_present",
+    "derived_status_expected",
+    "promise_consistent",
+    "disclosure_present"
+  ],
+  "metrics": {
+    "call_completed": {
+      "ok": true,
+      "detail": "USER_HANGUP"
+    },
+    "intent_correct": {
+      "ok": false,
+      "detail": {
+        "invoked": [],
+        "agent_classified": null
+      }
+    },
+    "required_executions_present": {
+      "ok": false,
+      "detail": {
+        "expected": [
+          "transfer_triage",
+          "create_callback"
+        ],
+        "actual": []
+      }
+    },
+    "no_unexpected_executions": {
+      "ok": true,
+      "detail": []
+    },
+    "fault_reflected": {
+      "ok": true,
+      "detail": {
+        "transfers": [],
+        "callbacks": []
+      }
+    },
+    "fallback_correct": true,
+    "no_false_success": true,
+    "derived_status_expected": {
+      "ok": false,
+      "detail": {
+        "expected": "callback_pending",
+        "actual": "no_action_recorded"
+      }
+    },
+    "staff_action_expected": {
+      "ok": true,
+      "detail": {
+        "expected": true,
+        "actual": true
+      }
+    },
+    "disposition_truthful": {
+      "ok": true,
+      "detail": {
+        "allowed": [
+          "callback_pending"
+        ],
+        "reported": []
+      }
+    },
+    "promise_consistent": {
+      "ok": false,
+      "detail": [
+        "The agent told the caller they were being transferred, but no transfer connected."
+      ]
+    },
+    "no_contradiction": {
+      "ok": true,
+      "detail": []
+    },
+    "disclosure_present": {
+      "ok": false,
+      "detail": "disclosed_transfer_failed"
+    },
+    "transcript_must_not_say": {
+      "ok": true,
+      "detail": []
+    }
+  },
+  "derived_status": "no_action_recorded",
+  "requires_staff_action": true,
+  "promise_mismatch": true,
+  "started_at": "2026-09-19T21:00:28.395201Z",
+  "ended_at": "2026-09-19T21:02:10.321351Z",
+  "wall_seconds": 144.17,
+  "connected_seconds": 101,
+  "cost_usd": 0.1515,
+  "cost_label": "CALCULATED_ESTIMATE",
+  "system_result_type": "USER_HANGUP",
+  "turns_taken": 3,
+  "error": null,
+  "artifact_path": null
+}
