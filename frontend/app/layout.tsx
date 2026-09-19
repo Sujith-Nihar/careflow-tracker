@@ -10,10 +10,15 @@ export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="en">
       <body>
-        <div className="nav">
-          <a href="/calls">CareFlow</a>
-          <span className="muted"> · Demo Surgical Associates</span>
-        </div>
+        <header className="masthead">
+          <div className="masthead-inner">
+            <a className="wordmark" href="/calls">
+              <span className="wordmark-dot" aria-hidden="true" />
+              CareFlow
+            </a>
+            <span className="masthead-sub">Demo Surgical Associates</span>
+          </div>
+        </header>
         <main>{children}</main>
       </body>
     </html>
