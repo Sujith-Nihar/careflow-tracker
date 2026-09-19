@@ -1,0 +1,17 @@
+[
+  {
+    "t": 1789847769658,
+    "type": "ready",
+    "value": true
+  },
+  {
+    "t": 1789847771648,
+    "type": "audio_connected",
+    "value": true
+  },
+  {
+    "t": 1789847771812,
+    "type": "status",
+    "value": "in-progress"
+  }
+]

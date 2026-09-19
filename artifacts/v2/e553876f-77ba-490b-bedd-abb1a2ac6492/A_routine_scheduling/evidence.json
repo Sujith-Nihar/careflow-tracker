@@ -1,0 +1,42 @@
+{
+  "action_executions": [],
+  "agent_statements": [],
+  "call": {
+    "connected_seconds": 150,
+    "dial_id": "ca41bf8a-adb1-4a9f-852e-7fbedf69b1be",
+    "ended_at": "2026-09-19T19:58:42.237267+00:00",
+    "evaluation_run_id": "e553876f-77ba-490b-bedd-abb1a2ac6492",
+    "id": "ddd6747c-48a3-41aa-a24e-7c18b8f325e4",
+    "lifecycle": "ended",
+    "scenario_id": "A_routine_scheduling",
+    "started_at": "2026-09-19T19:56:11.736092+00:00",
+    "system_result_type": "USER_HANGUP",
+    "versioned_prompt_id": "32033ebe-188f-4116-a756-260b17481a0e",
+    "vogent_agent_id": null
+  },
+  "derived": {
+    "evidence_refs": {},
+    "mismatch_details": [],
+    "next_step": "Review the call and contact the patient if they needed something.",
+    "promise_mismatch": false,
+    "reason": "The call ended without any recorded action. Whatever the caller was told, nothing was scheduled, transferred, or queued.",
+    "requires_staff_action": true,
+    "severity": 3,
+    "status": "no_action_recorded"
+  },
+  "downstream": {
+    "appointments": [],
+    "callback_requests": [],
+    "transfer_sessions": []
+  },
+  "intent": {
+    "agent_classified": null,
+    "true_intent": "routine_scheduling"
+  },
+  "staff_actions": [],
+  "transcript": {
+    "authoritative": false,
+    "note": "Shows what was said, not what happened.",
+    "segments": []
+  }
+}

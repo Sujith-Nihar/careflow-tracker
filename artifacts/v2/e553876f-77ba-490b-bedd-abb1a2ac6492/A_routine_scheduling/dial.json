@@ -1,0 +1,59 @@
+{
+  "agent": {
+    "defaultExtractorId": null,
+    "defaultVersionedPromptId": "b27a8ced-35c7-4d44-bb63-a0469bcde061",
+    "defaultVoiceId": "94c32748-865f-42e1-bb1a-3a6b4abc7d11",
+    "endpointDetectorConfig": {
+      "mode": "DEFAULT",
+      "type": "SEMANTIC"
+    },
+    "fillEmptyStringVariables": false,
+    "id": "b3d8f0c2-c96e-4a37-b023-ce1d0d99a82d",
+    "idleMessageConfig": {
+      "enabled": false,
+      "idleDurationMilliseconds": 0,
+      "maxIdleMessages": 0
+    },
+    "ivrConfiguration": null,
+    "ivrSilenceHangupConfiguration": null,
+    "language": "en",
+    "maxDurationSeconds": 10800,
+    "name": "CareFlow Demo Surgical",
+    "silenceHangupConfiguration": {
+      "silenceDurationSeconds": 0,
+      "type": "DISABLED"
+    },
+    "timeoutBehaviorConfiguration": {
+      "behavior": "HANGUP",
+      "transferNumber": null
+    },
+    "timeoutMessage": null,
+    "transcriberParams": {
+      "type": "deepgram"
+    },
+    "utteranceDetectorConfig": {
+      "interruptionPlayTimeMs": 1000,
+      "sensitivity": "MEDIUM"
+    },
+    "voicemailConfig": {
+      "detection": "DISABLE",
+      "message": null
+    }
+  },
+  "aiDurationSeconds": 150,
+  "aiResult": {},
+  "durationSeconds": 150,
+  "endedAt": "2026-09-19T19:58:42.237267Z",
+  "id": "ca41bf8a-adb1-4a9f-852e-7fbedf69b1be",
+  "inputs": {
+    "callback_phone": "+15555550101",
+    "evaluation_run_id": "e553876f-77ba-490b-bedd-abb1a2ac6492",
+    "patient_ref": "PT-SYN-0001",
+    "scenario_id": "A_routine_scheduling"
+  },
+  "startedAt": "2026-09-19T19:56:11.736092Z",
+  "status": "completed",
+  "systemResultType": "USER_HANGUP",
+  "versionedPromptId": "32033ebe-188f-4116-a756-260b17481a0e",
+  "voiceId": "94c32748-865f-42e1-bb1a-3a6b4abc7d11"
+}

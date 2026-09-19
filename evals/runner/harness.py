@@ -33,7 +33,18 @@ SETTLE_SECONDS = 1.6
 POLL_SECONDS = 0.3
 #: Hard ceiling per call, independent of the Vogent-side timeout. Protects the
 #: budget if the agent and the harness end up waiting on each other.
-MAX_CALL_SECONDS = 150
+MAX_CALL_SECONDS = 100
+
+#: If the agent has not said anything by now, the caller opens the conversation.
+#: Waiting for the other side to speak first is how the first run burned 150
+#: seconds of billed silence: the agent was waiting for the caller and the caller
+#: was waiting for the agent. A real caller would just start talking.
+OPEN_AFTER_SILENCE_SECONDS = 6.0
+
+#: Give up early when the call is clearly going nowhere, rather than paying for
+#: the full ceiling. Two spoken lines with no reply at all means something is
+#: broken, and a longer wait will not diagnose it any better.
+ABANDON_AFTER_SILENT_SECONDS = 35.0
 
 
 @dataclass
@@ -127,10 +138,12 @@ def _converse(page, scenario: Scenario, clips: dict[str, Path], origin: str, out
     """Reply to the agent until the call reaches an ending or a limit."""
     import re
 
-    deadline = time.monotonic() + MAX_CALL_SECONDS
+    started_at = time.monotonic()
+    deadline = started_at + MAX_CALL_SECONDS
     spoken: set[int] = set()
     last_text = ""
     stable_since = None
+    heard_agent = False
 
     while time.monotonic() < deadline and outcome.turns_taken < scenario.max_turns:
         status = page.evaluate("() => window.callerState.status")
@@ -139,6 +152,26 @@ def _converse(page, scenario: Scenario, clips: dict[str, Path], origin: str, out
 
         agent_lines = page.evaluate("() => window.caller.agentText()")
         text = agent_lines[-1] if agent_lines else ""
+        heard_agent = heard_agent or bool(text)
+        elapsed = time.monotonic() - started_at
+
+        if not heard_agent:
+            # Nothing heard yet. Open the conversation instead of waiting.
+            if elapsed >= OPEN_AFTER_SILENCE_SECONDS and outcome.turns_taken == 0:
+                opening = _next_line(scenario, "", spoken)
+                clip = clips.get(opening or "")
+                if clip is not None:
+                    page.evaluate("url => window.caller.say(url)", f"{origin}/clips/{clip.name}")
+                    outcome.turns_taken += 1
+                    time.sleep(1.0)
+                    continue
+            if elapsed >= ABANDON_AFTER_SILENT_SECONDS:
+                outcome.error = (
+                    "the agent never spoke; abandoned early to avoid paying for silence"
+                )
+                break
+            time.sleep(POLL_SECONDS)
+            continue
 
         if scenario.end_when and text and re.search(scenario.end_when, text, re.IGNORECASE):
             # Let the agent finish its closing sentence before hanging up.
@@ -174,8 +207,19 @@ def _converse(page, scenario: Scenario, clips: dict[str, Path], origin: str, out
 
 
 def _next_line(scenario: Scenario, agent_text: str, spoken: set[int]) -> str | None:
-    """Pick the caller's reply: the first unused turn whose trigger matches."""
+    """Pick the caller's reply: the first unused turn whose trigger matches.
+
+    With no agent text at all, fall straight through to the first unused turn:
+    that is the caller opening the conversation.
+    """
     import re
+
+    if not agent_text:
+        for index, turn in enumerate(scenario.turns):
+            if index not in spoken:
+                spoken.add(index)
+                return turn.say
+        return scenario.fallback_say or None
 
     for index, turn in enumerate(scenario.turns):
         if index in spoken:
