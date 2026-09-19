@@ -1,0 +1,82 @@
+[
+  {
+    "speaker": "AI",
+    "text": "Thanks for calling Demo Surgical Associates."
+  },
+  {
+    "speaker": "HUMAN",
+    "text": "I just need a routine follow-up appointment."
+  },
+  {
+    "speaker": "AI",
+    "text": "I can help with that. Please tell me your full name"
+  },
+  {
+    "speaker": "HUMAN",
+    "text": "Next Tuesday would work well for me."
+  },
+  {
+    "speaker": "AI",
+    "text": "What is your full name and date of birth?"
+  },
+  {
+    "speaker": "HUMAN",
+    "text": "I just need a routine follow-up appointment."
+  },
+  {
+    "speaker": "AI",
+    "text": "I can help with that. Please tell me your full name and"
+  },
+  {
+    "speaker": "HUMAN",
+    "text": "I just need a routine for an off appointment."
+  },
+  {
+    "speaker": "AI",
+    "text": "I can help schedule a routine appointment. Please tell me your full name and date of birth."
+  },
+  {
+    "speaker": "HUMAN",
+    "text": "Hi. I'd like to book a routine for an off appointment, please."
+  },
+  {
+    "speaker": "AI",
+    "text": "I can help with that. Please tell me your full name"
+  },
+  {
+    "speaker": "HUMAN",
+    "text": "I just need a routine for an appointment."
+  },
+  {
+    "speaker": "AI",
+    "text": "I can help schedule that. Please tell me your full name and date"
+  },
+  {
+    "speaker": "HUMAN",
+    "text": "I just need a routine for an off appointment."
+  },
+  {
+    "speaker": "AI",
+    "text": "I can help schedule a routine appointment. Please tell me your"
+  },
+  {
+    "speaker": "HUMAN",
+    "text": "I just need a routine for an off appointment."
+  },
+  {
+    "speaker": "AI",
+    "text": "I can help schedule a routine"
+  },
+  {
+    "speaker": "HUMAN",
+    "text": "I just need a run-in for an appointment."
+  },
+  {
+    "speaker": "AI",
+    "text": "I can help schedule that. Please tell me your full name and date of"
+  },
+  {
+    "speaker": "HUMAN",
+    "text": "I just need a rent in for an off appointment."
+  }
+]

@@ -71,10 +71,6 @@
         "functionId": "__schedule_appointment__",
         "inputs": [
           {
-            "name": "patient_ref",
-            "value": "{{patient_ref}}"
-          },
-          {
             "name": "preferred_date",
             "value": "{{node.collect_slot.answer}}"
           },
@@ -159,10 +155,6 @@
       "nodeData": {
         "functionId": "__transfer_triage__",
         "inputs": [
-          {
-            "name": "patient_ref",
-            "value": "{{patient_ref}}"
-          },
           {
             "name": "concern_summary",
             "value": "{{node.collect_concern.answer}}"

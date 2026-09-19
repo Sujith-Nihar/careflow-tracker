@@ -43,6 +43,9 @@ class Vogent:
     def patch(self, path: str, payload: dict) -> Any:
         return self.request("PATCH", path, json=payload)
 
+    def put(self, path: str, payload: dict) -> Any:
+        return self.request("PUT", path, json=payload)
+
     def list_all(self, path: str) -> list[dict]:
         return self.get(path).get("data", [])
 

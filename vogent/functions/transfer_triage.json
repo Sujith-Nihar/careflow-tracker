@@ -1,21 +1,33 @@
 {
   "name": "transfer_triage",
   "displayName": "Transfer to live triage nurse",
-  "description": "Attempt a live transfer to the triage nurse line for a post-operative concern. Returns status 'connected' only when the line actually answered. Returns 'failed' when it did not answer and 'unverified' when the outcome could not be confirmed. Neither 'failed' nor 'unverified' is a transfer. Never tell the caller they are being transferred or are connected unless status is 'connected'.",
+  "description": "Attempt a live transfer to the triage nurse line for a post-operative concern. Returns status 'connected' only when the line actually answered. Returns 'failed' when it did not answer and 'unverified' when the outcome could not be confirmed. Neither 'failed' nor 'unverified' is a transfer. Never tell the caller they are being transferred or are connected unless status is 'connected'. The patient reference is supplied by the system with the call; never ask the caller for it.",
   "type": "api",
   "path": "/vogent/functions/transfer_triage",
   "lifecycleMessages": {
-    "started": ["One moment."],
-    "waiting": ["Still trying."],
+    "started": [
+      "One moment."
+    ],
+    "waiting": [
+      "Still trying."
+    ],
     "awaitSpeech": true
   },
   "inputJsonSchema": {
     "type": "object",
     "properties": {
-      "patient_ref": {"type": "string", "description": "Synthetic patient reference"},
-      "concern_summary": {"type": "string", "description": "Short factual summary of what the caller reported. Do not interpret or diagnose."},
-      "callback_phone": {"type": "string", "description": "Best number to reach the caller, as they said it"}
+      "concern_summary": {
+        "type": "string",
+        "description": "Short factual summary of what the caller reported. Do not interpret or diagnose."
+      },
+      "callback_phone": {
+        "type": "string",
+        "description": "Best number to reach the caller, as they said it"
+      }
     },
-    "required": ["patient_ref", "concern_summary", "callback_phone"]
+    "required": [
+      "concern_summary",
+      "callback_phone"
+    ]
   }
 }

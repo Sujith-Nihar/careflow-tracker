@@ -1,22 +1,47 @@
 {
   "name": "create_callback",
   "displayName": "Create callback request",
-  "description": "Place a callback request in the practice queue. Use priority 'urgent' when a triage transfer could not be completed. Returns status 'created' only when the request now exists in the queue. Returns 'failed' when the queue refused it and 'unverified' when it could not be confirmed. Never tell the caller that someone will call them back unless status is 'created'.",
+  "description": "Place a callback request in the practice queue. Use priority 'urgent' when a triage transfer could not be completed. Returns status 'created' only when the request now exists in the queue. Returns 'failed' when the queue refused it and 'unverified' when it could not be confirmed. Never tell the caller that someone will call them back unless status is 'created'. The patient reference is supplied by the system with the call; never ask the caller for it.",
   "type": "api",
   "path": "/vogent/functions/create_callback",
   "lifecycleMessages": {
-    "started": ["One moment."],
-    "waiting": ["Still working on it."],
+    "started": [
+      "One moment."
+    ],
+    "waiting": [
+      "Still working on it."
+    ],
     "awaitSpeech": true
   },
   "inputJsonSchema": {
     "type": "object",
     "properties": {
-      "patient_ref": {"type": "string", "description": "Synthetic patient reference"},
-      "callback_phone": {"type": "string", "description": "Best number to reach the caller, as they said it"},
-      "priority": {"type": "string", "enum": ["urgent", "normal"], "description": "urgent for post-operative concerns, normal otherwise"},
-      "reason_code": {"type": "string", "enum": ["transfer_failed", "unsupported_request", "caller_requested"], "description": "Why the callback is needed"}
+      "callback_phone": {
+        "type": "string",
+        "description": "Best number to reach the caller, as they said it"
+      },
+      "priority": {
+        "type": "string",
+        "enum": [
+          "urgent",
+          "normal"
+        ],
+        "description": "urgent for post-operative concerns, normal otherwise"
+      },
+      "reason_code": {
+        "type": "string",
+        "enum": [
+          "transfer_failed",
+          "unsupported_request",
+          "caller_requested"
+        ],
+        "description": "Why the callback is needed"
+      }
     },
-    "required": ["patient_ref", "callback_phone", "priority", "reason_code"]
+    "required": [
+      "callback_phone",
+      "priority",
+      "reason_code"
+    ]
   }
 }

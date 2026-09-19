@@ -1,0 +1,182 @@
+{
+  "action_executions": [],
+  "agent_statements": [],
+  "call": {
+    "connected_seconds": 56,
+    "dial_id": "21951613-435d-4aca-95d9-c63504b60fbc",
+    "ended_at": "2026-09-19T20:11:05.020625+00:00",
+    "evaluation_run_id": "c15e6901-141f-4434-ba06-a2feed8e8f7e",
+    "id": "b93f2df0-0f7d-47fd-80e5-55168ee24a4b",
+    "lifecycle": "ended",
+    "scenario_id": "A_routine_scheduling",
+    "started_at": "2026-09-19T20:10:08.831867+00:00",
+    "system_result_type": "USER_HANGUP",
+    "versioned_prompt_id": "51a3a801-b560-476a-9e54-bb2035538849",
+    "vogent_agent_id": null
+  },
+  "derived": {
+    "evidence_refs": {},
+    "mismatch_details": [],
+    "next_step": "Review the call and contact the patient if they needed something.",
+    "promise_mismatch": false,
+    "reason": "The call ended without any recorded action. Whatever the caller was told, nothing was scheduled, transferred, or queued.",
+    "requires_staff_action": true,
+    "severity": 3,
+    "status": "no_action_recorded"
+  },
+  "downstream": {
+    "appointments": [],
+    "callback_requests": [],
+    "transfer_sessions": []
+  },
+  "intent": {
+    "agent_classified": null,
+    "true_intent": "routine_scheduling"
+  },
+  "staff_actions": [],
+  "transcript": {
+    "authoritative": false,
+    "note": "Shows what was said, not what happened.",
+    "segments": [
+      {
+        "detailType": null,
+        "endTimeMs": 3360,
+        "speaker": "AI",
+        "startTimeMs": 720,
+        "text": "Thanks for calling Demo Surgical Associates."
+      },
+      {
+        "detailType": null,
+        "endTimeMs": 5210,
+        "speaker": "HUMAN",
+        "text": "I just need a routine follow-up appointment."
+      },
+      {
+        "detailType": null,
+        "endTimeMs": 9700,
+        "speaker": "AI",
+        "startTimeMs": 6340,
+        "text": "I can help with that. Please tell me your full name"
+      },
+      {
+        "detailType": null,
+        "endTimeMs": 10350,
+        "speaker": "HUMAN",
+        "startTimeMs": 8180,
+        "text": "Next Tuesday would work well for me."
+      },
+      {
+        "detailType": null,
+        "endTimeMs": 13480,
+        "speaker": "AI",
+        "startTimeMs": 11320,
+        "text": "What is your full name and date of birth?"
+      },
+      {
+        "detailType": null,
+        "endTimeMs": 16070,
+        "speaker": "HUMAN",
+        "startTimeMs": 13530,
+        "text": "I just need a routine follow-up appointment."
+      },
+      {
+        "detailType": null,
+        "endTimeMs": 20180,
+        "speaker": "AI",
+        "startTimeMs": 16820,
+        "text": "I can help with that. Please tell me your full name and"
+      },
+      {
+        "detailType": null,
+        "endTimeMs": 21470,
+        "speaker": "HUMAN",
+        "startTimeMs": 16070,
+        "text": "I just need a routine for an off appointment."
+      },
+      {
+        "detailType": null,
+        "endTimeMs": 27220,
+        "speaker": "AI",
+        "startTimeMs": 22420,
+        "text": "I can help schedule a routine appointment. Please tell me your full name and date of birth."
+      },
+      {
+        "detailType": null,
+        "endTimeMs": 28140,
+        "speaker": "HUMAN",
+        "startTimeMs": 24509,
+        "text": "Hi. I'd like to book a routine for an off appointment, please."
+      },
+      {
+        "detailType": null,
+        "endTimeMs": 32452,
+        "speaker": "AI",
+        "startTimeMs": 29060,
+        "text": "I can help with that. Please tell me your full name"
+      },
+      {
+        "detailType": null,
+        "endTimeMs": 33560,
+        "speaker": "HUMAN",
+        "startTimeMs": 31039,
+        "text": "I just need a routine for an appointment."
+      },
+      {
+        "detailType": null,
+        "endTimeMs": 37816,
+        "speaker": "AI",
+        "startTimeMs": 34520,
+        "text": "I can help schedule that. Please tell me your full name and date"
+      },
+      {
+        "detailType": null,
+        "endTimeMs": 39140,
+        "speaker": "HUMAN",
+        "startTimeMs": 33730,
+        "text": "I just need a routine for an off appointment."
+      },
+      {
+        "detailType": null,
+        "endTimeMs": 43216,
+        "speaker": "AI",
+        "startTimeMs": 39920,
+        "text": "I can help schedule a routine appointment. Please tell me your"
+      },
+      {
+        "detailType": null,
+        "endTimeMs": 44550,
+        "speaker": "HUMAN",
+        "startTimeMs": 41940,
+        "text": "I just need a routine for an off appointment."
+      },
+      {
+        "detailType": null,
+        "endTimeMs": 48684,
+        "speaker": "AI",
+        "startTimeMs": 45260,
+        "text": "I can help schedule a routine"
+      },
+      {
+        "detailType": null,
+        "endTimeMs": 49960,
+        "speaker": "HUMAN",
+        "startTimeMs": 47270,
+        "text": "I just need a run-in for an appointment."
+      },
+      {
+        "detailType": null,
+        "endTimeMs": 54068,
+        "speaker": "AI",
+        "startTimeMs": 50740,
+        "text": "I can help schedule that. Please tell me your full name and date of"
+      },
+      {
+        "detailType": null,
+        "endTimeMs": 55330,
+        "speaker": "HUMAN",
+        "startTimeMs": 52680,
+        "text": "I just need a rent in for an off appointment."
+      }
+    ]
+  }
+}

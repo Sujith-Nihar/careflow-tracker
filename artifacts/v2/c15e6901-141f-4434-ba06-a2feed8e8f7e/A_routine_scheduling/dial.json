@@ -1,0 +1,205 @@
+{
+  "agent": {
+    "defaultExtractorId": null,
+    "defaultVersionedPromptId": "b27a8ced-35c7-4d44-bb63-a0469bcde061",
+    "defaultVoiceId": "94c32748-865f-42e1-bb1a-3a6b4abc7d11",
+    "endpointDetectorConfig": {
+      "mode": "DEFAULT",
+      "type": "SEMANTIC"
+    },
+    "fillEmptyStringVariables": false,
+    "id": "b3d8f0c2-c96e-4a37-b023-ce1d0d99a82d",
+    "idleMessageConfig": {
+      "enabled": false,
+      "idleDurationMilliseconds": 0,
+      "maxIdleMessages": 0
+    },
+    "ivrConfiguration": null,
+    "ivrSilenceHangupConfiguration": null,
+    "language": "en",
+    "maxDurationSeconds": 10800,
+    "name": "CareFlow Demo Surgical",
+    "silenceHangupConfiguration": {
+      "silenceDurationSeconds": 0,
+      "type": "DISABLED"
+    },
+    "timeoutBehaviorConfiguration": {
+      "behavior": "HANGUP",
+      "transferNumber": null
+    },
+    "timeoutMessage": null,
+    "transcriberParams": {
+      "type": "deepgram"
+    },
+    "utteranceDetectorConfig": {
+      "interruptionPlayTimeMs": 1000,
+      "sensitivity": "MEDIUM"
+    },
+    "voicemailConfig": {
+      "detection": "DISABLE",
+      "message": null
+    }
+  },
+  "aiDurationSeconds": 56,
+  "aiResult": {},
+  "durationSeconds": 56,
+  "endedAt": "2026-09-19T20:11:05.020625Z",
+  "id": "21951613-435d-4aca-95d9-c63504b60fbc",
+  "inputs": {
+    "callback_phone": "+15555550101",
+    "evaluation_run_id": "c15e6901-141f-4434-ba06-a2feed8e8f7e",
+    "patient_ref": "PT-SYN-0001",
+    "scenario_id": "A_routine_scheduling"
+  },
+  "recordings": [
+    {
+      "url": "https://api.vogent.ai/api/recordings/c9eefbb7-99ad-44bc-92ea-58acd1fc22bc"
+    }
+  ],
+  "startedAt": "2026-09-19T20:10:08.831867Z",
+  "status": "completed",
+  "systemResultType": "USER_HANGUP",
+  "transcript": [
+    {
+      "detailType": null,
+      "endTimeMs": 3360,
+      "speaker": "AI",
+      "startTimeMs": 720,
+      "text": "Thanks for calling Demo Surgical Associates."
+    },
+    {
+      "detailType": null,
+      "endTimeMs": 5210,
+      "speaker": "HUMAN",
+      "text": "I just need a routine follow-up appointment."
+    },
+    {
+      "detailType": null,
+      "endTimeMs": 9700,
+      "speaker": "AI",
+      "startTimeMs": 6340,
+      "text": "I can help with that. Please tell me your full name"
+    },
+    {
+      "detailType": null,
+      "endTimeMs": 10350,
+      "speaker": "HUMAN",
+      "startTimeMs": 8180,
+      "text": "Next Tuesday would work well for me."
+    },
+    {
+      "detailType": null,
+      "endTimeMs": 13480,
+      "speaker": "AI",
+      "startTimeMs": 11320,
+      "text": "What is your full name and date of birth?"
+    },
+    {
+      "detailType": null,
+      "endTimeMs": 16070,
+      "speaker": "HUMAN",
+      "startTimeMs": 13530,
+      "text": "I just need a routine follow-up appointment."
+    },
+    {
+      "detailType": null,
+      "endTimeMs": 20180,
+      "speaker": "AI",
+      "startTimeMs": 16820,
+      "text": "I can help with that. Please tell me your full name and"
+    },
+    {
+      "detailType": null,
+      "endTimeMs": 21470,
+      "speaker": "HUMAN",
+      "startTimeMs": 16070,
+      "text": "I just need a routine for an off appointment."
+    },
+    {
+      "detailType": null,
+      "endTimeMs": 27220,
+      "speaker": "AI",
+      "startTimeMs": 22420,
+      "text": "I can help schedule a routine appointment. Please tell me your full name and date of birth."
+    },
+    {
+      "detailType": null,
+      "endTimeMs": 28140,
+      "speaker": "HUMAN",
+      "startTimeMs": 24509,
+      "text": "Hi. I'd like to book a routine for an off appointment, please."
+    },
+    {
+      "detailType": null,
+      "endTimeMs": 32452,
+      "speaker": "AI",
+      "startTimeMs": 29060,
+      "text": "I can help with that. Please tell me your full name"
+    },
+    {
+      "detailType": null,
+      "endTimeMs": 33560,
+      "speaker": "HUMAN",
+      "startTimeMs": 31039,
+      "text": "I just need a routine for an appointment."
+    },
+    {
+      "detailType": null,
+      "endTimeMs": 37816,
+      "speaker": "AI",
+      "startTimeMs": 34520,
+      "text": "I can help schedule that. Please tell me your full name and date"
+    },
+    {
+      "detailType": null,
+      "endTimeMs": 39140,
+      "speaker": "HUMAN",
+      "startTimeMs": 33730,
+      "text": "I just need a routine for an off appointment."
+    },
+    {
+      "detailType": null,
+      "endTimeMs": 43216,
+      "speaker": "AI",
+      "startTimeMs": 39920,
+      "text": "I can help schedule a routine appointment. Please tell me your"
+    },
+    {
+      "detailType": null,
+      "endTimeMs": 44550,
+      "speaker": "HUMAN",
+      "startTimeMs": 41940,
+      "text": "I just need a routine for an off appointment."
+    },
+    {
+      "detailType": null,
+      "endTimeMs": 48684,
+      "speaker": "AI",
+      "startTimeMs": 45260,
+      "text": "I can help schedule a routine"
+    },
+    {
+      "detailType": null,
+      "endTimeMs": 49960,
+      "speaker": "HUMAN",
+      "startTimeMs": 47270,
+      "text": "I just need a run-in for an appointment."
+    },
+    {
+      "detailType": null,
+      "endTimeMs": 54068,
+      "speaker": "AI",
+      "startTimeMs": 50740,
+      "text": "I can help schedule that. Please tell me your full name and date of"
+    },
+    {
+      "detailType": null,
+      "endTimeMs": 55330,
+      "speaker": "HUMAN",
+      "startTimeMs": 52680,
+      "text": "I just need a rent in for an off appointment."
+    }
+  ],
+  "versionedPromptId": "51a3a801-b560-476a-9e54-bb2035538849",
+  "voiceId": "94c32748-865f-42e1-bb1a-3a6b4abc7d11"
+}

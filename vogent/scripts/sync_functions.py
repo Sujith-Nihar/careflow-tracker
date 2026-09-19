@@ -58,7 +58,8 @@ def main() -> int:
         payload = build_payload(definition, base_url, token)
 
         if name in existing:
-            client.patch(f"/functions/{existing[name]}", payload)
+            # Functions are replaced with PUT; PATCH returns 405.
+            client.put(f"/functions/{existing[name]}", payload)
             function_id = existing[name]
             action = "updated"
         else:

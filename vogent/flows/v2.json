@@ -71,10 +71,6 @@
         "functionId": "__schedule_appointment__",
         "inputs": [
           {
-            "name": "patient_ref",
-            "value": "{{patient_ref}}"
-          },
-          {
             "name": "preferred_date",
             "value": "{{node.collect_slot.answer}}"
           },
@@ -133,10 +129,6 @@
       "nodeData": {
         "functionId": "__create_callback__",
         "inputs": [
-          {
-            "name": "patient_ref",
-            "value": "{{patient_ref}}"
-          },
           {
             "name": "callback_phone",
             "value": "{{node.collect_slot.answer}}"
@@ -199,10 +191,6 @@
         "functionId": "__transfer_triage__",
         "inputs": [
           {
-            "name": "patient_ref",
-            "value": "{{patient_ref}}"
-          },
-          {
             "name": "concern_summary",
             "value": "{{node.collect_concern.answer}}"
           },
@@ -261,10 +249,6 @@
       "nodeData": {
         "functionId": "__create_callback__",
         "inputs": [
-          {
-            "name": "patient_ref",
-            "value": "{{patient_ref}}"
-          },
           {
             "name": "callback_phone",
             "value": "{{node.collect_phone.answer}}"
@@ -342,10 +326,6 @@
       "nodeData": {
         "functionId": "__create_callback__",
         "inputs": [
-          {
-            "name": "patient_ref",
-            "value": "{{patient_ref}}"
-          },
           {
             "name": "callback_phone",
             "value": "{{node.greet_intake.answer}}"
