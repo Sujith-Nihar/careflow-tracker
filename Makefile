@@ -35,7 +35,16 @@ migrate: ## apply backend/migrations/*.sql to DATABASE_URL
 migrate-test: ## apply migrations to the careflow_test schema
 	$(PY) scripts/migrate.py --test-schema
 
+seed: ## create the synthetic organizations
+	$(PY) scripts/seed.py
+
+api: ## run the Flask API on FLASK_PORT (default 5000)
+	$(PY) -m flask --app backend/app:create_app run --port $${FLASK_PORT:-5055} --reload
+
+replay: ## run scenarios through the backend without voice (needs `make api` running)
+	$(PY) -m evals.runner.cli --artifacts artifacts/replay
+
 secret-scan: ## fail if anything that looks like a credential is tracked by git
 	@scripts/secret_scan.sh
 
-.PHONY: help setup test test-cov db-check vogent-check migrate migrate-test secret-scan
+.PHONY: help setup test test-cov db-check vogent-check migrate migrate-test seed api replay secret-scan

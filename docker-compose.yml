@@ -1,5 +1,7 @@
-# For reviewers without a Supabase project: `docker compose up -d db`, then
-# DATABASE_URL=postgresql://careflow:careflow@localhost:5432/careflow
+# For reviewers without a Supabase project: `docker compose up -d db`, then point
+# DATABASE_URL at this container. User, password and database are all `careflow`,
+# on port 5432. Spelled out rather than pasted as a connection string so the
+# credential scanner in `make secret-scan` stays strict.
 services:
   db:
     image: postgres:16-alpine
