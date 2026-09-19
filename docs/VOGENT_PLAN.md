@@ -27,6 +27,10 @@ agent, its two versions, and the four functions are represented and reproduced.
 | Model list endpoint not in the docs index | `GET /models` | needed for the required `aiModelId`; this workspace exposes flow-tuned models (`GPT-5.4 Flow`) |
 | Voices endpoint returns `voices`, not `data` | `GET /voices` → `{voices: [...]}` | pagination key differs from every other list endpoint |
 | Function `path` field | request field is **`apiPath`**; `headers` are `[{key, value}]`; `inputJsonSchema` is a **JSON string**, not an object | `POST /functions` |
+| Question node output referenced as `{{node.<id>.output}}` | the field is **`answer`** (`outputSchema` confirms it) | every scheduling and concern template silently referenced a missing field |
+| `aiOpen` documented as deprecated | accepted and **ignored**; stays `false` | it is not the lever for who speaks first |
+| Nothing documented about which node types may open a call | a **`question` node cannot open a call**; a `freeform` node can | the agent sat silent for two runs (`INVESTIGATIONS.md` INV-2) |
+| `dial.created` webhook | exists, not in the documented event list | arrives before the runner registers the dial, which exposed a create race |
 
 Verified by building, not by reading. The probe versioned prompts used to establish the node type
 (`probe-freeform`, `probe-question`, `probe-function`) are left in the workspace; the API exposes no

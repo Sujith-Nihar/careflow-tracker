@@ -38,8 +38,14 @@ migrate-test: ## apply migrations to the careflow_test schema
 seed: ## create the synthetic organizations
 	$(PY) scripts/seed.py
 
-api: ## run the Flask API on FLASK_PORT (default 5055)
+api: ## run the Flask API on FLASK_PORT (default 5055), reloading on change
 	$(PY) -m flask --app backend/app:create_app run --port $${FLASK_PORT:-5055} --reload
+
+api-restart: ## restart the background API so it picks up code changes
+	@kill $$(lsof -ti:$${FLASK_PORT:-5055}) 2>/dev/null || true
+	@sleep 1
+	@nohup $(PY) -m flask --app backend/app:create_app run --port $${FLASK_PORT:-5055} > /tmp/careflow-api.log 2>&1 &
+	@sleep 4 && curl -sf http://localhost:$${FLASK_PORT:-5055}/healthz && echo " api restarted"
 
 tunnel: ## expose the local API on BACKEND_PUBLIC_URL so Vogent can reach it
 	@set -a; . ./.env; set +a; \
@@ -54,4 +60,4 @@ eval: ## real Vogent voice runs: make eval VERSION=v2 [SCENARIOS=A_routine_sched
 secret-scan: ## fail if anything that looks like a credential is tracked by git
 	@scripts/secret_scan.sh
 
-.PHONY: help setup test test-cov db-check vogent-check migrate migrate-test seed api tunnel replay eval secret-scan
+.PHONY: help setup test test-cov db-check vogent-check migrate migrate-test seed api api-restart tunnel replay eval secret-scan

@@ -130,17 +130,48 @@ def get_or_create_call(
         (dial_id,),
     ) or {}
 
-    return query_one(
+    # Vogent's `dial.created` webhook and the evaluation runner both reach this
+    # point for the same dial at almost the same moment. Let the database settle
+    # the race rather than trusting the earlier SELECT.
+    created = query_one(
         conn,
         """INSERT INTO calls (organization_id, dial_id, vogent_agent_id, versioned_prompt_id,
                               scenario_id, evaluation_run_id, true_intent, lifecycle)
            VALUES (%s, %s, %s, %s, %s, %s, %s, 'in_progress')
+           ON CONFLICT (dial_id) DO NOTHING
            RETURNING *""",
         (
             organization_id, dial_id, vogent_agent_id, versioned_prompt_id,
             profile.get("scenario_id"), profile.get("evaluation_run_id"), profile.get("true_intent"),
         ),
     )
+    if created is not None:
+        return created
+
+    # The other writer won. Take their row, and fill in anything they did not know:
+    # a webhook has no scenario, and the runner has no agent id.
+    existing = query_one(
+        conn, "SELECT * FROM calls WHERE dial_id = %s AND organization_id = %s",
+        (dial_id, organization_id),
+    )
+    if existing is None:
+        raise RuntimeError(f"call for dial {dial_id} is owned by another organization")
+    execute(
+        conn,
+        """UPDATE calls
+              SET vogent_agent_id = COALESCE(vogent_agent_id, %s),
+                  versioned_prompt_id = COALESCE(versioned_prompt_id, %s),
+                  scenario_id = COALESCE(scenario_id, %s),
+                  evaluation_run_id = COALESCE(evaluation_run_id, %s),
+                  true_intent = COALESCE(true_intent, %s),
+                  updated_at = now()
+            WHERE id = %s""",
+        (
+            vogent_agent_id, versioned_prompt_id, profile.get("scenario_id"),
+            profile.get("evaluation_run_id"), profile.get("true_intent"), existing["id"],
+        ),
+    )
+    return query_one(conn, "SELECT * FROM calls WHERE id = %s", (existing["id"],))
 
 
 def get_call(conn: psycopg.Connection, call_id: str, organization_id: str) -> dict | None:

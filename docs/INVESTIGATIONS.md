@@ -60,3 +60,50 @@ as evidence about the agent.
 prefer dial-level identifiers over values the model repeats back.
 
 **Re-evaluation.** Pending: re-run of `A_routine_scheduling` on V2 after the harness change.
+
+---
+
+## INV-2: The agent never spoke, because a question node cannot open a call
+
+**Observed.** After fixing the harness deadlock (INV-1), the caller opened the conversation and Vogent
+transcribed it correctly, but the agent still said nothing and the call was abandoned at 35 seconds.
+
+| | |
+|---|---|
+| evaluation_run_id | `297281b0-386e-4691-8c11-5b57d9b12af3` |
+| dial_id | `2e4b6a06...` |
+| aiDurationSeconds | 35 |
+| cost | $0.0525 (CALCULATED_ESTIMATE) |
+
+**Evidence.** `artifacts/v2/297281b0-386e-4691-8c11-5b57d9b12af3/A_routine_scheduling/`.
+Vogent's dial record holds exactly one transcript segment, and it is the caller:
+`HUMAN: "Hi. I'd like to book a routine for an up appointment, please."` (6.45s to 9.89s). So the
+synthetic audio reached Vogent and its speech recognition worked. The mishearing of "follow-up" as
+"for an up" is ordinary recognition behaviour and did not affect routing. No AI segment ever appeared.
+
+**Assumption.** That the flow's entry node, a `question` node with an opening line and
+`openingLineType: INBOUND_OUTBOUND`, would make the agent greet the caller.
+
+**Was it wrong.** Yes. Two separate things were wrong, and the first one hid the second.
+
+1. The stored flow has `aiOpen: false`. Publishing `aiOpen: true` does not change it; the field is
+   accepted and ignored, which matches the documentation calling it deprecated. It is therefore not
+   the lever, despite being the field that describes the behaviour.
+2. A **question node cannot open a call.** Proved by isolation: a one-node flow whose only node is a
+   `freeform` (versioned prompt `d11d964b-e191-43e7-84cb-acf909783c9e`) greeted the caller within one
+   second of audio connecting. The same workspace, the same model, the same `openingLineType`. The only
+   difference was the entry node's type.
+
+**Change made.** Both flows now begin with a `freeform` greeting node that transitions to the existing
+question node. The change is identical in V1 and V2, so the comparison between them is unaffected.
+
+**Re-evaluation.** Republished as V1 `5f2c2d40-c2ae-47e3-8681-1e951c92c9c2` and
+V2 `251e150f-1b68-46f2-8d5e-7754c864dbcf`; re-run pending.
+
+**Also found while diagnosing this.** A question node exposes its answer as `answer`, not `output`, so
+every `{{node.<id>.output}}` template in both flows referenced a field that does not exist. Function
+nodes do expose `status` as expected, which is what the V2 outcome-conditioned transitions branch on.
+
+**What this says about the eval design.** Both INV-1 and INV-2 are failures that a transcript test or a
+structural check would have scored as a pass or not seen at all: in one case there was no transcript,
+in the other the flow graph was perfectly well-formed. Only placing a real call surfaced them.

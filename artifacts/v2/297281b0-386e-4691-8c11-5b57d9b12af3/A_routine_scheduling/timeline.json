@@ -1,0 +1,86 @@
+[
+  {
+    "t": 1789848083506,
+    "type": "ready",
+    "value": true
+  },
+  {
+    "t": 1789848085578,
+    "type": "audio_connected",
+    "value": true
+  },
+  {
+    "t": 1789848085692,
+    "type": "status",
+    "value": "in-progress"
+  },
+  {
+    "t": 1789848091823,
+    "type": "caller_clip",
+    "value": "http://127.0.0.1:51040/clips/2d9bb9672038a04f.wav"
+  },
+  {
+    "t": 1789848092522,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "Hi."
+    }
+  },
+  {
+    "t": 1789848092669,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "Hi."
+    }
+  },
+  {
+    "t": 1789848092672,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "Hi."
+    }
+  },
+  {
+    "t": 1789848093604,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "I'd like to book a ride"
+    }
+  },
+  {
+    "t": 1789848094590,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "I'd like to book a"
+    }
+  },
+  {
+    "t": 1789848095621,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "I'd like to book a routine for an up appointment, please."
+    }
+  },
+  {
+    "t": 1789848095715,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "I'd like to book a routine for an up appointment, please."
+    }
+  },
+  {
+    "t": 1789848095812,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "Hi. I'd like to book a routine for an up appointment, please."
+    }
+  }
+]

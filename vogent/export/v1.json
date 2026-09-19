@@ -88,7 +88,7 @@
             },
             {
               "name": "preferred_date",
-              "value": "{{node.collect_slot.output}}"
+              "value": "{{node.collect_slot.answer}}"
             },
             {
               "name": "reason",
@@ -140,7 +140,7 @@
         "name": "Confirm appointment to caller",
         "nodeData": {
           "outputs": null,
-          "prompt": "Tell the caller they are all set for {{node.collect_slot.output}} and ask if there is anything else. Then end the call politely."
+          "prompt": "Tell the caller they are all set for {{node.collect_slot.answer}} and ask if there is anything else. Then end the call politely."
         },
         "outputSchema": null,
         "transitionRules": [
@@ -238,11 +238,11 @@
             },
             {
               "name": "concern_summary",
-              "value": "{{node.collect_concern.output}}"
+              "value": "{{node.collect_concern.answer}}"
             },
             {
               "name": "callback_phone",
-              "value": "{{node.collect_phone.output}}"
+              "value": "{{node.collect_phone.answer}}"
             }
           ],
           "outputs": [
@@ -334,7 +334,7 @@
           "inputs": [
             {
               "name": "category",
-              "value": "{{node.greet_intake.output}}"
+              "value": "{{node.greet_intake.answer}}"
             },
             {
               "name": "disposition",
@@ -398,7 +398,7 @@
     ],
     "openingLineType": "INBOUND_OUTBOUND"
   },
-  "id": "af532d73-0693-49e7-b39e-f33b4ff0ba5b",
+  "id": "c32acdd0-3637-43ad-bf10-4b523b7ac3a5",
   "modelOptionValues": [
     {
       "optionId": "temperature",

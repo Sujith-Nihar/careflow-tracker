@@ -88,7 +88,7 @@
             },
             {
               "name": "preferred_date",
-              "value": "{{node.collect_slot.output}}"
+              "value": "{{node.collect_slot.answer}}"
             },
             {
               "name": "reason",
@@ -196,7 +196,7 @@
             },
             {
               "name": "callback_phone",
-              "value": "{{node.collect_slot.output}}"
+              "value": "{{node.collect_slot.answer}}"
             },
             {
               "name": "priority",
@@ -310,11 +310,11 @@
             },
             {
               "name": "concern_summary",
-              "value": "{{node.collect_concern.output}}"
+              "value": "{{node.collect_concern.answer}}"
             },
             {
               "name": "callback_phone",
-              "value": "{{node.collect_phone.output}}"
+              "value": "{{node.collect_phone.answer}}"
             }
           ],
           "outputs": [
@@ -418,7 +418,7 @@
             },
             {
               "name": "callback_phone",
-              "value": "{{node.collect_phone.output}}"
+              "value": "{{node.collect_phone.answer}}"
             },
             {
               "name": "priority",
@@ -550,7 +550,7 @@
             },
             {
               "name": "callback_phone",
-              "value": "{{node.greet_intake.output}}"
+              "value": "{{node.greet_intake.answer}}"
             },
             {
               "name": "priority",
@@ -779,7 +779,7 @@
     ],
     "openingLineType": "INBOUND_OUTBOUND"
   },
-  "id": "32033ebe-188f-4116-a756-260b17481a0e",
+  "id": "285da967-c4e1-4744-ae93-e787fb076ec9",
   "modelOptionValues": [
     {
       "optionId": "temperature",

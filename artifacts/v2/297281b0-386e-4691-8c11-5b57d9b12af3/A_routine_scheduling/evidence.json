@@ -1,0 +1,50 @@
+{
+  "action_executions": [],
+  "agent_statements": [],
+  "call": {
+    "connected_seconds": 35,
+    "dial_id": "2e4b6a06-ab99-477e-b3c7-6da369e0a90e",
+    "ended_at": "2026-09-19T20:02:01.157331+00:00",
+    "evaluation_run_id": "297281b0-386e-4691-8c11-5b57d9b12af3",
+    "id": "b4cb44d0-e502-44a8-b8be-8ed5813baa85",
+    "lifecycle": "ended",
+    "scenario_id": "A_routine_scheduling",
+    "started_at": "2026-09-19T20:01:25.674085+00:00",
+    "system_result_type": "USER_HANGUP",
+    "versioned_prompt_id": "32033ebe-188f-4116-a756-260b17481a0e",
+    "vogent_agent_id": null
+  },
+  "derived": {
+    "evidence_refs": {},
+    "mismatch_details": [],
+    "next_step": "Review the call and contact the patient if they needed something.",
+    "promise_mismatch": false,
+    "reason": "The call ended without any recorded action. Whatever the caller was told, nothing was scheduled, transferred, or queued.",
+    "requires_staff_action": true,
+    "severity": 3,
+    "status": "no_action_recorded"
+  },
+  "downstream": {
+    "appointments": [],
+    "callback_requests": [],
+    "transfer_sessions": []
+  },
+  "intent": {
+    "agent_classified": null,
+    "true_intent": "routine_scheduling"
+  },
+  "staff_actions": [],
+  "transcript": {
+    "authoritative": false,
+    "note": "Shows what was said, not what happened.",
+    "segments": [
+      {
+        "detailType": null,
+        "endTimeMs": 9889,
+        "speaker": "HUMAN",
+        "startTimeMs": 6450,
+        "text": "Hi. I'd like to book a routine for an up appointment, please."
+      }
+    ]
+  }
+}

@@ -188,3 +188,26 @@ def test_staff_completing_the_callback_closes_the_call(client, demo_org):
         headers={"X-Organization-Id": demo_org},
     )
     assert repeat.status_code == 409
+
+
+def test_a_webhook_and_the_runner_can_create_the_same_call_concurrently(client, demo_org):
+    """Vogent announces the dial while the runner is still registering it.
+
+    Both paths create the call row. Whichever loses must adopt the winner's row
+    and fill in what the winner did not know, rather than failing the request.
+    """
+    dial = dial_id()
+    # The vendor's announcement arrives first and knows nothing about the scenario.
+    client.post(
+        "/vogent/webhooks/test-webhook-token-demo",
+        json={"event": "dial.created", "payload": {"dial_id": dial, "status": "in_progress"}},
+    )
+    response = register_dial(client, demo_org, dial, "race_check",
+                             {"transfer": "connect"}, "post_operative_concern")
+    assert response.status_code == 201
+
+    resolved = client.get(f"/api/calls/by-dial/{dial}", headers={"X-Organization-Id": demo_org})
+    detail = client.get(f"/api/calls/{resolved.json['call_id']}",
+                        headers={"X-Organization-Id": demo_org}).json
+    assert detail["call"]["scenario_id"] == "race_check"
+    assert detail["intent"]["true_intent"] == "post_operative_concern"

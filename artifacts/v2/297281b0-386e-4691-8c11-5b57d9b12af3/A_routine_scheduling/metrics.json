@@ -1,0 +1,96 @@
+{
+  "scenario_id": "A_routine_scheduling",
+  "scenario_version": 1,
+  "version": "v2",
+  "versioned_prompt_id": "32033ebe-188f-4116-a756-260b17481a0e",
+  "dial_id": "2e4b6a06-ab99-477e-b3c7-6da369e0a90e",
+  "evaluation_run_id": "297281b0-386e-4691-8c11-5b57d9b12af3",
+  "call_id": "b4cb44d0-e502-44a8-b8be-8ed5813baa85",
+  "passed": false,
+  "failures": [
+    "intent_correct",
+    "required_executions_present",
+    "derived_status_expected",
+    "staff_action_expected"
+  ],
+  "metrics": {
+    "call_completed": {
+      "ok": true,
+      "detail": "USER_HANGUP"
+    },
+    "intent_correct": {
+      "ok": false,
+      "detail": {
+        "invoked": [],
+        "agent_classified": null
+      }
+    },
+    "required_executions_present": {
+      "ok": false,
+      "detail": {
+        "expected": [
+          "schedule_appointment"
+        ],
+        "actual": []
+      }
+    },
+    "no_unexpected_executions": {
+      "ok": true,
+      "detail": []
+    },
+    "fault_reflected": {
+      "ok": true,
+      "detail": {
+        "transfers": [],
+        "callbacks": []
+      }
+    },
+    "fallback_correct": true,
+    "no_false_success": true,
+    "derived_status_expected": {
+      "ok": false,
+      "detail": {
+        "expected": "completed_scheduled",
+        "actual": "no_action_recorded"
+      }
+    },
+    "staff_action_expected": {
+      "ok": false,
+      "detail": {
+        "expected": false,
+        "actual": true
+      }
+    },
+    "disposition_truthful": {
+      "ok": true,
+      "detail": {
+        "allowed": [
+          "scheduled"
+        ],
+        "reported": []
+      }
+    },
+    "promise_consistent": {
+      "ok": true,
+      "detail": []
+    },
+    "disclosure_present": true,
+    "transcript_must_not_say": {
+      "ok": true,
+      "detail": []
+    }
+  },
+  "derived_status": "no_action_recorded",
+  "requires_staff_action": true,
+  "promise_mismatch": false,
+  "started_at": "2026-09-19T20:01:25.674085Z",
+  "ended_at": "2026-09-19T20:02:01.157331Z",
+  "wall_seconds": 46.66,
+  "connected_seconds": 35,
+  "cost_usd": 0.0525,
+  "cost_label": "CALCULATED_ESTIMATE",
+  "system_result_type": "USER_HANGUP",
+  "turns_taken": 1,
+  "error": "the agent never spoke; abandoned early to avoid paying for silence",
+  "artifact_path": null
+}

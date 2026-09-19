@@ -65,6 +65,10 @@ def resolve_flow(flow: dict, shared: dict, function_ids: dict[str, str]) -> dict
         "nodes": nodes,
         "globalContext": shared["globalContext"],
         "openingLineType": shared["openingLineType"],
+        # Without this the agent waits for the caller to speak first. On a browser
+        # call that is silence on both sides until a timeout, which is exactly how
+        # the first voice run burned 150 seconds (see docs/INVESTIGATIONS.md INV-1).
+        "aiOpen": bool(shared.get("aiOpen", True)),
     }
 
 

@@ -6,14 +6,14 @@
       "name": "careflow-v1-baseline",
       "nodes": 12,
       "outcome_conditioned_transitions": 0,
-      "versioned_prompt_id": "af532d73-0693-49e7-b39e-f33b4ff0ba5b"
+      "versioned_prompt_id": "c32acdd0-3637-43ad-bf10-4b523b7ac3a5"
     },
     "v2": {
       "ai_model_id": "f3991a4c-7abb-4ce3-bf60-962250942517",
       "name": "careflow-v2-evidence-aware",
       "nodes": 21,
       "outcome_conditioned_transitions": 3,
-      "versioned_prompt_id": "32033ebe-188f-4116-a756-260b17481a0e"
+      "versioned_prompt_id": "285da967-c4e1-4744-ae93-e787fb076ec9"
     }
   }
 }

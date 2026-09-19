@@ -1,7 +1,21 @@
 {
   "version_name": "careflow-v2-evidence-aware",
-  "note": "V2 — the same intake and the same functions, but every closing line sits downstream of the function result it describes. The agent never announces an action before it has one, and the disposition it reports is the one the evidence supports. Compare against v1.json: the intake, collection and policy are identical; only the reaction to function results differs.",
+  "note": "V2 \u2014 the same intake and the same functions, but every closing line sits downstream of the function result it describes. The agent never announces an action before it has one, and the disposition it reports is the one the evidence supports. Compare against v1.json: the intake, collection and policy are identical; only the reaction to function results differs. The flow opens with a freeform greeting node: a question node as the entry point produces no opening utterance, so the call starts in silence (see INVESTIGATIONS.md INV-2).",
   "nodes": [
+    {
+      "id": "greeting",
+      "name": "Opening line",
+      "type": "freeform",
+      "nodeData": {
+        "prompt": "Say exactly: Thanks for calling Demo Surgical Associates. Nothing else."
+      },
+      "transitionRules": [
+        {
+          "conditionType": "always",
+          "transitionNodeId": "greet_intake"
+        }
+      ]
+    },
     {
       "id": "greet_intake",
       "name": "Greeting and intake",
@@ -9,16 +23,30 @@
       "nodeData": {
         "question": "Thanks for calling Demo Surgical Associates. Are you calling to schedule a routine appointment, or about a concern after a recent surgery?",
         "questionType": "multiple_choice",
-        "options": ["routine", "post_op", "other"],
+        "options": [
+          "routine",
+          "post_op",
+          "other"
+        ],
         "clarificationDetails": "Choose routine for scheduling or rescheduling. Choose post_op for any concern about a recent operation, such as the incision, bleeding, pain, fever or swelling. Choose other for anything else."
       },
       "transitionRules": [
-        {"conditionType": "equal", "value": "routine", "transitionNodeId": "collect_slot"},
-        {"conditionType": "equal", "value": "post_op", "transitionNodeId": "collect_concern"},
-        {"conditionType": "always", "transitionNodeId": "other_help"}
+        {
+          "conditionType": "equal",
+          "value": "routine",
+          "transitionNodeId": "collect_slot"
+        },
+        {
+          "conditionType": "equal",
+          "value": "post_op",
+          "transitionNodeId": "collect_concern"
+        },
+        {
+          "conditionType": "always",
+          "transitionNodeId": "other_help"
+        }
       ]
     },
-
     {
       "id": "collect_slot",
       "name": "Collect preferred day",
@@ -28,7 +56,12 @@
         "questionType": "freeform",
         "clarificationDetails": "Accept a day of the week or a date. Do not offer specific times."
       },
-      "transitionRules": [{"conditionType": "always", "transitionNodeId": "book"}]
+      "transitionRules": [
+        {
+          "conditionType": "always",
+          "transitionNodeId": "book"
+        }
+      ]
     },
     {
       "id": "book",
@@ -37,15 +70,32 @@
       "nodeData": {
         "functionId": "__schedule_appointment__",
         "inputs": [
-          {"name": "patient_ref", "value": "{{patient_ref}}"},
-          {"name": "preferred_date", "value": "{{node.collect_slot.output}}"},
-          {"name": "reason", "value": "routine appointment"}
+          {
+            "name": "patient_ref",
+            "value": "{{patient_ref}}"
+          },
+          {
+            "name": "preferred_date",
+            "value": "{{node.collect_slot.answer}}"
+          },
+          {
+            "name": "reason",
+            "value": "routine appointment"
+          }
         ],
         "outputs": "__outputs.schedule_appointment__"
       },
       "transitionRules": [
-        {"conditionType": "equal", "field": "status", "value": "booked", "transitionNodeId": "close_scheduled"},
-        {"conditionType": "always", "transitionNodeId": "scheduling_failed_notice"}
+        {
+          "conditionType": "equal",
+          "field": "status",
+          "value": "booked",
+          "transitionNodeId": "close_scheduled"
+        },
+        {
+          "conditionType": "always",
+          "transitionNodeId": "scheduling_failed_notice"
+        }
       ]
     },
     {
@@ -55,7 +105,12 @@
       "nodeData": {
         "prompt": "Read back exactly what the scheduler confirmed: {{node.book.agent_message}}. Ask if there is anything else, then end the call politely."
       },
-      "transitionRules": [{"conditionType": "always", "transitionNodeId": "disposition_scheduled"}]
+      "transitionRules": [
+        {
+          "conditionType": "always",
+          "transitionNodeId": "disposition_scheduled"
+        }
+      ]
     },
     {
       "id": "scheduling_failed_notice",
@@ -64,7 +119,12 @@
       "nodeData": {
         "prompt": "Tell the caller plainly that you could not confirm a booking, and that the office will call them back to arrange it. Do not say an appointment was made."
       },
-      "transitionRules": [{"conditionType": "always", "transitionNodeId": "scheduling_callback"}]
+      "transitionRules": [
+        {
+          "conditionType": "always",
+          "transitionNodeId": "scheduling_callback"
+        }
+      ]
     },
     {
       "id": "scheduling_callback",
@@ -73,16 +133,32 @@
       "nodeData": {
         "functionId": "__create_callback__",
         "inputs": [
-          {"name": "patient_ref", "value": "{{patient_ref}}"},
-          {"name": "callback_phone", "value": "{{node.collect_slot.output}}"},
-          {"name": "priority", "value": "normal"},
-          {"name": "reason_code", "value": "unsupported_request"}
+          {
+            "name": "patient_ref",
+            "value": "{{patient_ref}}"
+          },
+          {
+            "name": "callback_phone",
+            "value": "{{node.collect_slot.answer}}"
+          },
+          {
+            "name": "priority",
+            "value": "normal"
+          },
+          {
+            "name": "reason_code",
+            "value": "unsupported_request"
+          }
         ],
         "outputs": "__outputs.create_callback__"
       },
-      "transitionRules": [{"conditionType": "always", "transitionNodeId": "disposition_unresolved"}]
+      "transitionRules": [
+        {
+          "conditionType": "always",
+          "transitionNodeId": "disposition_unresolved"
+        }
+      ]
     },
-
     {
       "id": "collect_concern",
       "name": "Collect concern",
@@ -92,7 +168,12 @@
         "questionType": "freeform",
         "clarificationDetails": "Record what the caller says. Do not interpret it and do not give any advice."
       },
-      "transitionRules": [{"conditionType": "always", "transitionNodeId": "collect_phone"}]
+      "transitionRules": [
+        {
+          "conditionType": "always",
+          "transitionNodeId": "collect_phone"
+        }
+      ]
     },
     {
       "id": "collect_phone",
@@ -103,7 +184,12 @@
         "questionType": "freeform",
         "clarificationDetails": "Capture the digits the caller says."
       },
-      "transitionRules": [{"conditionType": "always", "transitionNodeId": "transfer"}]
+      "transitionRules": [
+        {
+          "conditionType": "always",
+          "transitionNodeId": "transfer"
+        }
+      ]
     },
     {
       "id": "transfer",
@@ -112,15 +198,32 @@
       "nodeData": {
         "functionId": "__transfer_triage__",
         "inputs": [
-          {"name": "patient_ref", "value": "{{patient_ref}}"},
-          {"name": "concern_summary", "value": "{{node.collect_concern.output}}"},
-          {"name": "callback_phone", "value": "{{node.collect_phone.output}}"}
+          {
+            "name": "patient_ref",
+            "value": "{{patient_ref}}"
+          },
+          {
+            "name": "concern_summary",
+            "value": "{{node.collect_concern.answer}}"
+          },
+          {
+            "name": "callback_phone",
+            "value": "{{node.collect_phone.answer}}"
+          }
         ],
         "outputs": "__outputs.transfer_triage__"
       },
       "transitionRules": [
-        {"conditionType": "equal", "field": "status", "value": "connected", "transitionNodeId": "close_transferred"},
-        {"conditionType": "always", "transitionNodeId": "transfer_failed_notice"}
+        {
+          "conditionType": "equal",
+          "field": "status",
+          "value": "connected",
+          "transitionNodeId": "close_transferred"
+        },
+        {
+          "conditionType": "always",
+          "transitionNodeId": "transfer_failed_notice"
+        }
       ]
     },
     {
@@ -130,7 +233,12 @@
       "nodeData": {
         "prompt": "Tell the caller they are now connected with the triage nurse, and end your part of the call."
       },
-      "transitionRules": [{"conditionType": "always", "transitionNodeId": "disposition_transferred"}]
+      "transitionRules": [
+        {
+          "conditionType": "always",
+          "transitionNodeId": "disposition_transferred"
+        }
+      ]
     },
     {
       "id": "transfer_failed_notice",
@@ -139,7 +247,12 @@
       "nodeData": {
         "prompt": "Tell the caller plainly, in one sentence, that the transfer did not complete. Then say you are requesting an urgent callback from a nurse. Do not say they were transferred and do not say a nurse will definitely call yet."
       },
-      "transitionRules": [{"conditionType": "always", "transitionNodeId": "urgent_callback"}]
+      "transitionRules": [
+        {
+          "conditionType": "always",
+          "transitionNodeId": "urgent_callback"
+        }
+      ]
     },
     {
       "id": "urgent_callback",
@@ -148,16 +261,36 @@
       "nodeData": {
         "functionId": "__create_callback__",
         "inputs": [
-          {"name": "patient_ref", "value": "{{patient_ref}}"},
-          {"name": "callback_phone", "value": "{{node.collect_phone.output}}"},
-          {"name": "priority", "value": "urgent"},
-          {"name": "reason_code", "value": "transfer_failed"}
+          {
+            "name": "patient_ref",
+            "value": "{{patient_ref}}"
+          },
+          {
+            "name": "callback_phone",
+            "value": "{{node.collect_phone.answer}}"
+          },
+          {
+            "name": "priority",
+            "value": "urgent"
+          },
+          {
+            "name": "reason_code",
+            "value": "transfer_failed"
+          }
         ],
         "outputs": "__outputs.create_callback__"
       },
       "transitionRules": [
-        {"conditionType": "equal", "field": "status", "value": "created", "transitionNodeId": "close_callback_pending"},
-        {"conditionType": "always", "transitionNodeId": "close_escalation_failed"}
+        {
+          "conditionType": "equal",
+          "field": "status",
+          "value": "created",
+          "transitionNodeId": "close_callback_pending"
+        },
+        {
+          "conditionType": "always",
+          "transitionNodeId": "close_escalation_failed"
+        }
       ]
     },
     {
@@ -167,7 +300,12 @@
       "nodeData": {
         "prompt": "Tell the caller a nurse will call them back on the number they gave. Add that if their symptoms get worse before then they should call the office line or emergency services. Then end the call."
       },
-      "transitionRules": [{"conditionType": "always", "transitionNodeId": "disposition_callback_pending"}]
+      "transitionRules": [
+        {
+          "conditionType": "always",
+          "transitionNodeId": "disposition_callback_pending"
+        }
+      ]
     },
     {
       "id": "close_escalation_failed",
@@ -176,9 +314,13 @@
       "nodeData": {
         "prompt": "Tell the caller plainly that you could not complete the transfer and could not set up a callback either. Tell them to call the office directly, and to call emergency services if this is an emergency. Do not promise that anyone will call them."
       },
-      "transitionRules": [{"conditionType": "always", "transitionNodeId": "disposition_escalation_failed"}]
+      "transitionRules": [
+        {
+          "conditionType": "always",
+          "transitionNodeId": "disposition_escalation_failed"
+        }
+      ]
     },
-
     {
       "id": "other_help",
       "name": "Unsupported request",
@@ -186,7 +328,12 @@
       "nodeData": {
         "prompt": "Explain plainly that this is outside what you can help with, and that you are asking someone from the office to call them back. Then end the call."
       },
-      "transitionRules": [{"conditionType": "always", "transitionNodeId": "unsupported_callback"}]
+      "transitionRules": [
+        {
+          "conditionType": "always",
+          "transitionNodeId": "unsupported_callback"
+        }
+      ]
     },
     {
       "id": "unsupported_callback",
@@ -195,16 +342,32 @@
       "nodeData": {
         "functionId": "__create_callback__",
         "inputs": [
-          {"name": "patient_ref", "value": "{{patient_ref}}"},
-          {"name": "callback_phone", "value": "{{node.greet_intake.output}}"},
-          {"name": "priority", "value": "normal"},
-          {"name": "reason_code", "value": "unsupported_request"}
+          {
+            "name": "patient_ref",
+            "value": "{{patient_ref}}"
+          },
+          {
+            "name": "callback_phone",
+            "value": "{{node.greet_intake.answer}}"
+          },
+          {
+            "name": "priority",
+            "value": "normal"
+          },
+          {
+            "name": "reason_code",
+            "value": "unsupported_request"
+          }
         ],
         "outputs": "__outputs.create_callback__"
       },
-      "transitionRules": [{"conditionType": "always", "transitionNodeId": "disposition_unresolved"}]
+      "transitionRules": [
+        {
+          "conditionType": "always",
+          "transitionNodeId": "disposition_unresolved"
+        }
+      ]
     },
-
     {
       "id": "disposition_scheduled",
       "name": "Report scheduled",
@@ -212,9 +375,18 @@
       "nodeData": {
         "functionId": "__report_disposition__",
         "inputs": [
-          {"name": "category", "value": "routine_scheduling"},
-          {"name": "disposition", "value": "scheduled"},
-          {"name": "summary", "value": "Scheduler confirmed an appointment and the caller was told the confirmed details."}
+          {
+            "name": "category",
+            "value": "routine_scheduling"
+          },
+          {
+            "name": "disposition",
+            "value": "scheduled"
+          },
+          {
+            "name": "summary",
+            "value": "Scheduler confirmed an appointment and the caller was told the confirmed details."
+          }
         ],
         "outputs": "__outputs.report_disposition__"
       },
@@ -227,9 +399,18 @@
       "nodeData": {
         "functionId": "__report_disposition__",
         "inputs": [
-          {"name": "category", "value": "post_operative_concern"},
-          {"name": "disposition", "value": "transferred"},
-          {"name": "summary", "value": "Triage line answered and the caller was connected."}
+          {
+            "name": "category",
+            "value": "post_operative_concern"
+          },
+          {
+            "name": "disposition",
+            "value": "transferred"
+          },
+          {
+            "name": "summary",
+            "value": "Triage line answered and the caller was connected."
+          }
         ],
         "outputs": "__outputs.report_disposition__"
       },
@@ -242,9 +423,18 @@
       "nodeData": {
         "functionId": "__report_disposition__",
         "inputs": [
-          {"name": "category", "value": "post_operative_concern"},
-          {"name": "disposition", "value": "callback_pending"},
-          {"name": "summary", "value": "Transfer did not complete; an urgent callback was created and the caller was told so."}
+          {
+            "name": "category",
+            "value": "post_operative_concern"
+          },
+          {
+            "name": "disposition",
+            "value": "callback_pending"
+          },
+          {
+            "name": "summary",
+            "value": "Transfer did not complete; an urgent callback was created and the caller was told so."
+          }
         ],
         "outputs": "__outputs.report_disposition__"
       },
@@ -257,9 +447,18 @@
       "nodeData": {
         "functionId": "__report_disposition__",
         "inputs": [
-          {"name": "category", "value": "post_operative_concern"},
-          {"name": "disposition", "value": "escalation_failed"},
-          {"name": "summary", "value": "Neither the transfer nor the callback succeeded; the caller was told to contact the office directly."}
+          {
+            "name": "category",
+            "value": "post_operative_concern"
+          },
+          {
+            "name": "disposition",
+            "value": "escalation_failed"
+          },
+          {
+            "name": "summary",
+            "value": "Neither the transfer nor the callback succeeded; the caller was told to contact the office directly."
+          }
         ],
         "outputs": "__outputs.report_disposition__"
       },
@@ -272,9 +471,18 @@
       "nodeData": {
         "functionId": "__report_disposition__",
         "inputs": [
-          {"name": "category", "value": "other"},
-          {"name": "disposition", "value": "unresolved"},
-          {"name": "summary", "value": "Request was outside the supported workflow and was routed to a person."}
+          {
+            "name": "category",
+            "value": "other"
+          },
+          {
+            "name": "disposition",
+            "value": "unresolved"
+          },
+          {
+            "name": "summary",
+            "value": "Request was outside the supported workflow and was routed to a person."
+          }
         ],
         "outputs": "__outputs.report_disposition__"
       },
