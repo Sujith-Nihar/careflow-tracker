@@ -1,0 +1,240 @@
+{
+  "agent": {
+    "defaultExtractorId": null,
+    "defaultVersionedPromptId": "b27a8ced-35c7-4d44-bb63-a0469bcde061",
+    "defaultVoiceId": "94c32748-865f-42e1-bb1a-3a6b4abc7d11",
+    "endpointDetectorConfig": {
+      "mode": "DEFAULT",
+      "type": "SEMANTIC"
+    },
+    "fillEmptyStringVariables": false,
+    "id": "b3d8f0c2-c96e-4a37-b023-ce1d0d99a82d",
+    "idleMessageConfig": {
+      "enabled": false,
+      "idleDurationMilliseconds": 0,
+      "maxIdleMessages": 0
+    },
+    "ivrConfiguration": null,
+    "ivrSilenceHangupConfiguration": null,
+    "language": "en",
+    "maxDurationSeconds": 10800,
+    "name": "CareFlow Demo Surgical",
+    "silenceHangupConfiguration": {
+      "silenceDurationSeconds": 0,
+      "type": "DISABLED"
+    },
+    "timeoutBehaviorConfiguration": {
+      "behavior": "HANGUP",
+      "transferNumber": null
+    },
+    "timeoutMessage": null,
+    "transcriberParams": {
+      "type": "deepgram"
+    },
+    "utteranceDetectorConfig": {
+      "interruptionPlayTimeMs": 1000,
+      "sensitivity": "MEDIUM"
+    },
+    "voicemailConfig": {
+      "detection": "DISABLE",
+      "message": null
+    }
+  },
+  "aiDurationSeconds": 28,
+  "aiResult": {
+    "collect_concern": {
+      "answer": "Since last night, my number is 5 5 5 5 5 5 0 1 0 4."
+    },
+    "collect_phone": {
+      "answer": "5555550104"
+    },
+    "disposition_from_evidence": {
+      "error": "internal_error",
+      "request_id": "114b5f30eb694d73"
+    },
+    "greet_intake": {
+      "answer": "post_op"
+    },
+    "transfer": {
+      "agent_message": "The triage line did not answer.",
+      "failure_reason": "no_answer",
+      "status": "failed"
+    },
+    "urgent_callback": {
+      "agent_message": "I could not place a callback request.",
+      "failure_reason": "queue_rejected",
+      "priority": "urgent",
+      "status": "failed"
+    }
+  },
+  "durationSeconds": 28,
+  "endedAt": "2026-09-19T20:50:10.662955Z",
+  "id": "ff3f119a-5814-45f4-87e8-86874d9b925c",
+  "inputs": {
+    "callback_phone": "+15555550104",
+    "evaluation_run_id": "027949a4-d038-4b3e-8db0-0204e99a6770",
+    "patient_ref": "PT-SYN-0004",
+    "scenario_id": "D_postop_double_failure"
+  },
+  "recordings": [
+    {
+      "url": "https://api.vogent.ai/api/recordings/59fd8352-750c-485e-8731-05488baa37b6"
+    }
+  ],
+  "startedAt": "2026-09-19T20:49:42.083379Z",
+  "status": "completed",
+  "systemResultType": "USER_HANGUP",
+  "transcript": [
+    {
+      "detailType": null,
+      "endTimeMs": 4080,
+      "speaker": "AI",
+      "startTimeMs": 720,
+      "text": "Thanks for calling Demo Surgical"
+    },
+    {
+      "detailType": null,
+      "endTimeMs": 5740,
+      "speaker": "HUMAN",
+      "startTimeMs": 2639,
+      "text": "I had surgery on Monday. Now I have a favor."
+    },
+    {
+      "detailType": "node-transition",
+      "functionCallId": "call_dzCSCtCXfvdqatVZZH5gGljp",
+      "nodeTransition": {
+        "toNodeId": "collect_concern",
+        "transitionData": {
+          "answer": "post_op"
+        }
+      },
+      "speaker": "AI",
+      "text": ""
+    },
+    {
+      "detailType": null,
+      "endTimeMs": 10416,
+      "speaker": "AI",
+      "startTimeMs": 6960,
+      "text": "I'm sorry to hear that. Can you tell me briefly what's"
+    },
+    {
+      "detailType": null,
+      "endTimeMs": 15160,
+      "speaker": "HUMAN",
+      "startTimeMs": 9099,
+      "text": "Since last night, my number is 5 5 5 5 5 5 0 1 0 4."
+    },
+    {
+      "detailType": "node-transition",
+      "functionCallId": "call_gFICk1jMJvbMKgysjf1FpALy",
+      "nodeTransition": {
+        "toNodeId": "collect_phone",
+        "transitionData": {
+          "answer": "Since last night, my number is 5 5 5 5 5 5 0 1 0 4."
+        }
+      },
+      "speaker": "AI",
+      "text": ""
+    },
+    {
+      "detailType": "node-transition",
+      "functionCallId": "call_g8xDzk3qPiUuSwG6dF6CyOJB",
+      "nodeTransition": {
+        "toNodeId": "transfer",
+        "transitionData": {
+          "answer": "5555550104"
+        }
+      },
+      "speaker": "AI",
+      "text": ""
+    },
+    {
+      "detailType": null,
+      "functionCalls": [
+        {
+          "args": "{\"callback_phone\":\"5555550104\",\"concern_summary\":\"Since last night, my number is 5 5 5 5 5 5 0 1 0 4.\"}",
+          "functionCallId": "bbc88ba4-437c-4518-9d15-17bffca27e76",
+          "name": "Attempt transfer to triage"
+        }
+      ],
+      "speaker": "AI",
+      "text": ""
+    },
+    {
+      "detailType": "node-transition",
+      "functionCallId": "call_g8xDzk3qPiUuSwG6dF6CyOJB",
+      "nodeTransition": {
+        "toNodeId": "urgent_callback",
+        "transitionData": {
+          "agent_message": "The triage line did not answer.",
+          "failure_reason": "no_answer",
+          "status": "failed"
+        }
+      },
+      "speaker": "AI",
+      "text": ""
+    },
+    {
+      "detailType": null,
+      "functionCalls": [
+        {
+          "args": "{\"callback_phone\":\"5555550104\",\"priority\":\"urgent\",\"reason_code\":\"transfer_failed\"}",
+          "functionCallId": "4507c063-21c0-4179-bb61-fa2b8a7fdbf1",
+          "name": "Queue an urgent callback"
+        }
+      ],
+      "speaker": "AI",
+      "text": ""
+    },
+    {
+      "detailType": "node-transition",
+      "functionCallId": "call_g8xDzk3qPiUuSwG6dF6CyOJB",
+      "nodeTransition": {
+        "toNodeId": "disposition_from_evidence",
+        "transitionData": {
+          "agent_message": "I could not place a callback request.",
+          "failure_reason": "queue_rejected",
+          "priority": "urgent",
+          "status": "failed"
+        }
+      },
+      "speaker": "AI",
+      "text": ""
+    },
+    {
+      "detailType": null,
+      "functionCalls": [
+        {
+          "args": "{\"category\":\"post_operative_concern\",\"disposition\":\"Use exactly one of these, chosen from the function results: 'transferred' if failed is connected; 'callback_pending' if failed is created; otherwise 'escalation_failed'.\",\"summary\":\"Reported from the recorded function results.\"}",
+          "functionCallId": "584250ac-6305-400f-a2c2-98b588b53cc4",
+          "name": "Report the disposition the evidence supports"
+        }
+      ],
+      "speaker": "AI",
+      "text": ""
+    },
+    {
+      "detailType": "node-transition",
+      "functionCallId": "call_g8xDzk3qPiUuSwG6dF6CyOJB",
+      "nodeTransition": {
+        "toNodeId": "callback_outcome_notice",
+        "transitionData": {
+          "error": "internal_error",
+          "request_id": "114b5f30eb694d73"
+        }
+      },
+      "speaker": "AI",
+      "text": ""
+    },
+    {
+      "detailType": null,
+      "endTimeMs": 28516,
+      "speaker": "AI",
+      "startTimeMs": 26020,
+      "text": "The transfer did not"
+    }
+  ],
+  "versionedPromptId": "0d16bb48-afe1-4b0c-9a7b-c155f5098fb0",
+  "voiceId": "94c32748-865f-42e1-bb1a-3a6b4abc7d11"
+}

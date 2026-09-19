@@ -133,6 +133,7 @@ def run_call(scenario: Scenario, dial: Dial, *, headless: bool = True) -> CallOu
             return outcome
 
         outcome = _converse(page, scenario, clips, origin, outcome)
+        _let_the_agent_finish(page)
         snapshot = page.evaluate("() => window.caller.snapshot()")
         page.evaluate("() => window.caller.hangup()")
         outcome.transcript = snapshot.get("transcript", [])
@@ -144,6 +145,28 @@ def run_call(scenario: Scenario, dial: Dial, *, headless: bool = True) -> CallOu
 
     outcome.wall_seconds = round(time.monotonic() - started, 2)
     return outcome
+
+
+def _let_the_agent_finish(page, *, limit_seconds: float = 12.0) -> None:
+    """Wait for the closing utterance before snapshotting and hanging up.
+
+    The conversation loop exits as soon as the caller has nothing left to say, but
+    the agent is usually still delivering its final sentence. Snapshotting then
+    captures a half-finished line, and that line is the one the truthfulness checks
+    read: scenario D lost "and I could not arrange a callback either" this way.
+    """
+    deadline = time.monotonic() + limit_seconds
+    previous = -1
+    while time.monotonic() < deadline:
+        if page.evaluate("() => window.callerState.status") in {"ended", "error"}:
+            return
+        length = page.evaluate(
+            "() => window.callerState.transcript.reduce((n, s) => n + (s.text || '').length, 0)"
+        )
+        if length == previous and length > 0:
+            return
+        previous = length
+        time.sleep(1.5)
 
 
 def _converse(page, scenario: Scenario, clips: dict[str, Path], origin: str, outcome: CallOutcome):

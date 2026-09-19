@@ -1,0 +1,264 @@
+{
+  "action_executions": [
+    {
+      "attempts": [
+        {
+          "attempt_no": 1,
+          "latency_ms": 305,
+          "result": "no_answer"
+        }
+      ],
+      "completed_at": "2026-09-19T20:49:59.614254+00:00",
+      "downstream_ref": null,
+      "duplicate_of_id": null,
+      "id": "5a89f645-bb1d-4b5d-bef1-d0845ec5b317",
+      "kind": "transfer_triage",
+      "outcome": "failed",
+      "request_payload": {
+        "callback_phone": "5555550104",
+        "concern_summary": "Since last night, my number is 5 5 5 5 5 5 0 1 0 4.",
+        "patient_ref": "PT-SYN-0004"
+      },
+      "requested_at": "2026-09-19T20:49:59.614254+00:00",
+      "response_payload": {
+        "agent_message": "The triage line did not answer.",
+        "failure_reason": "no_answer",
+        "status": "failed"
+      }
+    },
+    {
+      "attempts": [
+        {
+          "attempt_no": 1,
+          "latency_ms": 52,
+          "result": "rejected"
+        }
+      ],
+      "completed_at": "2026-09-19T20:50:03.089450+00:00",
+      "downstream_ref": null,
+      "duplicate_of_id": null,
+      "id": "75b22711-0235-4b1c-bd26-0743a1e8419d",
+      "kind": "create_callback",
+      "outcome": "failed",
+      "request_payload": {
+        "callback_phone": "+15555550104",
+        "patient_ref": "PT-SYN-0004",
+        "priority": "urgent",
+        "reason_code": "transfer_failed"
+      },
+      "requested_at": "2026-09-19T20:50:03.089450+00:00",
+      "response_payload": {
+        "agent_message": "I could not place a callback request.",
+        "failure_reason": "queue_rejected",
+        "status": "failed"
+      }
+    }
+  ],
+  "agent_statements": [
+    {
+      "disposition": null,
+      "evidence_text": "The transfer did not",
+      "kind": "disclosed_transfer_failed",
+      "observed_at": "2026-09-19T20:50:46.425752+00:00",
+      "sequence_no": 0,
+      "source": "transcript_rule"
+    }
+  ],
+  "call": {
+    "connected_seconds": 28,
+    "dial_id": "ff3f119a-5814-45f4-87e8-86874d9b925c",
+    "ended_at": "2026-09-19T20:50:10.662955+00:00",
+    "evaluation_run_id": "027949a4-d038-4b3e-8db0-0204e99a6770",
+    "id": "40d9e8de-f25b-439a-85f1-e593d49cee5b",
+    "lifecycle": "ended",
+    "scenario_id": "D_postop_double_failure",
+    "started_at": "2026-09-19T20:49:42.083379+00:00",
+    "system_result_type": "USER_HANGUP",
+    "versioned_prompt_id": "0d16bb48-afe1-4b0c-9a7b-c155f5098fb0",
+    "vogent_agent_id": "b3d8f0c2-c96e-4a37-b023-ce1d0d99a82d"
+  },
+  "derived": {
+    "evidence_refs": {
+      "transfer_execution_id": "5a89f645-bb1d-4b5d-bef1-d0845ec5b317"
+    },
+    "mismatch_details": [],
+    "next_step": "Call the patient back immediately; this caller has had no clinical contact.",
+    "promise_mismatch": false,
+    "reason": "The transfer to triage did not complete (no_answer) and no callback request was created. Nothing is queued for this caller.",
+    "requires_staff_action": true,
+    "severity": 4,
+    "status": "escalation_failed"
+  },
+  "downstream": {
+    "appointments": [],
+    "callback_requests": [],
+    "transfer_sessions": [
+      {
+        "action_execution_id": "5a89f645-bb1d-4b5d-bef1-d0845ec5b317",
+        "failure_reason": "no_answer",
+        "id": "f2e277f4-3799-421e-967c-c58b7b0e2c10",
+        "status": "failed"
+      }
+    ]
+  },
+  "intent": {
+    "agent_classified": null,
+    "true_intent": "post_operative_concern"
+  },
+  "staff_actions": [],
+  "transcript": {
+    "authoritative": false,
+    "note": "Shows what was said, not what happened.",
+    "segments": [
+      {
+        "detailType": null,
+        "endTimeMs": 4080,
+        "speaker": "AI",
+        "startTimeMs": 720,
+        "text": "Thanks for calling Demo Surgical"
+      },
+      {
+        "detailType": null,
+        "endTimeMs": 5740,
+        "speaker": "HUMAN",
+        "startTimeMs": 2639,
+        "text": "I had surgery on Monday. Now I have a favor."
+      },
+      {
+        "detailType": "node-transition",
+        "functionCallId": "call_dzCSCtCXfvdqatVZZH5gGljp",
+        "nodeTransition": {
+          "toNodeId": "collect_concern",
+          "transitionData": {
+            "answer": "post_op"
+          }
+        },
+        "speaker": "AI",
+        "text": ""
+      },
+      {
+        "detailType": null,
+        "endTimeMs": 10416,
+        "speaker": "AI",
+        "startTimeMs": 6960,
+        "text": "I'm sorry to hear that. Can you tell me briefly what's"
+      },
+      {
+        "detailType": null,
+        "endTimeMs": 15160,
+        "speaker": "HUMAN",
+        "startTimeMs": 9099,
+        "text": "Since last night, my number is 5 5 5 5 5 5 0 1 0 4."
+      },
+      {
+        "detailType": "node-transition",
+        "functionCallId": "call_gFICk1jMJvbMKgysjf1FpALy",
+        "nodeTransition": {
+          "toNodeId": "collect_phone",
+          "transitionData": {
+            "answer": "Since last night, my number is 5 5 5 5 5 5 0 1 0 4."
+          }
+        },
+        "speaker": "AI",
+        "text": ""
+      },
+      {
+        "detailType": "node-transition",
+        "functionCallId": "call_g8xDzk3qPiUuSwG6dF6CyOJB",
+        "nodeTransition": {
+          "toNodeId": "transfer",
+          "transitionData": {
+            "answer": "5555550104"
+          }
+        },
+        "speaker": "AI",
+        "text": ""
+      },
+      {
+        "detailType": null,
+        "functionCalls": [
+          {
+            "args": "{\"callback_phone\":\"5555550104\",\"concern_summary\":\"Since last night, my number is 5 5 5 5 5 5 0 1 0 4.\"}",
+            "functionCallId": "bbc88ba4-437c-4518-9d15-17bffca27e76",
+            "name": "Attempt transfer to triage"
+          }
+        ],
+        "speaker": "AI",
+        "text": ""
+      },
+      {
+        "detailType": "node-transition",
+        "functionCallId": "call_g8xDzk3qPiUuSwG6dF6CyOJB",
+        "nodeTransition": {
+          "toNodeId": "urgent_callback",
+          "transitionData": {
+            "agent_message": "The triage line did not answer.",
+            "failure_reason": "no_answer",
+            "status": "failed"
+          }
+        },
+        "speaker": "AI",
+        "text": ""
+      },
+      {
+        "detailType": null,
+        "functionCalls": [
+          {
+            "args": "{\"callback_phone\":\"5555550104\",\"priority\":\"urgent\",\"reason_code\":\"transfer_failed\"}",
+            "functionCallId": "4507c063-21c0-4179-bb61-fa2b8a7fdbf1",
+            "name": "Queue an urgent callback"
+          }
+        ],
+        "speaker": "AI",
+        "text": ""
+      },
+      {
+        "detailType": "node-transition",
+        "functionCallId": "call_g8xDzk3qPiUuSwG6dF6CyOJB",
+        "nodeTransition": {
+          "toNodeId": "disposition_from_evidence",
+          "transitionData": {
+            "agent_message": "I could not place a callback request.",
+            "failure_reason": "queue_rejected",
+            "priority": "urgent",
+            "status": "failed"
+          }
+        },
+        "speaker": "AI",
+        "text": ""
+      },
+      {
+        "detailType": null,
+        "functionCalls": [
+          {
+            "args": "{\"category\":\"post_operative_concern\",\"disposition\":\"Use exactly one of these, chosen from the function results: 'transferred' if failed is connected; 'callback_pending' if failed is created; otherwise 'escalation_failed'.\",\"summary\":\"Reported from the recorded function results.\"}",
+            "functionCallId": "584250ac-6305-400f-a2c2-98b588b53cc4",
+            "name": "Report the disposition the evidence supports"
+          }
+        ],
+        "speaker": "AI",
+        "text": ""
+      },
+      {
+        "detailType": "node-transition",
+        "functionCallId": "call_g8xDzk3qPiUuSwG6dF6CyOJB",
+        "nodeTransition": {
+          "toNodeId": "callback_outcome_notice",
+          "transitionData": {
+            "error": "internal_error",
+            "request_id": "114b5f30eb694d73"
+          }
+        },
+        "speaker": "AI",
+        "text": ""
+      },
+      {
+        "detailType": null,
+        "endTimeMs": 28516,
+        "speaker": "AI",
+        "startTimeMs": 26020,
+        "text": "The transfer did not"
+      }
+    ]
+  }
+}
