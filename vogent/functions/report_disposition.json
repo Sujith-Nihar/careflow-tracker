@@ -1,0 +1,20 @@
+{
+  "name": "report_disposition",
+  "displayName": "Report call disposition",
+  "description": "Record what you told the caller and how you believe the call ended. This is a record of your own account of the call. It does not complete anything and it does not change what actually happened. Call it once, at the end of every call.",
+  "type": "api",
+  "path": "/vogent/functions/report_disposition",
+  "lifecycleMessages": {
+    "started": [],
+    "awaitSpeech": true
+  },
+  "inputJsonSchema": {
+    "type": "object",
+    "properties": {
+      "category": {"type": "string", "enum": ["routine_scheduling", "post_operative_concern", "other"], "description": "What the caller was calling about"},
+      "disposition": {"type": "string", "enum": ["scheduled", "transferred", "callback_pending", "escalation_failed", "unresolved", "resolved"], "description": "Report only what the function results actually showed"},
+      "summary": {"type": "string", "description": "One short sentence on what you told the caller"}
+    },
+    "required": ["category", "disposition"]
+  }
+}

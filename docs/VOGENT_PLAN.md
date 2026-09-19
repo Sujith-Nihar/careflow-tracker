@@ -18,12 +18,26 @@ agent, its two versions, and the four functions are represented and reproduced.
 | Web SDK `@vogent/vogent-web-client`: `new VogentCall({sessionId, dialId, token})`, `start()`, `connectAudio()` (microphone), `monitorTranscript()`, `on('status')`, `hangup()` | `/sdk/web-sdk` |
 | Billing: metered per second; standard voices $0.09/min ($0.0015/s), premium $0.14/min; usage in the Billing tab; no usage API documented | `/platform-overview/billing` |
 
-## 2. Assumed, to be verified experimentally in Phase 4
+## 2a. Corrections found by building against the live API (2026-09-19)
+
+| Documented | Actually accepted | Where it bit |
+|------------|-------------------|--------------|
+| node `type: "function_call"` | **`"function"`** | `POST /agents/{id}/versioned_prompts` returns `500 unknown node type: function_call`. `freeform` and `question` are as documented. |
+| `inboundWebhookResponse` described as a string | **boolean** | `POST /agents` rejects a string with a schema error |
+| Model list endpoint not in the docs index | `GET /models` | needed for the required `aiModelId`; this workspace exposes flow-tuned models (`GPT-5.4 Flow`) |
+| Voices endpoint returns `voices`, not `data` | `GET /voices` → `{voices: [...]}` | pagination key differs from every other list endpoint |
+| Function `path` field | request field is **`apiPath`**; `headers` are `[{key, value}]`; `inputJsonSchema` is a **JSON string**, not an object | `POST /functions` |
+
+Verified by building, not by reading. The probe versioned prompts used to establish the node type
+(`probe-freeform`, `probe-question`, `probe-function`) are left in the workspace; the API exposes no
+delete for versioned prompts, and they are never dialled.
+
+## 2b. Assumed, to be verified experimentally in Phase 4
 
 | Assumption | How verified | If false |
 |------------|--------------|----------|
 | A1: `dial.inputs` in the function payload echoes `callAgentInput` | Inspect the first captured payload | Correlate by pre-registered `dial_id` only (already primary) |
-| A2: an `Equal connected` rule on a `function_call` node's `status` output routes correctly, and a failed/null function result falls through to the `Always` rule | Manual browser call with `transfer=fail` | Freeform node whose prompt reads `{{node.transfer.status}}` and instructs the branch; test harder |
+| A2: an `equal` rule with `field: "status"` on a function node routes correctly, and a failed result falls through to the `always` rule | **Accepted by the API** (V2 stores 3 outcome-conditioned transitions). Still needs a real voice call to prove it routes at run time. | Freeform node whose prompt reads `{{node.transfer.status}}` and instructs the branch; test harder |
 | A3: the endpoint may return a flat JSON object matching `outputs[]` | Same call | Wrap per whatever the captured error says |
 | A4: function timeout ≥ 10 s, no automatic retry | Stub sleeps 8 s once; count POSTs | Tighten budgets; if retries exist, promote duplicate scenario to voice |
 | A5: two concurrent browser dials are allowed | Two dials in the optimized run | Sequential; report no parallel savings |

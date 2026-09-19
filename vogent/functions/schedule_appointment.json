@@ -1,0 +1,21 @@
+{
+  "name": "schedule_appointment",
+  "displayName": "Schedule routine appointment",
+  "description": "Book a routine appointment in the practice scheduler. Use only for routine requests, never for a post-operative concern. Returns status 'booked' when an appointment now exists, 'unavailable' when the scheduler declined, 'unverified' when it did not answer, or 'invalid_input' when the details could not be read. Do not tell the caller an appointment exists unless status is 'booked'.",
+  "type": "api",
+  "path": "/vogent/functions/schedule_appointment",
+  "lifecycleMessages": {
+    "started": ["One moment."],
+    "waiting": ["Still checking."],
+    "awaitSpeech": true
+  },
+  "inputJsonSchema": {
+    "type": "object",
+    "properties": {
+      "patient_ref": {"type": "string", "description": "Synthetic patient reference, e.g. PT-SYN-0001"},
+      "preferred_date": {"type": "string", "description": "The day the caller asked for, in their own words"},
+      "reason": {"type": "string", "description": "Short reason for the routine visit"}
+    },
+    "required": ["patient_ref", "preferred_date"]
+  }
+}

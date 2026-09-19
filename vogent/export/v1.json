@@ -1,0 +1,414 @@
+{
+  "agentType": "CUSTOM_FLOW",
+  "aiModelId": "f3991a4c-7abb-4ce3-bf60-962250942517",
+  "flowDefinition": {
+    "aiOpen": false,
+    "globalContext": "You are the automated phone assistant for Demo Surgical Associates, a surgical practice. All callers, records and systems in this environment are synthetic and for testing.\n\nPractice policy, which is the only clinical rule you follow:\n1. A routine appointment request may be booked with the scheduler.\n2. A caller reporting a post-operative concern must be routed to the live triage nurse by transfer.\n3. If that transfer fails or cannot be verified, create an urgent callback request and tell the caller plainly that the transfer did not complete.\n4. A call is not finished because you promised something. It is finished when a function result says the action happened.\n\nYou must never give medical advice, never interpret symptoms, and never invent clinical rules. If a caller asks for something this policy does not cover, say plainly that you cannot help with it and route them to a person.\n\nKeep replies to one or two short sentences. Speak plainly. Do not repeat the caller's medical details back to them at length.",
+    "nodes": [
+      {
+        "id": "greet_intake",
+        "name": "Greeting and intake",
+        "nodeData": {
+          "additionalDetails": null,
+          "answerGuidelines": null,
+          "clarificationDetails": "Choose routine for scheduling or rescheduling. Choose post_op for any concern about a recent operation, such as the incision, bleeding, pain, fever or swelling. Choose other for anything else.",
+          "options": [
+            "routine",
+            "post_op",
+            "other"
+          ],
+          "question": "Thanks for calling Demo Surgical Associates. Are you calling to schedule a routine appointment, or about a concern after a recent surgery?",
+          "questionSchemaId": null,
+          "questionType": "multiple_choice"
+        },
+        "outputSchema": "{\"properties\":{\"answer\":{\"additionalProperties\":false,\"type\":\"string\",\"enum\":[\"routine\",\"post_op\",\"other\"]}},\"additionalProperties\":false}",
+        "transitionRules": [
+          {
+            "arrayConditionType": null,
+            "conditionType": "equal",
+            "field": null,
+            "transitionNodeId": "collect_slot",
+            "value": "routine",
+            "values": null
+          },
+          {
+            "arrayConditionType": null,
+            "conditionType": "equal",
+            "field": null,
+            "transitionNodeId": "collect_concern",
+            "value": "post_op",
+            "values": null
+          },
+          {
+            "arrayConditionType": null,
+            "conditionType": "always",
+            "field": null,
+            "transitionNodeId": "other_help",
+            "value": null,
+            "values": null
+          }
+        ],
+        "type": "question"
+      },
+      {
+        "id": "collect_slot",
+        "name": "Collect preferred day",
+        "nodeData": {
+          "additionalDetails": null,
+          "answerGuidelines": null,
+          "clarificationDetails": "Accept a day of the week or a date. Do not offer specific times.",
+          "options": null,
+          "question": "Which day would you like to come in?",
+          "questionSchemaId": null,
+          "questionType": "freeform"
+        },
+        "outputSchema": "{\"properties\":{\"answer\":{\"additionalProperties\":false,\"type\":\"string\"}},\"additionalProperties\":false}",
+        "transitionRules": [
+          {
+            "arrayConditionType": null,
+            "conditionType": "always",
+            "field": null,
+            "transitionNodeId": "book",
+            "value": null,
+            "values": null
+          }
+        ],
+        "type": "question"
+      },
+      {
+        "id": "book",
+        "name": "Book appointment",
+        "nodeData": {
+          "functionId": "3be9acdf-fb3a-4b51-9957-fa657adde38a",
+          "includeTranscript": false,
+          "inputs": [
+            {
+              "name": "patient_ref",
+              "value": "{{patient_ref}}"
+            },
+            {
+              "name": "preferred_date",
+              "value": "{{node.collect_slot.output}}"
+            },
+            {
+              "name": "reason",
+              "value": "routine appointment"
+            }
+          ],
+          "outputs": [
+            {
+              "customFieldJsonSchema": null,
+              "customFieldTs": null,
+              "description": "booked, unavailable, unverified or invalid_input",
+              "name": "status",
+              "nullable": false,
+              "type": "STRING"
+            },
+            {
+              "customFieldJsonSchema": null,
+              "customFieldTs": null,
+              "description": "Short factual sentence you may read to the caller",
+              "name": "agent_message",
+              "nullable": true,
+              "type": "STRING"
+            },
+            {
+              "customFieldJsonSchema": null,
+              "customFieldTs": null,
+              "description": "Present only when an appointment exists",
+              "name": "appointment_id",
+              "nullable": true,
+              "type": "STRING"
+            }
+          ]
+        },
+        "outputSchema": "{\"properties\":{\"status\":{\"additionalProperties\":false,\"type\":\"string\",\"description\":\"booked, unavailable, unverified or invalid_input\"},\"agent_message\":{\"additionalProperties\":false,\"type\":[\"string\",\"null\"],\"description\":\"Short factual sentence you may read to the caller\"},\"appointment_id\":{\"additionalProperties\":false,\"type\":[\"string\",\"null\"],\"description\":\"Present only when an appointment exists\"}},\"additionalProperties\":false,\"type\":\"object\",\"required\":[\"status\",\"agent_message\",\"appointment_id\"]}",
+        "transitionRules": [
+          {
+            "arrayConditionType": null,
+            "conditionType": "always",
+            "field": null,
+            "transitionNodeId": "close_scheduled",
+            "value": null,
+            "values": null
+          }
+        ],
+        "type": "function"
+      },
+      {
+        "id": "close_scheduled",
+        "name": "Confirm appointment to caller",
+        "nodeData": {
+          "outputs": null,
+          "prompt": "Tell the caller they are all set for {{node.collect_slot.output}} and ask if there is anything else. Then end the call politely."
+        },
+        "outputSchema": null,
+        "transitionRules": [
+          {
+            "arrayConditionType": null,
+            "conditionType": "always",
+            "field": null,
+            "transitionNodeId": "disposition_resolved",
+            "value": null,
+            "values": null
+          }
+        ],
+        "type": "freeform"
+      },
+      {
+        "id": "collect_concern",
+        "name": "Collect concern",
+        "nodeData": {
+          "additionalDetails": null,
+          "answerGuidelines": null,
+          "clarificationDetails": "Record what the caller says. Do not interpret it and do not give any advice.",
+          "options": null,
+          "question": "I'm sorry to hear that. Can you tell me briefly what's happening?",
+          "questionSchemaId": null,
+          "questionType": "freeform"
+        },
+        "outputSchema": "{\"properties\":{\"answer\":{\"additionalProperties\":false,\"type\":\"string\"}},\"additionalProperties\":false}",
+        "transitionRules": [
+          {
+            "arrayConditionType": null,
+            "conditionType": "always",
+            "field": null,
+            "transitionNodeId": "collect_phone",
+            "value": null,
+            "values": null
+          }
+        ],
+        "type": "question"
+      },
+      {
+        "id": "collect_phone",
+        "name": "Collect callback number",
+        "nodeData": {
+          "additionalDetails": null,
+          "answerGuidelines": null,
+          "clarificationDetails": "Capture the digits the caller says.",
+          "options": null,
+          "question": "What's the best number to reach you on?",
+          "questionSchemaId": null,
+          "questionType": "freeform"
+        },
+        "outputSchema": "{\"properties\":{\"answer\":{\"additionalProperties\":false,\"type\":\"string\"}},\"additionalProperties\":false}",
+        "transitionRules": [
+          {
+            "arrayConditionType": null,
+            "conditionType": "always",
+            "field": null,
+            "transitionNodeId": "promise_transfer",
+            "value": null,
+            "values": null
+          }
+        ],
+        "type": "question"
+      },
+      {
+        "id": "promise_transfer",
+        "name": "Announce the transfer",
+        "nodeData": {
+          "outputs": null,
+          "prompt": "Tell the caller you are connecting them to the triage nurse now. Keep it to one sentence."
+        },
+        "outputSchema": null,
+        "transitionRules": [
+          {
+            "arrayConditionType": null,
+            "conditionType": "always",
+            "field": null,
+            "transitionNodeId": "transfer",
+            "value": null,
+            "values": null
+          }
+        ],
+        "type": "freeform"
+      },
+      {
+        "id": "transfer",
+        "name": "Transfer to triage",
+        "nodeData": {
+          "functionId": "5ae084a6-9c58-419f-b5de-f0ba279fd7d7",
+          "includeTranscript": false,
+          "inputs": [
+            {
+              "name": "patient_ref",
+              "value": "{{patient_ref}}"
+            },
+            {
+              "name": "concern_summary",
+              "value": "{{node.collect_concern.output}}"
+            },
+            {
+              "name": "callback_phone",
+              "value": "{{node.collect_phone.output}}"
+            }
+          ],
+          "outputs": [
+            {
+              "customFieldJsonSchema": null,
+              "customFieldTs": null,
+              "description": "connected, failed or unverified",
+              "name": "status",
+              "nullable": false,
+              "type": "STRING"
+            },
+            {
+              "customFieldJsonSchema": null,
+              "customFieldTs": null,
+              "description": "Short factual sentence you may read to the caller",
+              "name": "agent_message",
+              "nullable": true,
+              "type": "STRING"
+            },
+            {
+              "customFieldJsonSchema": null,
+              "customFieldTs": null,
+              "description": "Why the line was not reached",
+              "name": "failure_reason",
+              "nullable": true,
+              "type": "STRING"
+            }
+          ]
+        },
+        "outputSchema": "{\"properties\":{\"status\":{\"additionalProperties\":false,\"type\":\"string\",\"description\":\"connected, failed or unverified\"},\"agent_message\":{\"additionalProperties\":false,\"type\":[\"string\",\"null\"],\"description\":\"Short factual sentence you may read to the caller\"},\"failure_reason\":{\"additionalProperties\":false,\"type\":[\"string\",\"null\"],\"description\":\"Why the line was not reached\"}},\"additionalProperties\":false,\"type\":\"object\",\"required\":[\"status\",\"agent_message\",\"failure_reason\"]}",
+        "transitionRules": [
+          {
+            "arrayConditionType": null,
+            "conditionType": "always",
+            "field": null,
+            "transitionNodeId": "close_transferred",
+            "value": null,
+            "values": null
+          }
+        ],
+        "type": "function"
+      },
+      {
+        "id": "close_transferred",
+        "name": "Hand off",
+        "nodeData": {
+          "outputs": null,
+          "prompt": "Tell the caller the triage nurse will take it from here, wish them well, and end the call."
+        },
+        "outputSchema": null,
+        "transitionRules": [
+          {
+            "arrayConditionType": null,
+            "conditionType": "always",
+            "field": null,
+            "transitionNodeId": "disposition_resolved",
+            "value": null,
+            "values": null
+          }
+        ],
+        "type": "freeform"
+      },
+      {
+        "id": "other_help",
+        "name": "Unsupported request",
+        "nodeData": {
+          "outputs": null,
+          "prompt": "Explain that you can only help with scheduling and post-operative concerns, and that someone from the office can call them back. Then end the call."
+        },
+        "outputSchema": null,
+        "transitionRules": [
+          {
+            "arrayConditionType": null,
+            "conditionType": "always",
+            "field": null,
+            "transitionNodeId": "disposition_unresolved",
+            "value": null,
+            "values": null
+          }
+        ],
+        "type": "freeform"
+      },
+      {
+        "id": "disposition_resolved",
+        "name": "Report resolved",
+        "nodeData": {
+          "functionId": "d04a30e7-4fc4-49ba-b4a7-7ed4a2de646d",
+          "includeTranscript": false,
+          "inputs": [
+            {
+              "name": "category",
+              "value": "{{node.greet_intake.output}}"
+            },
+            {
+              "name": "disposition",
+              "value": "resolved"
+            },
+            {
+              "name": "summary",
+              "value": "Caller was helped and the call was completed."
+            }
+          ],
+          "outputs": [
+            {
+              "customFieldJsonSchema": null,
+              "customFieldTs": null,
+              "description": "recorded",
+              "name": "status",
+              "nullable": false,
+              "type": "STRING"
+            }
+          ]
+        },
+        "outputSchema": "{\"properties\":{\"status\":{\"additionalProperties\":false,\"type\":\"string\",\"description\":\"recorded\"}},\"additionalProperties\":false,\"type\":\"object\",\"required\":[\"status\"]}",
+        "transitionRules": [],
+        "type": "function"
+      },
+      {
+        "id": "disposition_unresolved",
+        "name": "Report unresolved",
+        "nodeData": {
+          "functionId": "d04a30e7-4fc4-49ba-b4a7-7ed4a2de646d",
+          "includeTranscript": false,
+          "inputs": [
+            {
+              "name": "category",
+              "value": "other"
+            },
+            {
+              "name": "disposition",
+              "value": "unresolved"
+            },
+            {
+              "name": "summary",
+              "value": "Caller's request was outside what the assistant handles."
+            }
+          ],
+          "outputs": [
+            {
+              "customFieldJsonSchema": null,
+              "customFieldTs": null,
+              "description": "recorded",
+              "name": "status",
+              "nullable": false,
+              "type": "STRING"
+            }
+          ]
+        },
+        "outputSchema": "{\"properties\":{\"status\":{\"additionalProperties\":false,\"type\":\"string\",\"description\":\"recorded\"}},\"additionalProperties\":false,\"type\":\"object\",\"required\":[\"status\"]}",
+        "transitionRules": [],
+        "type": "function"
+      }
+    ],
+    "openingLineType": "INBOUND_OUTBOUND"
+  },
+  "id": "af532d73-0693-49e7-b39e-f33b4ff0ba5b",
+  "modelOptionValues": [
+    {
+      "optionId": "temperature",
+      "value": "0.2"
+    },
+    {
+      "optionId": "max_tokens",
+      "value": "600"
+    }
+  ],
+  "name": "careflow-v1-baseline",
+  "prompt": null
+}

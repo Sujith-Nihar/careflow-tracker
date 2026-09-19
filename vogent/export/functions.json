@@ -1,0 +1,93 @@
+[
+  {
+    "apiPath": "https://marry-veto-semicolon.ngrok-free.dev/vogent/functions/transfer_triage",
+    "description": "Attempt a live transfer to the triage nurse line for a post-operative concern. Returns status 'connected' only when the line actually answered. Returns 'failed' when it did not answer and 'unverified' when the outcome could not be confirmed. Neither 'failed' nor 'unverified' is a transfer. Never tell the caller they are being transferred or are connected unless status is 'connected'.",
+    "displayName": "Transfer to live triage nurse",
+    "headers": [
+      {
+        "key": "X-CareFlow-Token",
+        "value": "<redacted: set from CAREFLOW_DEMO_ORG_FUNCTION_TOKEN at sync time>"
+      }
+    ],
+    "id": "5ae084a6-9c58-419f-b5de-f0ba279fd7d7",
+    "inputJsonSchema": "{\"properties\":{\"patient_ref\":{\"additionalProperties\":false,\"type\":\"string\",\"description\":\"Synthetic patient reference\"},\"concern_summary\":{\"additionalProperties\":false,\"type\":\"string\",\"description\":\"Short factual summary of what the caller reported. Do not interpret or diagnose.\"},\"callback_phone\":{\"additionalProperties\":false,\"type\":\"string\",\"description\":\"Best number to reach the caller, as they said it\"}},\"additionalProperties\":false,\"type\":\"object\",\"required\":[\"patient_ref\",\"concern_summary\",\"callback_phone\"]}",
+    "lifecycleMessages": {
+      "awaitSpeech": true,
+      "started": [
+        "One moment."
+      ],
+      "waiting": [
+        "Still trying."
+      ]
+    },
+    "name": "transfer_triage",
+    "type": "api"
+  },
+  {
+    "apiPath": "https://marry-veto-semicolon.ngrok-free.dev/vogent/functions/schedule_appointment",
+    "description": "Book a routine appointment in the practice scheduler. Use only for routine requests, never for a post-operative concern. Returns status 'booked' when an appointment now exists, 'unavailable' when the scheduler declined, 'unverified' when it did not answer, or 'invalid_input' when the details could not be read. Do not tell the caller an appointment exists unless status is 'booked'.",
+    "displayName": "Schedule routine appointment",
+    "headers": [
+      {
+        "key": "X-CareFlow-Token",
+        "value": "<redacted: set from CAREFLOW_DEMO_ORG_FUNCTION_TOKEN at sync time>"
+      }
+    ],
+    "id": "3be9acdf-fb3a-4b51-9957-fa657adde38a",
+    "inputJsonSchema": "{\"properties\":{\"patient_ref\":{\"additionalProperties\":false,\"type\":\"string\",\"description\":\"Synthetic patient reference, e.g. PT-SYN-0001\"},\"preferred_date\":{\"additionalProperties\":false,\"type\":\"string\",\"description\":\"The day the caller asked for, in their own words\"},\"reason\":{\"additionalProperties\":false,\"type\":\"string\",\"description\":\"Short reason for the routine visit\"}},\"additionalProperties\":false,\"type\":\"object\",\"required\":[\"patient_ref\",\"preferred_date\",\"reason\"]}",
+    "lifecycleMessages": {
+      "awaitSpeech": true,
+      "started": [
+        "One moment."
+      ],
+      "waiting": [
+        "Still checking."
+      ]
+    },
+    "name": "schedule_appointment",
+    "type": "api"
+  },
+  {
+    "apiPath": "https://marry-veto-semicolon.ngrok-free.dev/vogent/functions/report_disposition",
+    "description": "Record what you told the caller and how you believe the call ended. This is a record of your own account of the call. It does not complete anything and it does not change what actually happened. Call it once, at the end of every call.",
+    "displayName": "Report call disposition",
+    "headers": [
+      {
+        "key": "X-CareFlow-Token",
+        "value": "<redacted: set from CAREFLOW_DEMO_ORG_FUNCTION_TOKEN at sync time>"
+      }
+    ],
+    "id": "d04a30e7-4fc4-49ba-b4a7-7ed4a2de646d",
+    "inputJsonSchema": "{\"properties\":{\"category\":{\"additionalProperties\":false,\"type\":\"string\",\"description\":\"What the caller was calling about\"},\"disposition\":{\"additionalProperties\":false,\"type\":\"string\",\"description\":\"Report only what the function results actually showed\"},\"summary\":{\"additionalProperties\":false,\"type\":\"string\",\"description\":\"One short sentence on what you told the caller\"}},\"additionalProperties\":false,\"type\":\"object\",\"required\":[\"category\",\"disposition\",\"summary\"]}",
+    "lifecycleMessages": {
+      "awaitSpeech": true,
+      "started": []
+    },
+    "name": "report_disposition",
+    "type": "api"
+  },
+  {
+    "apiPath": "https://marry-veto-semicolon.ngrok-free.dev/vogent/functions/create_callback",
+    "description": "Place a callback request in the practice queue. Use priority 'urgent' when a triage transfer could not be completed. Returns status 'created' only when the request now exists in the queue. Returns 'failed' when the queue refused it and 'unverified' when it could not be confirmed. Never tell the caller that someone will call them back unless status is 'created'.",
+    "displayName": "Create callback request",
+    "headers": [
+      {
+        "key": "X-CareFlow-Token",
+        "value": "<redacted: set from CAREFLOW_DEMO_ORG_FUNCTION_TOKEN at sync time>"
+      }
+    ],
+    "id": "4e1dfb85-ccaa-48a3-833a-2d658007a93e",
+    "inputJsonSchema": "{\"properties\":{\"patient_ref\":{\"additionalProperties\":false,\"type\":\"string\",\"description\":\"Synthetic patient reference\"},\"callback_phone\":{\"additionalProperties\":false,\"type\":\"string\",\"description\":\"Best number to reach the caller, as they said it\"},\"priority\":{\"additionalProperties\":false,\"type\":\"string\",\"description\":\"urgent for post-operative concerns, normal otherwise\"},\"reason_code\":{\"additionalProperties\":false,\"type\":\"string\",\"description\":\"Why the callback is needed\"}},\"additionalProperties\":false,\"type\":\"object\",\"required\":[\"patient_ref\",\"callback_phone\",\"priority\",\"reason_code\"]}",
+    "lifecycleMessages": {
+      "awaitSpeech": true,
+      "started": [
+        "One moment."
+      ],
+      "waiting": [
+        "Still working on it."
+      ]
+    },
+    "name": "create_callback",
+    "type": "api"
+  }
+]
