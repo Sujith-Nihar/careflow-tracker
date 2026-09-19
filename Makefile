@@ -41,10 +41,14 @@ seed: ## create the synthetic organizations
 api: ## run the Flask API on FLASK_PORT (default 5000)
 	$(PY) -m flask --app backend/app:create_app run --port $${FLASK_PORT:-5055} --reload
 
+tunnel: ## expose the local API on BACKEND_PUBLIC_URL so Vogent can reach it
+	@set -a; . ./.env; set +a; \
+	ngrok http $${FLASK_PORT:-5055} --url=$$BACKEND_PUBLIC_URL
+
 replay: ## run scenarios through the backend without voice (needs `make api` running)
 	$(PY) -m evals.runner.cli --artifacts artifacts/replay
 
 secret-scan: ## fail if anything that looks like a credential is tracked by git
 	@scripts/secret_scan.sh
 
-.PHONY: help setup test test-cov db-check vogent-check migrate migrate-test seed api replay secret-scan
+.PHONY: help setup test test-cov db-check vogent-check migrate migrate-test seed api tunnel replay secret-scan
