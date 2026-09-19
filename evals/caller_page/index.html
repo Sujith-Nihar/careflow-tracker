@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>CareFlow synthetic caller</title>
+</head>
+<body>
+<h1>CareFlow synthetic caller harness</h1>
+<p id="status">idle</p>
+<pre id="transcript"></pre>
+
+<!--
+  Drives a real Vogent browser call with synthetic audio.
+
+  The microphone is replaced before any Vogent code runs: `getUserMedia` is
+  overridden in a Playwright init script (see harness.py) to hand back a stream
+  fed by an AudioContext. Caller lines are pre-rendered WAV clips played into
+  that stream, so Vogent's speech recognition hears real audio over WebRTC
+  exactly as it would from a person.
+
+  Everything the harness needs is exposed on `window.caller`.
+-->
+<script type="module">
+import { VogentCall } from "https://esm.sh/@vogent/vogent-web-client";
+
+const statusEl = document.getElementById("status");
+const transcriptEl = document.getElementById("transcript");
+
+const state = {
+  call: null,
+  status: "idle",
+  transcript: [],
+  events: [],
+  error: null,
+};
+window.callerState = state;
+
+function record(type, value) {
+  state.events.push({ t: Date.now(), type, value });
+}
+
+window.caller = {
+  /** Start a dial the backend already created. */
+  async start({ sessionId, dialId, token }) {
+    try {
+      state.call = new VogentCall({ sessionId, dialId, token });
+
+      state.call.on("status", (s) => {
+        state.status = s;
+        statusEl.textContent = s;
+        record("status", s);
+      });
+
+      state.call.monitorTranscript((segments) => {
+        state.transcript = segments.map((s) => ({ speaker: s.speaker, text: s.text }));
+        transcriptEl.textContent = state.transcript
+          .map((s) => `${s.speaker}: ${s.text}`)
+          .join("\n");
+        const last = segments[segments.length - 1];
+        if (last) record("transcript", { speaker: last.speaker, text: last.text });
+      });
+
+      await state.call.start();
+      await state.call.connectAudio();
+      record("audio_connected", true);
+      return { ok: true };
+    } catch (err) {
+      state.error = String(err);
+      record("error", String(err));
+      return { ok: false, error: String(err) };
+    }
+  },
+
+  /** Play one pre-rendered caller line into the fake microphone. */
+  async say(clipUrl) {
+    record("caller_clip", clipUrl);
+    return window.__fakeMic.play(clipUrl);
+  },
+
+  /** What the agent has said so far, newest last. */
+  agentText() {
+    return state.transcript
+      .filter((s) => String(s.speaker).toUpperCase() === "AI")
+      .map((s) => s.text);
+  },
+
+  snapshot() {
+    return {
+      status: state.status,
+      transcript: state.transcript,
+      events: state.events,
+      error: state.error,
+    };
+  },
+
+  async hangup() {
+    try {
+      await state.call?.hangup();
+    } catch (err) {
+      record("hangup_error", String(err));
+    }
+    record("hangup", true);
+    return state.events;
+  },
+};
+
+statusEl.textContent = "ready";
+record("ready", true);
+</script>
+</body>
+</html>

@@ -38,6 +38,25 @@ class FunctionEnvelope(Strict):
         return str(value) if value else None
 
     @property
+    def dial_inputs(self) -> dict[str, Any]:
+        """`callAgentInput` echoed back on the dial, set when the dial was created."""
+        value = self.dial.get("inputs")
+        return value if isinstance(value, dict) else {}
+
+    def resolved(self, name: str, spoken: str) -> str:
+        """Prefer a value set at dial creation over one the model supplied.
+
+        A flow template such as `{{patient_ref}}` may arrive unresolved, and a
+        value the model repeated back may be misheard. Identifiers fixed when the
+        dial was created are more trustworthy than either.
+        """
+        fixed = str(self.dial_inputs.get(name) or "").strip()
+        spoken = (spoken or "").strip()
+        if spoken.startswith("{{") or not spoken:
+            return fixed or spoken
+        return fixed or spoken
+
+    @property
     def transcript_snapshot(self) -> list | None:
         value = self.dial.get("transcript")
         return value if isinstance(value, list) and value else None

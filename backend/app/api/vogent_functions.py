@@ -80,6 +80,7 @@ def schedule_appointment() -> Any:
                 agent_message="I could not read those appointment details.",
             ))
 
+        patient_ref = envelope.resolved("patient_ref", params.patient_ref)
         slot = parsing.parse_preferred_date(params.preferred_date)
         if slot is None:
             return _finish(conn, call, principal, rejected_action(
@@ -97,13 +98,14 @@ def schedule_appointment() -> Any:
         def persist(conn: psycopg.Connection, execution_id: str, result: SimulatorResult) -> str:
             row = repo.insert_appointment(
                 conn, organization_id=principal.organization_id, execution_id=execution_id,
-                patient_ref=params.patient_ref or "unknown", slot=slot,
+                patient_ref=patient_ref or "unknown", slot=slot,
             )
             return str(row["id"])
 
         body = run_action(
             conn, organization_id=principal.organization_id, call=call, dial_id=envelope.dial_id,
-            kind="schedule_appointment", params=params.model_dump(),
+            kind="schedule_appointment",
+            params=params.model_dump() | {"patient_ref": patient_ref},
             request_id=g.get("request_id"), simulate=simulate, persist_downstream=persist,
             transcript_snapshot=envelope.transcript_snapshot,
         )
@@ -129,6 +131,8 @@ def transfer_triage() -> Any:
                 agent_message="I could not read those details.",
             ))
 
+        patient_ref = envelope.resolved("patient_ref", params.patient_ref)
+
         def simulate(profile: dict) -> SimulatorResult:
             return triage_line.connect_to_triage(
                 fault=profile.get("transfer", triage_line.CONNECT), clock=Clock()
@@ -143,7 +147,9 @@ def transfer_triage() -> Any:
 
         body = run_action(
             conn, organization_id=principal.organization_id, call=call, dial_id=envelope.dial_id,
-            kind="transfer_triage", params=params.model_dump(), request_id=g.get("request_id"),
+            kind="transfer_triage",
+            params=params.model_dump() | {"patient_ref": patient_ref},
+            request_id=g.get("request_id"),
             simulate=simulate, persist_downstream=persist,
             transcript_snapshot=envelope.transcript_snapshot,
         )
@@ -194,7 +200,10 @@ def create_callback() -> Any:
                 agent_message="I could not read those callback details.",
             ))
 
-        phone = parsing.normalize_phone(params.callback_phone)
+        patient_ref = envelope.resolved("patient_ref", params.patient_ref)
+        phone = parsing.normalize_phone(
+            envelope.resolved("callback_phone", params.callback_phone)
+        )
         if phone is None:
             return _finish(conn, call, principal, rejected_action(
                 conn, organization_id=principal.organization_id, call=call,
@@ -213,12 +222,12 @@ def create_callback() -> Any:
         def persist(conn: psycopg.Connection, execution_id: str, result: SimulatorResult) -> str:
             row = repo.insert_callback_request(
                 conn, organization_id=principal.organization_id, execution_id=execution_id,
-                patient_ref=params.patient_ref or "unknown", priority=params.priority,
+                patient_ref=patient_ref or "unknown", priority=params.priority,
                 reason_code=params.reason_code,
             )
             return str(row["id"])
 
-        stored = params.model_dump() | {"callback_phone": phone}
+        stored = params.model_dump() | {"callback_phone": phone, "patient_ref": patient_ref}
         body = run_action(
             conn, organization_id=principal.organization_id, call=call, dial_id=envelope.dial_id,
             kind="create_callback", params=stored, request_id=g.get("request_id"),

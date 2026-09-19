@@ -95,3 +95,34 @@ def test_an_empty_body_is_rejected_cleanly(client):
     )
     assert response.status_code in {400, 500}
     assert response.status_code != 200
+
+
+def test_dial_level_identifiers_beat_what_the_model_repeats_back(client, demo_org):
+    """A value fixed when the dial was created outranks one the model echoed.
+
+    Flow templates can arrive unresolved and spoken values can be misheard, so the
+    identifier set at dial creation is the more trustworthy of the two.
+    """
+    dial = dial_id()
+    register_dial(client, demo_org, dial, "dial_inputs", {"callback": "create"},
+                  "post_operative_concern")
+    body = {
+        "dial_id": dial,
+        "dial": {
+            "id": dial,
+            "agent": {"id": "agent-demo"},
+            "inputs": {"patient_ref": "PT-SYN-FIXED", "callback_phone": "+15555550140"},
+        },
+        # The flow template never resolved, and the model echoed nothing useful.
+        "params": {"patient_ref": "{{patient_ref}}", "callback_phone": "",
+                   "priority": "urgent", "reason_code": "transfer_failed"},
+    }
+    response = client.post("/vogent/functions/create_callback", json=body,
+                           headers={"X-CareFlow-Token": "test-function-token-demo"})
+    assert response.json["status"] == "created"
+
+    bundle = bundle_for(client, demo_org, dial)
+    stored = next(e for e in bundle["action_executions"]
+                  if e["kind"] == "create_callback")["request_payload"]
+    assert stored["patient_ref"] == "PT-SYN-FIXED"
+    assert stored["callback_phone"] == "+15555550140"
