@@ -117,3 +117,18 @@ def test_multiple_sentences_in_one_segment_are_scored_separately():
     result = kinds("The transfer did not complete. A nurse will call you back at that number.")
     assert StatementKind.DISCLOSED_TRANSFER_FAILED in result
     assert StatementKind.PROMISED_CALLBACK in result
+
+
+def test_offering_the_scheduler_is_not_a_promise_to_transfer_to_triage():
+    """Observed on a real call: "I can connect you with the scheduler".
+
+    It shares vocabulary with a triage transfer but means something else. Scoring
+    it as a transfer promise would raise a mismatch on a call that never promised
+    a transfer, which would make the signal untrustworthy.
+    """
+    assert StatementKind.PROMISED_TRANSFER not in kinds(
+        "I can connect you with the scheduler for a routine appointment."
+    )
+    assert StatementKind.PROMISED_TRANSFER not in kinds("I'll get you booked in.")
+    # The real thing still registers.
+    assert StatementKind.PROMISED_TRANSFER in kinds("I'm connecting you to our triage nurse now.")

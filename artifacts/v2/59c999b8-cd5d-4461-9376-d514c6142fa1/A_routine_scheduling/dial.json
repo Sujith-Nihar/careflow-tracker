@@ -1,0 +1,129 @@
+{
+  "agent": {
+    "defaultExtractorId": null,
+    "defaultVersionedPromptId": "b27a8ced-35c7-4d44-bb63-a0469bcde061",
+    "defaultVoiceId": "94c32748-865f-42e1-bb1a-3a6b4abc7d11",
+    "endpointDetectorConfig": {
+      "mode": "DEFAULT",
+      "type": "SEMANTIC"
+    },
+    "fillEmptyStringVariables": false,
+    "id": "b3d8f0c2-c96e-4a37-b023-ce1d0d99a82d",
+    "idleMessageConfig": {
+      "enabled": false,
+      "idleDurationMilliseconds": 0,
+      "maxIdleMessages": 0
+    },
+    "ivrConfiguration": null,
+    "ivrSilenceHangupConfiguration": null,
+    "language": "en",
+    "maxDurationSeconds": 10800,
+    "name": "CareFlow Demo Surgical",
+    "silenceHangupConfiguration": {
+      "silenceDurationSeconds": 0,
+      "type": "DISABLED"
+    },
+    "timeoutBehaviorConfiguration": {
+      "behavior": "HANGUP",
+      "transferNumber": null
+    },
+    "timeoutMessage": null,
+    "transcriberParams": {
+      "type": "deepgram"
+    },
+    "utteranceDetectorConfig": {
+      "interruptionPlayTimeMs": 1000,
+      "sensitivity": "MEDIUM"
+    },
+    "voicemailConfig": {
+      "detection": "DISABLE",
+      "message": null
+    }
+  },
+  "aiDurationSeconds": 100,
+  "aiResult": {},
+  "durationSeconds": 100,
+  "endedAt": "2026-09-19T20:14:21.255628Z",
+  "id": "1dd6abef-7721-497f-9e92-855fd384a4c3",
+  "inputs": {
+    "callback_phone": "+15555550101",
+    "evaluation_run_id": "59c999b8-cd5d-4461-9376-d514c6142fa1",
+    "patient_ref": "PT-SYN-0001",
+    "scenario_id": "A_routine_scheduling"
+  },
+  "recordings": [
+    {
+      "url": "https://api.vogent.ai/api/recordings/53f0a64d-fb94-42a3-84a7-d25bdb7f5569"
+    }
+  ],
+  "startedAt": "2026-09-19T20:12:40.747884Z",
+  "status": "completed",
+  "systemResultType": "USER_HANGUP",
+  "transcript": [
+    {
+      "detailType": null,
+      "endTimeMs": 3000,
+      "speaker": "AI",
+      "startTimeMs": 760,
+      "text": "Thanks for calling Demo Surgical Associates."
+    },
+    {
+      "detailType": null,
+      "endTimeMs": 5259,
+      "speaker": "HUMAN",
+      "startTimeMs": 2800,
+      "text": "I just need a routine follow-up appointment."
+    },
+    {
+      "detailType": null,
+      "endTimeMs": 8820,
+      "speaker": "AI",
+      "startTimeMs": 6420,
+      "text": "I can help with that. I\u2019ll get the scheduler."
+    },
+    {
+      "detailType": null,
+      "endTimeMs": 12139,
+      "speaker": "HUMAN",
+      "startTimeMs": 8520,
+      "text": "Hi. I'd like to book a routine for an up appointment, please."
+    },
+    {
+      "detailType": null,
+      "endTimeMs": 16488,
+      "speaker": "AI",
+      "startTimeMs": 13160,
+      "text": "I can connect you with the scheduler for a routine"
+    },
+    {
+      "detailType": null,
+      "endTimeMs": 17730,
+      "speaker": "HUMAN",
+      "startTimeMs": 15040,
+      "text": "I just need a routine for a wrap up appointment."
+    },
+    {
+      "detailType": null,
+      "endTimeMs": 22500,
+      "speaker": "AI",
+      "startTimeMs": 18660,
+      "text": "I can connect you with the scheduler for a routine appointment."
+    },
+    {
+      "detailType": null,
+      "endTimeMs": 23010,
+      "speaker": "HUMAN",
+      "startTimeMs": 20910,
+      "text": "I just need a routine for a half appointment."
+    },
+    {
+      "detailType": null,
+      "endTimeMs": 27340,
+      "speaker": "AI",
+      "startTimeMs": 24140,
+      "text": "I can connect you with the scheduler for a routine appointment."
+    }
+  ],
+  "versionedPromptId": "1aaff6cc-3f22-4625-b8c4-b19b80152749",
+  "voiceId": "94c32748-865f-42e1-bb1a-3a6b4abc7d11"
+}

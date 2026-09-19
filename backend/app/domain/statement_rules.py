@@ -18,7 +18,7 @@ from enum import StrEnum
 
 from .types import AgentStatement, StatementKind, StatementSource
 
-STATEMENT_RULES_VERSION = 1
+STATEMENT_RULES_VERSION = 2
 
 AI_SPEAKER = "AI"
 
@@ -37,6 +37,10 @@ class Rule:
     topic: Topic
     pattern: re.Pattern[str]
     is_disclosure: bool
+    #: Words that mean this sentence is about something else. "Connect you with the
+    #: scheduler" shares vocabulary with a triage transfer but is not one, and a
+    #: promise recorded in error makes the mismatch signal untrustworthy.
+    excludes: re.Pattern[str] | None = None
 
 
 def _c(pattern: str) -> re.Pattern[str]:
@@ -81,6 +85,7 @@ PROMISE_RULES: tuple[Rule, ...] = (
             r"|(you'?re|you\s*are)\s*(now\s*)?connected)\b"
         ),
         is_disclosure=False,
+        excludes=_c(r"schedul|book|appointment"),
     ),
     Rule(
         kind=StatementKind.PROMISED_CALLBACK,
@@ -149,6 +154,8 @@ def extract_statements(
             for rule in PROMISE_RULES:
                 # A sentence that admits a failure is not also a promise about it.
                 if rule.topic in disclosed_topics:
+                    continue
+                if rule.excludes is not None and rule.excludes.search(sentence):
                     continue
                 if rule.pattern.search(sentence):
                     statements.append(

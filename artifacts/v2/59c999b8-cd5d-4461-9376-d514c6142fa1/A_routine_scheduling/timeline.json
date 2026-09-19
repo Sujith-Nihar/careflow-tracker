@@ -1,0 +1,381 @@
+[
+  {
+    "t": 1789848758708,
+    "type": "ready",
+    "value": true
+  },
+  {
+    "t": 1789848760669,
+    "type": "audio_connected",
+    "value": true
+  },
+  {
+    "t": 1789848760774,
+    "type": "status",
+    "value": "in-progress"
+  },
+  {
+    "t": 1789848761441,
+    "type": "transcript",
+    "value": {
+      "speaker": "AI",
+      "text": "Thanks for calling Demo Surgical Associates."
+    }
+  },
+  {
+    "t": 1789848763464,
+    "type": "caller_clip",
+    "value": "http://127.0.0.1:52056/clips/ff1fad8b0afa344c.wav"
+  },
+  {
+    "t": 1789848763628,
+    "type": "transcript",
+    "value": {
+      "speaker": "AI",
+      "text": "Thanks for calling Demo Surgical Associates."
+    }
+  },
+  {
+    "t": 1789848763786,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "I"
+    }
+  },
+  {
+    "t": 1789848764810,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "I just need a run"
+    }
+  },
+  {
+    "t": 1789848765695,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "I just need"
+    }
+  },
+  {
+    "t": 1789848765696,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "I just need a routine for our"
+    }
+  },
+  {
+    "t": 1789848766216,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "I just need a routine follow-up appointment."
+    }
+  },
+  {
+    "t": 1789848766236,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "I just need a routine follow-up appointment."
+    }
+  },
+  {
+    "t": 1789848767086,
+    "type": "transcript",
+    "value": {
+      "speaker": "AI",
+      "text": "I can help with that. I\u2019ll get the scheduler."
+    }
+  },
+  {
+    "t": 1789848769187,
+    "type": "caller_clip",
+    "value": "http://127.0.0.1:52056/clips/2d9bb9672038a04f.wav"
+  },
+  {
+    "t": 1789848769529,
+    "type": "transcript",
+    "value": {
+      "speaker": "AI",
+      "text": "I can help with that. I\u2019ll get the scheduler."
+    }
+  },
+  {
+    "t": 1789848769952,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "Hi."
+    }
+  },
+  {
+    "t": 1789848769952,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "Hi."
+    }
+  },
+  {
+    "t": 1789848770904,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "I'd like to book a"
+    }
+  },
+  {
+    "t": 1789848771917,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "I'd like to book a routine for an auto"
+    }
+  },
+  {
+    "t": 1789848772923,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "I'd like to book a routine for an up appointment, please."
+    }
+  },
+  {
+    "t": 1789848773072,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "I'd like to book a routine for an up appointment, please."
+    }
+  },
+  {
+    "t": 1789848773092,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "Hi. I'd like to book a routine for an up appointment, please."
+    }
+  },
+  {
+    "t": 1789848773842,
+    "type": "transcript",
+    "value": {
+      "speaker": "AI",
+      "text": "I can connect you with the scheduler for a routine appointment. Please hold."
+    }
+  },
+  {
+    "t": 1789848775719,
+    "type": "caller_clip",
+    "value": "http://127.0.0.1:52056/clips/ff1fad8b0afa344c.wav"
+  },
+  {
+    "t": 1789848776070,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "I'd"
+    }
+  },
+  {
+    "t": 1789848777104,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "I just need a routine"
+    }
+  },
+  {
+    "t": 1789848777106,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "I just need a routine"
+    }
+  },
+  {
+    "t": 1789848778056,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "I just need a routine"
+    }
+  },
+  {
+    "t": 1789848778069,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "I just need a routine for our app appointment"
+    }
+  },
+  {
+    "t": 1789848778547,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "I just need a routine for a wrap up appointment."
+    }
+  },
+  {
+    "t": 1789848778566,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "I just need a routine for a wrap up appointment."
+    }
+  },
+  {
+    "t": 1789848779326,
+    "type": "transcript",
+    "value": {
+      "speaker": "AI",
+      "text": "I can connect you with the scheduler for a routine appointment."
+    }
+  },
+  {
+    "t": 1789848781428,
+    "type": "caller_clip",
+    "value": "http://127.0.0.1:52056/clips/ff1fad8b0afa344c.wav"
+  },
+  {
+    "t": 1789848782464,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "I just need a"
+    }
+  },
+  {
+    "t": 1789848783161,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "I just need a"
+    }
+  },
+  {
+    "t": 1789848783485,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "I just need a routine for a"
+    }
+  },
+  {
+    "t": 1789848784208,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "I just need a routine for a half appointment."
+    }
+  },
+  {
+    "t": 1789848784209,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "I just need a routine for a half appointment."
+    }
+  },
+  {
+    "t": 1789848784814,
+    "type": "transcript",
+    "value": {
+      "speaker": "AI",
+      "text": "I can connect you with the scheduler for a routine appointment."
+    }
+  },
+  {
+    "t": 1789848787946,
+    "type": "transcript",
+    "value": {
+      "speaker": "AI",
+      "text": "I can connect you with the scheduler for a routine appointment."
+    }
+  },
+  {
+    "t": 1789848849928,
+    "type": "transcript",
+    "value": {
+      "speaker": "AI",
+      "text": "I can connect you with the scheduler for a routine appointment. Thanks for calling Demo Surgical Associates."
+    }
+  },
+  {
+    "t": 1789848849929,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "I just need a routine follow-up appointment."
+    }
+  },
+  {
+    "t": 1789848849933,
+    "type": "transcript",
+    "value": {
+      "speaker": "AI",
+      "text": "I can help with that. I\u2019ll get the scheduler."
+    }
+  },
+  {
+    "t": 1789848849935,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "Hi."
+    }
+  },
+  {
+    "t": 1789848849935,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "Hi. I'd like to book a routine for an up appointment, please."
+    }
+  },
+  {
+    "t": 1789848849937,
+    "type": "transcript",
+    "value": {
+      "speaker": "AI",
+      "text": "I can connect you with the scheduler for a routine"
+    }
+  },
+  {
+    "t": 1789848849938,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "I just need a routine for a wrap up appointment."
+    }
+  },
+  {
+    "t": 1789848849939,
+    "type": "transcript",
+    "value": {
+      "speaker": "AI",
+      "text": "I can connect you with the scheduler for a routine appointment."
+    }
+  },
+  {
+    "t": 1789848849940,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "I just need a routine for a half appointment."
+    }
+  },
+  {
+    "t": 1789848849940,
+    "type": "transcript",
+    "value": {
+      "speaker": "AI",
+      "text": "I can connect you with the scheduler for a routine appointment."
+    }
+  }
+]

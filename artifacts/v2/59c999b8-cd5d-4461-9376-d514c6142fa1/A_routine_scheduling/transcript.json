@@ -1,0 +1,70 @@
+[
+  {
+    "speaker": "AI",
+    "text": "Thanks for calling Demo Surgical Associates."
+  },
+  {
+    "speaker": "HUMAN",
+    "text": "I just need a routine follow-up appointment."
+  },
+  {
+    "speaker": "AI",
+    "text": "I can help with that. I\u2019ll get the scheduler."
+  },
+  {
+    "speaker": "HUMAN",
+    "text": "Hi. I'd like to book a routine for an up appointment, please."
+  },
+  {
+    "speaker": "AI",
+    "text": "I can connect you with the scheduler for a routine"
+  },
+  {
+    "speaker": "HUMAN",
+    "text": "I just need a routine for a wrap up appointment."
+  },
+  {
+    "speaker": "AI",
+    "text": "I can connect you with the scheduler for a routine appointment."
+  },
+  {
+    "speaker": "HUMAN",
+    "text": "I just need a routine for a half appointment."
+  },
+  {
+    "speaker": "AI",
+    "text": "I can connect you with the scheduler for a routine appointment. Thanks for calling Demo Surgical Associates."
+  },
+  {
+    "speaker": "HUMAN",
+    "text": "I just need a routine follow-up appointment."
+  },
+  {
+    "speaker": "AI",
+    "text": "I can help with that. I\u2019ll get the scheduler."
+  },
+  {
+    "speaker": "HUMAN",
+    "text": "Hi. I'd like to book a routine for an up appointment, please."
+  },
+  {
+    "speaker": "AI",
+    "text": "I can connect you with the scheduler for a routine"
+  },
+  {
+    "speaker": "HUMAN",
+    "text": "I just need a routine for a wrap up appointment."
+  },
+  {
+    "speaker": "AI",
+    "text": "I can connect you with the scheduler for a routine appointment."
+  },
+  {
+    "speaker": "HUMAN",
+    "text": "I just need a routine for a half appointment."
+  },
+  {
+    "speaker": "AI",
+    "text": "I can connect you with the scheduler for a routine appointment."
+  }
+]

@@ -32,6 +32,8 @@ agent, its two versions, and the four functions are represented and reproduced.
 | Nothing documented about which node types may open a call | a **`question` node cannot open a call**; a `freeform` node can | the agent sat silent for two runs (`INVESTIGATIONS.md` INV-2) |
 | `dial.created` webhook | exists, not in the documented event list | arrives before the runner registers the dial, which exposed a create race |
 | `modelOptionValues` offered by the model metadata | **temperature below the default makes the agent mute**; accepted with 200, no error anywhere | four silent runs (`INVESTIGATIONS.md` INV-3). We publish no model options. |
+| Updating a function with `PATCH` | **`PUT`**; `PATCH` returns 405 with an empty body | `vogent/scripts/sync_functions.py` |
+| Transition rules shown without a `field` for question nodes | an `equal` rule on a question node needs **`field: "answer"`**; with `field: null` it never matches and the flow stalls on the intake node | seventh run looped on the greeting for 100s |
 
 Verified by building, not by reading. The probe versioned prompts used to establish the node type
 (`probe-freeform`, `probe-question`, `probe-function`) are left in the workspace; the API exposes no

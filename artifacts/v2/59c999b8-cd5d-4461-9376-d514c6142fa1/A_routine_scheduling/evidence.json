@@ -1,0 +1,157 @@
+{
+  "action_executions": [],
+  "agent_statements": [
+    {
+      "disposition": null,
+      "evidence_text": "I can connect you with the scheduler for a routine",
+      "kind": "promised_transfer",
+      "observed_at": "2026-09-19T20:14:21.363392+00:00",
+      "sequence_no": 0,
+      "source": "transcript_rule"
+    },
+    {
+      "disposition": null,
+      "evidence_text": "I can connect you with the scheduler for a routine",
+      "kind": "promised_transfer",
+      "observed_at": "2026-09-19T20:14:21.363400+00:00",
+      "sequence_no": 0,
+      "source": "transcript_rule"
+    },
+    {
+      "disposition": null,
+      "evidence_text": "I can connect you with the scheduler for a routine appointment.",
+      "kind": "promised_transfer",
+      "observed_at": "2026-09-19T20:14:21.363392+00:00",
+      "sequence_no": 1,
+      "source": "transcript_rule"
+    },
+    {
+      "disposition": null,
+      "evidence_text": "I can connect you with the scheduler for a routine appointment.",
+      "kind": "promised_transfer",
+      "observed_at": "2026-09-19T20:14:21.363400+00:00",
+      "sequence_no": 1,
+      "source": "transcript_rule"
+    },
+    {
+      "disposition": null,
+      "evidence_text": "I can connect you with the scheduler for a routine appointment.",
+      "kind": "promised_transfer",
+      "observed_at": "2026-09-19T20:14:21.363392+00:00",
+      "sequence_no": 2,
+      "source": "transcript_rule"
+    },
+    {
+      "disposition": null,
+      "evidence_text": "I can connect you with the scheduler for a routine appointment.",
+      "kind": "promised_transfer",
+      "observed_at": "2026-09-19T20:14:21.363400+00:00",
+      "sequence_no": 2,
+      "source": "transcript_rule"
+    }
+  ],
+  "call": {
+    "connected_seconds": 100,
+    "dial_id": "1dd6abef-7721-497f-9e92-855fd384a4c3",
+    "ended_at": "2026-09-19T20:14:21.255628+00:00",
+    "evaluation_run_id": "59c999b8-cd5d-4461-9376-d514c6142fa1",
+    "id": "8686e2ea-fef0-46da-8230-2d5fd60a6f0a",
+    "lifecycle": "ended",
+    "scenario_id": "A_routine_scheduling",
+    "started_at": "2026-09-19T20:12:40.747884+00:00",
+    "system_result_type": "USER_HANGUP",
+    "versioned_prompt_id": "1aaff6cc-3f22-4625-b8c4-b19b80152749",
+    "vogent_agent_id": null
+  },
+  "derived": {
+    "evidence_refs": {},
+    "mismatch_details": [
+      "The agent told the caller they were being transferred, but no transfer connected."
+    ],
+    "next_step": "Review the call and contact the patient if they needed something.",
+    "promise_mismatch": true,
+    "reason": "The call ended without any recorded action. Whatever the caller was told, nothing was scheduled, transferred, or queued. The agent told the caller they were being transferred, but no transfer connected.",
+    "requires_staff_action": true,
+    "severity": 3,
+    "status": "no_action_recorded"
+  },
+  "downstream": {
+    "appointments": [],
+    "callback_requests": [],
+    "transfer_sessions": []
+  },
+  "intent": {
+    "agent_classified": null,
+    "true_intent": "routine_scheduling"
+  },
+  "staff_actions": [],
+  "transcript": {
+    "authoritative": false,
+    "note": "Shows what was said, not what happened.",
+    "segments": [
+      {
+        "detailType": null,
+        "endTimeMs": 3000,
+        "speaker": "AI",
+        "startTimeMs": 760,
+        "text": "Thanks for calling Demo Surgical Associates."
+      },
+      {
+        "detailType": null,
+        "endTimeMs": 5259,
+        "speaker": "HUMAN",
+        "startTimeMs": 2800,
+        "text": "I just need a routine follow-up appointment."
+      },
+      {
+        "detailType": null,
+        "endTimeMs": 8820,
+        "speaker": "AI",
+        "startTimeMs": 6420,
+        "text": "I can help with that. I\u2019ll get the scheduler."
+      },
+      {
+        "detailType": null,
+        "endTimeMs": 12139,
+        "speaker": "HUMAN",
+        "startTimeMs": 8520,
+        "text": "Hi. I'd like to book a routine for an up appointment, please."
+      },
+      {
+        "detailType": null,
+        "endTimeMs": 16488,
+        "speaker": "AI",
+        "startTimeMs": 13160,
+        "text": "I can connect you with the scheduler for a routine"
+      },
+      {
+        "detailType": null,
+        "endTimeMs": 17730,
+        "speaker": "HUMAN",
+        "startTimeMs": 15040,
+        "text": "I just need a routine for a wrap up appointment."
+      },
+      {
+        "detailType": null,
+        "endTimeMs": 22500,
+        "speaker": "AI",
+        "startTimeMs": 18660,
+        "text": "I can connect you with the scheduler for a routine appointment."
+      },
+      {
+        "detailType": null,
+        "endTimeMs": 23010,
+        "speaker": "HUMAN",
+        "startTimeMs": 20910,
+        "text": "I just need a routine for a half appointment."
+      },
+      {
+        "detailType": null,
+        "endTimeMs": 27340,
+        "speaker": "AI",
+        "startTimeMs": 24140,
+        "text": "I can connect you with the scheduler for a routine appointment."
+      }
+    ]
+  }
+}
