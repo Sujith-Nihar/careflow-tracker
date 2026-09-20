@@ -5,7 +5,7 @@ Medical take-home. The problem: calls were marked "resolved" because the agent *
 callback happened. The fix: completion is derived only from persisted function results and downstream
 system state, the agent's flow branches on those results, and staff see promise and evidence side by side.
 
-**Status:** planning complete; implementation not started. See `docs/PROJECT_PLAN.md`.
+**Status:** built and evaluated end to end on real Vogent voice calls. Start with `SUBMISSION.md`; measured results are in `docs/RESULTS.md`.
 
 ## Architecture at a glance
 
@@ -19,17 +19,30 @@ evaluations asynchronously; Terraform describes the AWS equivalent. Details: `do
 Python 3.12 · Flask · psycopg 3 · PostgreSQL (Supabase or Docker) · Next.js 15 / TypeScript ·
 Vogent (flows, functions, Web SDK) · Playwright · boto3 + `moto` (local SQS) · Terraform.
 
-## Setup and run (to be finalized in Phase 10)
+## Setup and run
 
 ```bash
 cp .env.example .env            # fill values per docs/HUMAN_SETUP.md
-make setup                      # Python deps, Playwright Chromium, frontend deps
-make migrate && make seed       # schema + demo organization + replayed scenarios
-make api                        # Flask on :5000
-make ui                         # Next.js on :3000
-make test                       # backend tests
-make replay                     # scenarios A–E through the backend without voice
-make eval VERSION=v2 SCENARIOS=A,B,C,D   # real Vogent voice runs (needs workspace credentials)
+make setup                      # Python deps and Playwright Chromium
+make migrate && make seed       # schema + the two synthetic practices
+make test                       # backend tests against real PostgreSQL
+make api                        # Flask on :5055 (5000 is taken by macOS AirPlay)
+make ui-install && make ui      # Next.js dashboard on :3000
+```
+
+No Vogent credentials are needed for any of the above, nor for the paths that cost nothing:
+
+```bash
+make replay        # scenarios A–E through the backend without voice
+make structural    # flow lint: V1 fails five checks, V2 passes
+make worker-demo   # queue, worker, poisoned job, dead-letter queue
+make tf-validate   # the AWS definition
+```
+
+Real voice runs need a Vogent workspace and a tunnel (`make tunnel`), and they cost money:
+
+```bash
+make eval VERSION=v2 SCENARIOS=A,B,C,D
 ```
 
 ## Documentation
@@ -37,6 +50,7 @@ make eval VERSION=v2 SCENARIOS=A,B,C,D   # real Vogent voice runs (needs workspa
 `docs/ARCHITECTURE.md` · `docs/DATA_MODEL.md` · `docs/API_DESIGN.md` · `docs/VOGENT_PLAN.md` ·
 `docs/EVALUATION_PLAN.md` · `docs/UI_PLAN.md` · `docs/ASYNC_INFRA_PLAN.md` · `docs/PROJECT_PLAN.md` ·
 `docs/REQUIREMENTS_MATRIX.md` · `docs/DECISIONS.md` · `docs/RISKS.md` · `docs/HUMAN_SETUP.md` ·
-`docs/SUBMISSION_CHECKLIST.md`. Orientation for coding agents: `CLAUDE.md`.
+`docs/SUBMISSION_CHECKLIST.md` · `docs/RESULTS.md` · `docs/INVESTIGATIONS.md`.
+Orientation for coding agents: `CLAUDE.md`.
 
 All people, calls, and records are synthetic. No credentials are committed.

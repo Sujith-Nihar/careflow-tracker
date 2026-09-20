@@ -8,9 +8,10 @@ Written for the practice manager who reported the problem. Plain language, no ja
 
 Your instinct was right. Some calls were being marked resolved because the assistant
 *said* it had transferred someone or arranged a callback, not because anything actually
-happened. We reproduced it: on a test call, a caller reporting a bleeding surgical wound
-was told "I'm connecting you to the triage nurse now" and nothing was attempted at all.
-No transfer, no callback, no record of either.
+happened. We reproduced it on a test call. A caller reporting a bleeding surgical wound
+was told they were now connected to the triage nurse. The transfer was attempted, the line
+did not answer, and the call was still filed as resolved. No callback was ever created, and
+nobody would have rung that caller back.
 
 **What we changed**
 
@@ -22,7 +23,7 @@ transfer.
 
 More importantly, we stopped trusting the assistant to decide whether to escalate.
 When a transfer does not connect, our system creates the urgent callback itself, based
-on what actually happened on the line. Even if the assistant word things badly, the
+on what actually happened on the line. Even if the assistant words things badly, the
 callback still exists.
 
 **What staff can trust now**
