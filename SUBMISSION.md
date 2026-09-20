@@ -61,10 +61,15 @@ bleeding surgical wound, the transfer to triage fails, an urgent callback must c
 | Staff-visible reason | "The caller was not put through to the nurse because the line did not pick up. An urgent callback is now waiting for someone to make." |
 | In the dashboard | `/calls` → the call → side-by-side "what the agent told the caller" vs "what actually happened" |
 
-**The contrast, same scenario on V1**: dial `0607515f`. The agent said "You're now connected
-with the triage nurse, and they'll take it from here", filed the call as `resolved`, and no
-callback was ever created. Derived status `escalation_failed`, promise mismatch flagged.
-That is the practice manager's complaint, reproduced on a real call.
+**The contrast, same scenario on V1**: dial `0607515f`. V1 called the transfer, it failed
+with `no_answer`, and V1 then told the caller "You're now connected with the triage nurse,
+and they'll take it from here" and filed the call as `resolved`. No callback was ever
+created. Derived status `escalation_failed`, promise mismatch flagged.
+
+That is the practice manager's complaint reproduced exactly: an attempted action that
+failed, a caller told it succeeded, and the call marked resolved. The backend caught it from
+the absence of a connected transfer session and the absence of a callback row, independently
+of anything the agent said.
 
 Artifacts for every case: `dial.json`, `transcript.json`, `timeline.json`, `evidence.json`,
 `metrics.json` under `artifacts/`.
@@ -348,18 +353,15 @@ the test that proves it.
 
 ## 11. What I would do next
 
-1. **Isolate the V1 comparison further.** V1's post-operative failures are now the design
-   flaw, but a second run with its promise moved into the function's lifecycle message would
-   remove the last confound.
-2. **Repeat runs per scenario.** Scenario D is unstable on one transcript metric. Three runs
+1. **Repeat runs per scenario.** Scenario D is unstable on one transcript metric. Three runs
    per scenario reporting a pass rate replaces a coin-flip with a measurement.
-3. **Alerting on `escalation_failed`.** The worst state in the system currently waits to be
+2. **Alerting on `escalation_failed`.** The worst state in the system currently waits to be
    noticed on a screen. It should page someone.
-4. **Callback ageing.** The system knows a callback is owed, not that it has been owed for
+3. **Callback ageing.** The system knows a callback is owed, not that it has been owed for
    three hours.
-5. **Authentication.** So "who closed this call" is a real answer and the audit trail means
+4. **Authentication.** So "who closed this call" is a real answer and the audit trail means
    something.
-6. **Replace the transcript regexes.** They are tuned to phrasings I anticipated. A second
+5. **Replace the transcript regexes.** They are tuned to phrasings I anticipated. A second
    model scoring truthfulness against hand-labelled traces would generalise better, and is
    the brief's optional rubric-based evaluator.
-7. **Deploy the AWS path** to a sandbox and observe one real job end to end.
+6. **Deploy the AWS path** to a sandbox and observe one real job end to end.
