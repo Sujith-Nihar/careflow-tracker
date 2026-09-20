@@ -21,6 +21,8 @@ export type Derived = {
 };
 
 export type CallSummary = {
+  /** What the agent told the caller it had arranged, if it claimed anything. */
+  agent_promised: string | null;
   call_id: string;
   dial_id: string;
   scenario_id: string | null;

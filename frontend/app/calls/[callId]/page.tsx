@@ -13,28 +13,46 @@ import { markCallbackCompleted } from "./actions";
 export const dynamic = "force-dynamic";
 
 const ACTION_LABEL: Record<string, string> = {
-  schedule_appointment: "Book an appointment",
-  transfer_triage: "Transfer to the triage nurse",
-  create_callback: "Request a callback",
-  report_disposition: "Agent's own account of the call",
+  schedule_appointment: "Tried to book an appointment",
+  transfer_triage: "Tried to put the caller through to the nurse",
+  create_callback: "Tried to arrange a callback",
+  report_disposition: "Agent's own summary of the call",
 };
 
 const OUTCOME: Record<string, { text: string; tone: "good" | "warning" | "critical" | "neutral" }> = {
-  succeeded: { text: "worked", tone: "good" },
-  failed: { text: "failed", tone: "critical" },
-  unverified: { text: "could not be confirmed", tone: "warning" },
-  rejected: { text: "refused: details unreadable", tone: "warning" },
+  succeeded: { text: "it worked", tone: "good" },
+  failed: { text: "it failed", tone: "critical" },
+  unverified: { text: "no answer either way", tone: "warning" },
+  rejected: { text: "details were unreadable", tone: "warning" },
   not_applicable: { text: "not needed", tone: "neutral" },
   requested: { text: "still running", tone: "neutral" },
 };
 
+/** How the agent summarised the call, in the words a person would use. */
+const DISPOSITION_TEXT: Record<string, string> = {
+  scheduled: "booked",
+  transferred: "put through to the nurse",
+  callback_pending: "a callback is waiting",
+  escalation_failed: "nobody could be reached",
+  unresolved: "not resolved",
+  resolved: "sorted",
+};
+
 const SAID: Record<string, { text: string; icon: string }> = {
-  promised_transfer: { text: "Told the caller they were being transferred", icon: "!" },
-  promised_callback: { text: "Told the caller someone would call them back", icon: "!" },
-  promised_appointment: { text: "Told the caller an appointment was made", icon: "!" },
-  disclosed_transfer_failed: { text: "Told the caller the transfer did not complete", icon: "✓" },
-  disclosed_callback_failed: { text: "Told the caller no callback could be arranged", icon: "✓" },
-  disclosed_scheduling_failed: { text: "Told the caller the booking was not confirmed", icon: "✓" },
+  promised_transfer: { text: "\u201cI\u2019m putting you through to the nurse\u201d", icon: "!" },
+  promised_callback: { text: "\u201cSomeone will call you back\u201d", icon: "!" },
+  promised_appointment: { text: "\u201cYour appointment is booked\u201d", icon: "!" },
+  disclosed_transfer_failed: { text: "Admitted the transfer did not go through", icon: "✓" },
+  disclosed_callback_failed: { text: "Admitted no callback could be arranged", icon: "✓" },
+  disclosed_scheduling_failed: { text: "Admitted the booking was not confirmed", icon: "✓" },
+};
+
+/** Failure codes belong in logs. On screen they become a phrase. */
+const WHY_NO_TRANSFER: Record<string, string> = {
+  no_answer: "nobody picked up",
+  busy: "the line was busy",
+  no_confirmation: "the line never confirmed the caller was connected",
+  transfer_timeout: "the line did not respond in time",
 };
 
 function recorded(detail: CallDetail): { text: string; tone: "good" | "critical" | "warning" }[] {
@@ -42,23 +60,28 @@ function recorded(detail: CallDetail): { text: string; tone: "good" | "critical"
   for (const t of detail.downstream.transfer_sessions) {
     out.push(
       t.status === "connected"
-        ? { text: "The triage line answered.", tone: "good" }
-        : { text: `The triage line did not answer (${t.failure_reason ?? t.status}).`, tone: "critical" },
+        ? { text: "The nurse's line picked up.", tone: "good" }
+        : {
+            text: `The caller never reached the nurse: ${
+              WHY_NO_TRANSFER[t.failure_reason ?? ""] ?? "the line did not connect"
+            }.`,
+            tone: "critical",
+          },
     );
   }
   for (const c of detail.downstream.callback_requests) {
     const priority = c.priority === "urgent" ? "An urgent" : "A normal-priority";
     out.push(
       c.status === "completed"
-        ? { text: `${priority} callback was completed by staff.`, tone: "good" }
-        : { text: `${priority} callback request is waiting in the queue.`, tone: "warning" },
+        ? { text: `${priority} callback was made by a staff member.`, tone: "good" }
+        : { text: `${priority} callback is sitting in the queue, not yet made.`, tone: "warning" },
     );
   }
   for (const a of detail.downstream.appointments) {
     out.push(
       a.status === "booked"
-        ? { text: "An appointment exists in the scheduler.", tone: "good" }
-        : { text: "No appointment exists.", tone: "critical" },
+        ? { text: "An appointment exists in the diary.", tone: "good" }
+        : { text: "There is no appointment.", tone: "critical" },
     );
   }
   const failed = detail.action_executions.filter(
@@ -69,12 +92,12 @@ function recorded(detail: CallDetail): { text: string; tone: "good" | "critical"
   );
   for (const e of failed) {
     out.push({
-      text: `${ACTION_LABEL[e.kind] ?? e.kind}: ${OUTCOME[e.outcome]?.text ?? e.outcome}.`,
+      text: `${ACTION_LABEL[e.kind] ?? e.kind} \u2014 ${OUTCOME[e.outcome]?.text ?? e.outcome}.`,
       tone: "critical",
     });
   }
   if (out.length === 0) {
-    out.push({ text: "Nothing was attempted and nothing exists.", tone: "critical" });
+    out.push({ text: "The agent never tried to do anything.", tone: "critical" });
   }
   return out;
 }
@@ -111,7 +134,7 @@ export default async function CallDetailPage({ params }: { params: Promise<{ cal
   return (
     <>
       <Link className="back" href="/calls">
-        ← Calls needing attention
+        ← Back to calls
       </Link>
 
       <div className="page-head">
@@ -137,7 +160,7 @@ export default async function CallDetailPage({ params }: { params: Promise<{ cal
 
         {d?.requires_staff_action && (
           <div className="hero-next">
-            <span className="hero-next-label">Do this next</span>
+            <span className="hero-next-label">What you should do</span>
             <span>{d.next_step}</span>
           </div>
         )}
@@ -167,16 +190,16 @@ export default async function CallDetailPage({ params }: { params: Promise<{ cal
         )}
       </div>
 
-      <h2>What was said, and what was done</h2>
+      <h2>What the agent said, against what really happened</h2>
       <div className="compare stagger">
         <section className="panel">
           <div className="panel-head">
-            <span className="panel-title">The agent told the caller</span>
+            <span className="panel-title">What the agent told the caller</span>
           </div>
           <div className="panel-body">
             {spoken.length === 0 && !disposition ? (
               <p className="muted" style={{ margin: 0 }}>
-                Nothing that asserted an outcome.
+                The agent did not claim anything had been arranged.
               </p>
             ) : (
               <ul className="claim-list">
@@ -193,25 +216,27 @@ export default async function CallDetailPage({ params }: { params: Promise<{ cal
                     <span>{SAID[s.kind].text}</span>
                   </li>
                 ))}
-                {disposition && (
+                {disposition?.disposition && (
                   <li>
                     <span className="claim-icon muted">›</span>
                     <span>
-                      Reported the call as <strong>{disposition.disposition}</strong>
+                      Signed the call off as{" "}
+                      <strong>{DISPOSITION_TEXT[disposition.disposition] ?? disposition.disposition}</strong>
                     </span>
                   </li>
                 )}
               </ul>
             )}
             <p className="panel-note">
-              Taken from the recording. Evidence of what was said, never of what was done.
+              Taken from the recording. This tells you what the caller was told. It is not proof
+              that anything happened.
             </p>
           </div>
         </section>
 
         <section className="panel">
           <div className="panel-head">
-            <span className="panel-title">The systems recorded</span>
+            <span className="panel-title">What actually happened</span>
           </div>
           <div className="panel-body">
             <ul className="claim-list">
@@ -225,31 +250,31 @@ export default async function CallDetailPage({ params }: { params: Promise<{ cal
               ))}
             </ul>
             <p className="panel-note">
-              From the function results and the state of the scheduler, triage line and callback
-              queue. This is what decides the status.
+              Taken from the diary, the nurse's line and the callback queue. This is what decides
+              whether the call is finished.
             </p>
           </div>
         </section>
       </div>
 
-      <h2>Every action, in order</h2>
+      <h2>Everything the agent tried, in order</h2>
       <div className="panel">
         <div className="table-wrap">
           <table>
             <thead>
               <tr>
-                <th>Action</th>
-                <th>Result</th>
+                <th>What it tried</th>
+                <th>How it went</th>
                 <th>Attempts</th>
                 <th>Reference</th>
-                <th>Requested</th>
+                <th>At</th>
               </tr>
             </thead>
             <tbody>
               {detail.action_executions.length === 0 && (
                 <tr>
                   <td colSpan={5} className="muted">
-                    No action was ever attempted on this call.
+                    The agent never tried to do anything on this call.
                   </td>
                 </tr>
               )}
@@ -285,7 +310,7 @@ export default async function CallDetailPage({ params }: { params: Promise<{ cal
         </div>
       </div>
 
-      <h2>Trace</h2>
+      <h2>Reference numbers</h2>
       <div className="panel">
         <div className="panel-body">
           <table className="kv">
@@ -311,7 +336,7 @@ export default async function CallDetailPage({ params }: { params: Promise<{ cal
                 <td className="mono">{detail.call.evaluation_run_id ?? "—"}</td>
               </tr>
               <tr>
-                <th>How it ended</th>
+                <th>How the call ended</th>
                 <td className="mono">{detail.call.system_result_type ?? "—"}</td>
               </tr>
             </tbody>
@@ -319,11 +344,11 @@ export default async function CallDetailPage({ params }: { params: Promise<{ cal
         </div>
       </div>
 
-      <h2>Transcript</h2>
+      <h2>What was said on the call</h2>
       <div className="panel">
         <div className="panel-head">
           <span className="panel-title">Recording</span>
-          <Badge tone="neutral">not authoritative</Badge>
+          <Badge tone="neutral">not proof of anything</Badge>
         </div>
         <div className="panel-body">
           <pre>
@@ -334,7 +359,7 @@ export default async function CallDetailPage({ params }: { params: Promise<{ cal
           </pre>
           <p className="panel-note">{detail.transcript.note}</p>
           <details>
-            <summary>Function requests and responses</summary>
+            <summary>Technical detail: what was sent and what came back</summary>
             <pre>
               {JSON.stringify(
                 detail.action_executions.map((e) => ({

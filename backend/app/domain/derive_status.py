@@ -99,7 +99,7 @@ def derive_status(evidence: CallEvidence) -> DerivedStatus:
                 status=CallStatus.CLOSED_BY_STAFF,
                 severity=Severity.NONE,
                 requires_staff_action=False,
-                reason="A staff member completed the callback for this call.",
+                reason="A staff member rang this patient back.",
                 next_step="No further action.",
                 evidence_refs=refs,
             ),
@@ -128,7 +128,7 @@ def derive_status(evidence: CallEvidence) -> DerivedStatus:
                     status=CallStatus.COMPLETED_TRANSFERRED,
                     severity=Severity.NONE,
                     requires_staff_action=False,
-                    reason="The caller was connected to the triage line and the line confirmed it.",
+                    reason="The caller was put through to the nurse and the line confirmed it.",
                     next_step="No further action.",
                     evidence_refs=refs,
                 ),
@@ -146,11 +146,11 @@ def derive_status(evidence: CallEvidence) -> DerivedStatus:
                     severity=Severity.URGENT if urgent else Severity.ROUTINE,
                     requires_staff_action=True,
                     reason=(
-                        f"The transfer to triage did not complete ({failure}). "
-                        f"{'An urgent' if urgent else 'A normal-priority'} callback request "
-                        "was created and is still open."
+                        f"The caller was not put through to the nurse because {failure}. "
+                        f"{'An urgent' if urgent else 'A routine'} callback is now waiting "
+                        "for someone to make."
                     ),
-                    next_step="Call the patient back on the number recorded for this call.",
+                    next_step="Ring this patient back on the number they gave.",
                     evidence_refs=refs,
                 ),
             )
@@ -162,10 +162,10 @@ def derive_status(evidence: CallEvidence) -> DerivedStatus:
                 severity=Severity.CRITICAL,
                 requires_staff_action=True,
                 reason=(
-                    f"The transfer to triage did not complete ({failure}) and no callback "
-                    "request was created. Nothing is queued for this caller."
+                    f"The caller was not put through to the nurse because {failure}, and no "
+                    "callback was created either. Nobody is going to contact this patient."
                 ),
-                next_step="Call the patient back immediately; this caller has had no clinical contact.",
+                next_step="Call this patient back now. Nobody has spoken to them.",
                 evidence_refs=refs,
             ),
         )
@@ -179,10 +179,10 @@ def derive_status(evidence: CallEvidence) -> DerivedStatus:
                 severity=Severity.HIGH,
                 requires_staff_action=True,
                 reason=(
-                    "The agent recorded this as a post-operative concern but never attempted a "
-                    "triage transfer, which the practice policy requires."
+                    "The agent logged this as a concern after surgery but never tried to put the "
+                    "caller through to the nurse, which the practice policy requires."
                 ),
-                next_step="Call the patient back and review why the flow did not route to triage.",
+                next_step="Ring this patient back, then check why the call was not routed.",
                 evidence_refs=refs,
             ),
         )
@@ -198,7 +198,7 @@ def derive_status(evidence: CallEvidence) -> DerivedStatus:
                     status=CallStatus.COMPLETED_SCHEDULED,
                     severity=Severity.NONE,
                     requires_staff_action=False,
-                    reason="An appointment was booked and the scheduler confirmed it.",
+                    reason="An appointment was booked and confirmed.",
                     next_step="No further action.",
                     evidence_refs=refs,
                 ),
@@ -212,14 +212,14 @@ def derive_status(evidence: CallEvidence) -> DerivedStatus:
                 severity=Severity.ROUTINE,
                 requires_staff_action=True,
                 reason=(
-                    "Scheduling was attempted but no appointment exists in the scheduler."
+                    "The agent tried to book an appointment and there is no appointment."
                     + (
-                        " A callback request was created for the office to follow up."
+                        " A callback was created so the office can follow up."
                         if created_callbacks
                         else ""
                     )
                 ),
-                next_step="Book the appointment manually and call the patient to confirm.",
+                next_step="Book the appointment by hand and ring the patient to confirm.",
                 evidence_refs=refs,
             ),
         )
@@ -237,8 +237,8 @@ def derive_status(evidence: CallEvidence) -> DerivedStatus:
                     status=CallStatus.CALLBACK_PENDING,
                     severity=Severity.URGENT if urgent else Severity.ROUTINE,
                     requires_staff_action=True,
-                    reason="A callback request was created for this caller and is still open.",
-                    next_step="Call the patient back on the number recorded for this call.",
+                    reason="A callback is waiting for someone to make.",
+                    next_step="Ring this patient back on the number they gave.",
                     evidence_refs=refs,
                 ),
             )
@@ -249,10 +249,10 @@ def derive_status(evidence: CallEvidence) -> DerivedStatus:
                 severity=Severity.HIGH,
                 requires_staff_action=True,
                 reason=(
-                    "A callback request was attempted but the callback queue did not accept it. "
-                    "Nothing is queued for this caller."
+                    "The agent tried to arrange a callback and it was not created. Nothing is "
+                    "waiting for this caller."
                 ),
-                next_step="Call the patient back on the number recorded for this call.",
+                next_step="Ring this patient back on the number they gave.",
                 evidence_refs=refs,
             ),
         )
@@ -266,10 +266,10 @@ def derive_status(evidence: CallEvidence) -> DerivedStatus:
                 severity=Severity.HIGH,
                 requires_staff_action=True,
                 reason=(
-                    "The call ended without any recorded action. Whatever the caller was told, "
-                    "nothing was scheduled, transferred, or queued."
+                    "The call ended and nothing was done. Whatever the caller was told, no "
+                    "appointment, transfer or callback exists."
                 ),
-                next_step="Review the call and contact the patient if they needed something.",
+                next_step="Listen to the call and ring the patient back if they needed something.",
                 evidence_refs=refs,
             ),
         )
@@ -281,22 +281,31 @@ def derive_status(evidence: CallEvidence) -> DerivedStatus:
             status=CallStatus.NEEDS_REVIEW,
             severity=Severity.URGENT,
             requires_staff_action=True,
-            reason="This call has recorded actions that do not match any known outcome pattern.",
-            next_step="Open the evidence timeline and review manually.",
+            reason="This call does not match anything we recognise.",
+            next_step="Read the call and decide what needs doing.",
             evidence_refs=refs,
         ),
     )
 
 
+#: Failure codes are for logs. Staff read a sentence, so each code has a plain phrase.
+_FAILURE_PHRASE = {
+    "no_answer": "the line did not pick up",
+    "busy": "the line was busy",
+    "no_confirmation": "the line never confirmed the caller was connected",
+    "transfer_timeout": "the line did not respond in time",
+}
+
+
 def _transfer_failure_phrase(evidence: CallEvidence) -> str:
-    """Describe why the transfer is not a success, for the staff-facing reason."""
+    """Say why the transfer is not a success, in words a person would use."""
     sessions = evidence.transfer_sessions
     if not sessions:
-        return "the triage line was never reached"
+        return "the nurse's line was never reached"
     session = sessions[-1]
     if session.status == TransferStatus.UNVERIFIED:
-        return "the triage line did not confirm the connection"
-    return session.failure_reason or "no answer"
+        return "the line never confirmed the caller was connected"
+    return _FAILURE_PHRASE.get(session.failure_reason or "", "the line did not pick up")
 
 
 def _promise_stands(
@@ -345,7 +354,7 @@ def _with_overlay(
         and not connected
     ):
         details.append(
-            "The agent told the caller they were being transferred, but no transfer connected."
+            "The agent told the caller they were being put through, and they were not."
         )
     if (
         _promise_stands(
@@ -353,7 +362,7 @@ def _with_overlay(
         )
         and not has_callback
     ):
-        details.append("The agent promised a callback, but no callback request exists.")
+        details.append("The agent promised a callback, and no callback was ever created.")
     if _promise_stands(evidence, StatementKind.PROMISED_APPOINTMENT, None) and not has_appointment:
         details.append("The agent told the caller an appointment was made, but none exists.")
 
@@ -367,8 +376,7 @@ def _with_overlay(
     )
     if claim is not None and base.requires_staff_action:
         details.append(
-            f"The agent reported this call as '{claim.disposition}' while the recorded "
-            "evidence shows it still needs a human."
+            "The agent signed this call off as finished when it was not."
         )
 
     if not details:

@@ -98,6 +98,7 @@ def list_calls() -> Any:
                 continue
             items.append(
                 {
+                    "agent_promised": _promise_summary(evidence),
                     "call_id": str(row["id"]),
                     "dial_id": row["dial_id"],
                     "scenario_id": row["scenario_id"],
@@ -112,6 +113,28 @@ def list_calls() -> Any:
 
         items.sort(key=lambda i: (-i["derived"]["severity"], i["ended_at"] or ""))
         return jsonify({"calls": items, "count": len(items)}), 200
+
+
+#: What the agent told the caller, in the order we would want to read it. Only the
+#: claims matter for the list; the honest disclosures are shown on the detail page.
+_PROMISE_TEXT = {
+    "promised_transfer": "A transfer to the nurse",
+    "promised_callback": "A callback from the nurse",
+    "promised_appointment": "An appointment",
+}
+
+
+def _promise_summary(evidence) -> str | None:
+    """One short phrase for what the agent told the caller it had arranged."""
+    for kind, text in _PROMISE_TEXT.items():
+        if any(str(s.kind) == kind for s in evidence.agent_statements):
+            return text
+    disposition = next(
+        (s for s in evidence.agent_statements if str(s.kind) == "reported_disposition"), None
+    )
+    if disposition is not None and disposition.disposition is not None:
+        return f"Reported it as {str(disposition.disposition).replace('_', ' ')}"
+    return None
 
 
 @bp.get("/calls/by-dial/<dial_id>")

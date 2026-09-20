@@ -11,10 +11,9 @@ import {
 
 export const dynamic = "force-dynamic";
 
-/** What the agent claimed, as one short phrase, or nothing if it claimed nothing. */
-function claimSummary(call: CallSummary): string | null {
-  if (call.derived.promise_mismatch) return "Something the records do not show";
-  return null;
+/** True when the agent's claim is contradicted by the records. */
+function claimIsFalse(call: CallSummary): boolean {
+  return call.derived.promise_mismatch;
 }
 
 type Tile = { label: string; value: number; note: string; accent: string };
@@ -23,27 +22,27 @@ function tiles(calls: CallSummary[]): Tile[] {
   const attention = calls.filter((c) => c.derived.requires_staff_action);
   return [
     {
-      label: "Needs a human",
+      label: "Waiting on someone",
       value: attention.length,
-      note: "derived from recorded evidence",
+      note: "based on what the systems recorded",
       accent: "var(--accent)",
     },
     {
-      label: "Nobody is coming",
+      label: "No one reached them",
       value: calls.filter((c) => c.derived.status === "escalation_failed").length,
-      note: "no transfer, no callback",
+      note: "no transfer and no callback",
       accent: "var(--critical)",
     },
     {
-      label: "Callbacks owed",
+      label: "Callbacks to make",
       value: calls.filter((c) => c.derived.status === "callback_pending").length,
-      note: "queued and unanswered",
+      note: "waiting for someone to ring",
       accent: "var(--serious)",
     },
     {
-      label: "Agent said otherwise",
+      label: "Agent told them wrong",
       value: calls.filter((c) => c.derived.promise_mismatch).length,
-      note: "claim contradicts the records",
+      note: "promised something that never happened",
       accent: "var(--warning)",
     },
   ];
@@ -83,7 +82,7 @@ export default async function CallsPage({
       <div className="page-head">
         <h1>{showAll ? "All calls" : "Calls needing attention"}</h1>
         <p className="lede">
-          Ordered by what the recorded evidence shows, never by what the agent said it did.
+          Sorted by what the systems actually recorded, not by what the agent told the caller.
         </p>
       </div>
 
@@ -114,10 +113,10 @@ export default async function CallsPage({
 
         {calls.length === 0 ? (
           <div className="empty">
-            <div className="empty-title">Nothing is waiting on a human</div>
+            <div className="empty-title">Nothing is waiting on anyone</div>
             <p className="empty-note">
-              That means no call has evidence of an unfinished action. It does not mean every
-              caller was helped: a call where nothing was recorded would appear here too.
+              No call has an unfinished action on record. That is not the same as every caller
+              being helped: a call where the agent did nothing at all would show up here too.
             </p>
           </div>
         ) : (
@@ -125,17 +124,18 @@ export default async function CallsPage({
             <table>
               <thead>
                 <tr>
-                  <th>Status</th>
-                  <th>Caller wanted</th>
-                  <th>What the records show</th>
-                  <th>Do this next</th>
+                  <th>How urgent</th>
+                  <th>What the caller wanted</th>
+                  <th>What the agent promised</th>
+                  <th>What actually happened</th>
+                  <th>What you should do</th>
                   <th>When</th>
                 </tr>
               </thead>
               <tbody>
                 {calls.map((call) => {
                   const tone = toneForSeverity(call.derived.severity);
-                  const claim = claimSummary(call);
+                  const claim = claimIsFalse(call);
                   return (
                     <tr key={call.call_id}>
                       <td>
@@ -150,22 +150,29 @@ export default async function CallsPage({
                         )}
                       </td>
                       <td>
-                        <Link href={`/calls/${call.call_id}`} className="cell-strong">
-                          {statusLabel(call.derived.status)}
-                        </Link>
+                        {call.agent_promised ? (
+                          <span className="cell-strong">{call.agent_promised}</span>
+                        ) : (
+                          <span className="muted">Did not promise anything</span>
+                        )}
                         {claim && (
                           <div className="cell-sub">
                             <Badge tone="critical" alarm>
-                              agent said otherwise
+                              this did not happen
                             </Badge>
                           </div>
                         )}
                       </td>
                       <td>
+                        <Link href={`/calls/${call.call_id}`} className="cell-strong">
+                          {statusLabel(call.derived.status)}
+                        </Link>
+                      </td>
+                      <td>
                         {call.derived.requires_staff_action ? (
                           call.derived.next_step
                         ) : (
-                          <span className="muted">Nothing outstanding</span>
+                          <span className="muted">Nothing to do</span>
                         )}
                       </td>
                       <td className="num muted">

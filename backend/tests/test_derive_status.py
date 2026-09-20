@@ -104,7 +104,12 @@ def test_failed_transfer_with_urgent_callback_is_pending_not_resolved():
     assert result.status is CallStatus.CALLBACK_PENDING
     assert result.severity == 2
     assert result.requires_staff_action is True
-    assert "no_answer" in result.reason
+    # The reason must explain both halves: why the transfer failed, and that a
+    # callback now exists. Asserted on meaning, not on exact wording.
+    assert "nurse" in result.reason.lower()
+    assert "callback" in result.reason.lower()
+    # Staff-facing text carries no internal codes.
+    assert "no_answer" not in result.reason
 
 
 def test_failed_transfer_and_failed_callback_is_the_most_severe_state():
@@ -131,7 +136,8 @@ def test_unverified_transfer_is_not_a_success():
         )
     )
     assert result.status is CallStatus.ESCALATION_FAILED
-    assert "did not confirm" in result.reason
+    assert "never confirmed" in result.reason
+    assert "unverified" not in result.reason
 
 
 def test_rejected_transfer_request_still_demands_attention():
@@ -319,7 +325,9 @@ def test_disposition_claiming_resolution_while_work_remains_is_a_mismatch():
         )
     )
     assert result.promise_mismatch is True
-    assert "resolved" in result.reason
+    # The mismatch is spelled out for staff rather than quoting an internal value.
+    assert "signed this call off" in result.reason
+    assert result.mismatch_details
 
 
 def test_honest_retraction_is_not_a_mismatch():
