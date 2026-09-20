@@ -85,11 +85,14 @@ Then fill in three values (the file marks which are required, and
 
 1. **`DATABASE_URL`** — `docker compose up -d db` gives you one, or point at any PostgreSQL 16
 2. **Two org tokens** — `openssl rand -hex 24`, twice. Not an account, just two different strings
-3. **`DEMO_ORGANIZATION_ID`** — printed by `make seed` in step 3 below; paste it back
+3. **`DEMO_ORGANIZATION_ID`** — printed by `make seed` below. Fill in the existing blank
+   line; a second copy appended at the end of the file is ignored
 
 ```bash
 make setup                    # Python dependencies
-make migrate && make seed     # schema + the two synthetic practices
+make migrate                  # schema
+make migrate-test             # the careflow_test schema `make test` needs
+make seed                     # the two synthetic practices
                               # ^ prints the practice ids — copy the demo one into .env
 make api                      # evidence API on :5055
 make ui-install && make ui    # dashboard on :3000

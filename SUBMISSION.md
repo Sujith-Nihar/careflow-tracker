@@ -28,7 +28,8 @@ only in the voice block below.
 ```bash
 cp .env.example .env          # DATABASE_URL + two tokens, per docs/HUMAN_SETUP.md
 make setup                    # python deps
-make migrate && make seed     # schema + the two synthetic practices
+make migrate && make migrate-test   # schema, plus the test schema `make test` needs
+make seed                     # the two synthetic practices
 #                               seed prints the practice ids: copy the demo one into
 #                               .env as DEMO_ORGANIZATION_ID before starting the UI
 make test                     # 98 backend tests against real PostgreSQL

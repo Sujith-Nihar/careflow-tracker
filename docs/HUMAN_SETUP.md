@@ -52,11 +52,15 @@ Paste both into `.env`. `make seed` refuses to run if they are missing or identi
 
 ```bash
 make setup
-make migrate && make seed
+make migrate          # the public schema
+make migrate-test     # the careflow_test schema, or `make test` silently skips 35 db tests
+make seed
 ```
 
-`make seed` prints the two practice ids. **Copy the demo one into `.env` as
-`DEMO_ORGANIZATION_ID`** — the dashboard reads it server-side and will return 401 without it.
+`make seed` prints the two practice ids. **Put the demo one on the existing
+`DEMO_ORGANIZATION_ID=` line in `.env`** — the dashboard reads it server-side and returns 401
+without it. Fill the blank line rather than appending a second copy: the loader takes the first
+occurrence of a key and ignores later ones.
 
 **4. Run it:**
 
