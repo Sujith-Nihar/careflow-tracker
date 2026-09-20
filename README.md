@@ -21,10 +21,18 @@ Vogent (flows, functions, Web SDK) · Playwright · boto3 + `moto` (local SQS) �
 
 ## Setup and run
 
+**No third-party API key is needed.** You supply a PostgreSQL you control and two random
+strings you generate yourself (`openssl rand -hex 24`); everything below then runs, including
+the tests, the evaluation suite, the worker and the AWS definition. A Vogent key and an ngrok
+domain are needed only to place *new* voice calls — the calls behind the reported results are
+already saved under `artifacts/`.
+
 ```bash
-cp .env.example .env            # fill values per docs/HUMAN_SETUP.md
-make setup                      # Python deps and Playwright Chromium
+cp .env.example .env            # DATABASE_URL + two tokens, per docs/HUMAN_SETUP.md
+make setup                      # Python deps
 make migrate && make seed       # schema + the two synthetic practices
+#                                 seed prints the practice ids: copy the demo one
+#                                 into .env as DEMO_ORGANIZATION_ID before `make ui`
 make test                       # backend tests against real PostgreSQL
 make api                        # Flask on :5055 (5000 is taken by macOS AirPlay)
 make ui-install && make ui      # Next.js dashboard on :3000
@@ -42,6 +50,7 @@ make tf-validate   # the AWS definition
 Real voice runs need a Vogent workspace and a tunnel (`make tunnel`), and they cost money:
 
 ```bash
+make setup-evals                          # Playwright + Chromium, not part of `make setup`
 make eval VERSION=v2 SCENARIOS=A,B,C,D
 ```
 

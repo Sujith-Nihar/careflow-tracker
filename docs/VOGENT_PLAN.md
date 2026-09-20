@@ -61,11 +61,12 @@ versioned prompts, browser calls enabled, credit for roughly 25 short calls (≈
 ## 4. Implementation decisions
 
 - **Configuration as code.** `vogent/functions/*.json` (four function definitions) and
-  `vogent/flows/v1.json`, `vogent/flows/v2.json` (flowDefinitions). `vogent/scripts/sync.py` creates or
-  updates functions (patching `apiPath` to the current `BACKEND_PUBLIC_URL`), creates versioned prompts,
-  and writes the resulting IDs to `vogent/ids.json` (git-ignored) and prints them. `vogent/scripts/export.py`
-  pulls the live versioned prompts and functions back into `vogent/export/` so the submitted export is
-  what actually ran.
+  `vogent/flows/v1.json`, `vogent/flows/v2.json` (flowDefinitions). `vogent/scripts/sync_functions.py` creates or
+  updates the four functions (patching `apiPath` to the current `BACKEND_PUBLIC_URL` and injecting the
+  token header), and `vogent/scripts/sync_flows.py` creates the versioned prompts, writes the resulting
+  IDs to `vogent/ids.json` (git-ignored) and prints them. `vogent/scripts/export_flows.py` pulls the live
+  versioned prompts and functions back into `vogent/export/`, pinned to the ids the reported runs used,
+  so the submitted export is what actually ran.
 - **Fallback if programmatic creation fails** (Gate in Phase 4): build the flows in the Flow Builder UI,
   export via `GET /agents/{id}/versioned_prompts` into `vogent/export/`, and document node-by-node in
   this file. Reproducibility is preserved by the export plus the function JSON.

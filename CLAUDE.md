@@ -55,8 +55,8 @@ scenario · evaluation run / evaluation case · fault profile · versioned promp
 backend/    Flask app: api/ services/ simulators/ domain/ persistence/ observability/, migrations/*.sql, tests/
 frontend/   Next.js investigation UI (server-side fetch only)
 evals/      scenarios/*.yaml, fixtures/, runner/ (harness, metrics, replay, structural), caller_page/
-vogent/     functions/*.json, flows/v1.json v2.json, scripts/sync.py export.py, export/ (what actually ran)
-worker/     SQS-compatible worker, bootstrap, enqueue, DLQ inspection
+vogent/     functions/*.json, flows/v1.json v2.json, scripts/ (sync_functions, sync_flows, export_flows), export/ (what actually ran)
+worker/     SQS-compatible worker: queues, jobs, enqueue, DLQ inspection
 infra/terraform/   SQS + DLQ, ECS task, IAM, SSM, CloudWatch (validate only)
 artifacts/  spike/ v1/ v2/ efficiency/{baseline,optimized}/ investigations/ worker/
 docs/       design documents listed above; SUBMISSION.md and MANAGER_UPDATE.md are written in Phase 10

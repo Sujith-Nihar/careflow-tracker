@@ -14,7 +14,7 @@ Details: `ARCHITECTURE.md §1–2`.
 
 **Verify first.** The real Vogent function payload (`dial.inputs`, transcript snapshot); whether an
 `Equal` rule on a function output routes; function timeout/retry behavior; that a Playwright-driven
-browser can complete a call with injected audio. `VOGENT_PLAN.md §2`.
+browser can complete a call with injected audio. `VOGENT_PLAN.md §2b`.
 
 **Smallest outcome.** Scenarios A–D on real browser calls against V1 and V2, backend evidence with
 deterministic derivation, an investigation UI, two measured evaluation strategies, a local async worker
@@ -25,7 +25,7 @@ by replay; (3) real Vogent flows and voice evaluations. **Deferred:** request si
 organization switcher, LLM judge, CI, accessibility, live AWS, stretch scenarios (unverified transfer,
 off-policy request, mid-call intent switch).
 
-**Evidence that would change the plan.** `VOGENT_PLAN.md §2` (assumptions A1–A6 with fallbacks);
+**Evidence that would change the plan.** `VOGENT_PLAN.md §2b` (assumptions A1–A6 with fallbacks);
 harness gate in `EVALUATION_PLAN.md §5`; if V1 does not reproduce the failure on voice, report it.
 
 **Questions.** To the practice: where does today's "resolved" come from; callback turnaround and owner;
@@ -148,7 +148,7 @@ Why: R3, R4, R6; assumptions A1–A6.
 Dependencies: Gate A; `HUMAN_SETUP.md` C–D.
 Steps:
 1. `vogent/functions/*.json` (four) and `vogent/scripts/sync.py` (create/update functions with `apiPath`, print header instruction).
-2. Manual browser call from the Vogent UI on a throwaway one-node flow calling `transfer_triage` with `transfer=fail` registered by hand → capture payload to `artifacts/spike/function_payload.json`; record A1, A3, A6 findings in `VOGENT_PLAN.md §2`.
+2. Manual browser call from the Vogent UI on a throwaway one-node flow calling `transfer_triage` with `transfer=fail` registered by hand → capture payload to `artifacts/spike/function_payload.json`; record A1, A3, A6 findings in `VOGENT_PLAN.md §2b`.
 3. Timeout/retry probe (A4): env flag makes the stub sleep 8 s once; count events.
 4. `vogent/flows/v1.json`, `v2.json` per `VOGENT_PLAN.md §6–7`; `sync.py` creates both versioned prompts; `vogent/scripts/export.py` writes `vogent/export/`.
 5. Manual smoke call per version for scenario C's fault profile; confirm A2 (branching) on V2 and the unconditional path on V1; save both dial IDs.

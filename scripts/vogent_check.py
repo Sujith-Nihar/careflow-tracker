@@ -35,9 +35,7 @@ def main() -> int:
     for agent in agents:
         print(f"  {agent.get('id')}  {agent.get('name')}")
     if not agents:
-        print(
-            "  (none yet — vogent/scripts/sync.py creates the CareFlow agent in Phase 4)"
-        )
+        print("  (none yet — vogent/scripts/sync_flows.py creates the CareFlow agent)")
     return 0
 
 

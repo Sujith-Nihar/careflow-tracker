@@ -5,17 +5,28 @@ VENV := .venv
 PY := $(VENV)/bin/python
 PIP := $(VENV)/bin/pip
 PYTEST := $(VENV)/bin/pytest
+# Prefer the 3.12 binary by name; otherwise whatever `python3` is, which the rule
+# below checks is new enough. The package needs >= 3.12 (backend/pyproject.toml).
+PYTHON ?= $(shell command -v python3.12 2>/dev/null || command -v python3 2>/dev/null)
 
 help: ## list targets
 	@grep -hE '^[a-z0-9_-]+:.*?## ' $(MAKEFILE_LIST) | awk -F':.*?## ' '{printf "  %-16s %s\n", $$1, $$2}'
 
 $(VENV)/bin/python:
-	python3.12 -m venv $(VENV)
+	@test -n "$(PYTHON)" || { echo "no python3 on PATH; install Python 3.12 or newer"; exit 1; }
+	@$(PYTHON) -c 'import sys; sys.exit(0 if sys.version_info >= (3,12) else 1)' || \
+		{ echo "$(PYTHON) is $$($(PYTHON) -V); this project needs 3.12 or newer"; exit 1; }
+	$(PYTHON) -m venv $(VENV)
 	$(PIP) install -q --upgrade pip
 
 setup: $(VENV)/bin/python ## install backend deps (dev extras included)
 	$(PIP) install -q -e "backend[dev]"
-	@echo "backend deps installed. Frontend and eval deps are installed in their own phases."
+	@echo "backend deps installed. Frontend: make ui-install. Real voice runs: make setup-evals."
+
+setup-evals: $(VENV)/bin/python ## install Playwright and its Chromium, needed only by `make eval`
+	$(PIP) install -q -e "backend[evals]"
+	$(PY) -m playwright install chromium
+	@echo "playwright and chromium installed; 'make eval' can now drive browser calls."
 
 lint: ## static analysis over every Python source
 	$(VENV)/bin/ruff check backend evals vogent scripts
@@ -90,4 +101,4 @@ worker-demo: ## async path end to end: success, poisoned job, DLQ, log correlati
 secret-scan: ## fail if anything that looks like a credential is tracked by git
 	@scripts/secret_scan.sh
 
-.PHONY: help setup lint format typecheck-ui test test-cov db-check vogent-check migrate migrate-test reset-calls seed api api-restart tunnel replay eval structural ui ui-install worker-demo tf-validate secret-scan
+.PHONY: help setup setup-evals lint format typecheck-ui test test-cov db-check vogent-check migrate migrate-test reset-calls seed api api-restart tunnel replay eval structural ui ui-install worker-demo tf-validate secret-scan
