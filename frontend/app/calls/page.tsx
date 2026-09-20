@@ -130,6 +130,9 @@ export default async function CallsPage({
                   <th>What actually happened</th>
                   <th>What you should do</th>
                   <th>When</th>
+                  <th>
+                    <span className="sr-only">Open the call</span>
+                  </th>
                 </tr>
               </thead>
               <tbody>
@@ -187,6 +190,12 @@ export default async function CallsPage({
                               ? "in progress"
                               : "duration not recorded"}
                         </div>
+                      </td>
+                      <td className="row-open">
+                        <Link href={`/calls/${call.call_id}`} className="open-link">
+                          View evidence
+                          <span aria-hidden="true"> →</span>
+                        </Link>
                       </td>
                     </tr>
                   );
