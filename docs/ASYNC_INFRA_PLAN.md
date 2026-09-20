@@ -105,17 +105,35 @@ Terraform state, a plan output, or a pull request diff.
 | `ecs.tf` | Fargate task definition and service; secrets injected from SSM at start |
 | `logs.tf` | Log group with retention, and an alarm on the dead-letter queue being non-empty |
 | `outputs.tf` | Queue URLs, log group, and the Logs Insights query to trace a run |
+| `Dockerfile` (repo root) | The worker image: backend package, replay runner, scenarios. No browser |
 
 Deploy and tear down:
 
 ```bash
+# 1. Write the five settings as SSM SecureStrings. Values never enter Terraform.
+for n in database_url backend_url function_token webhook_token organization_id; do
+  aws ssm put-parameter --type SecureString --name "/careflow/dev/$n" --value "..."
+done
+
+# 2. Build and push the worker image.
+docker build -t careflow/worker:latest .
+docker tag careflow/worker:latest <account>.dkr.ecr.<region>.amazonaws.com/careflow/worker:latest
+docker push <account>.dkr.ecr.<region>.amazonaws.com/careflow/worker:latest
+
+# 3. Apply.
 cd infra/terraform
-cp terraform.tfvars.example terraform.tfvars   # fill in subnets, image, parameter names
+cp terraform.tfvars.example terraform.tfvars   # subnets, security group, image, parameter names
 terraform init
 terraform plan
 terraform apply
 terraform destroy      # removes every resource in this stack
 ```
+
+The worker needs all five settings, not three: it replays scenarios through the evidence
+API exactly as the local runner does, so it needs the organization id and the webhook
+token as well as the database URL, the API URL and the function token. Two prerequisites
+are outside this stack: a registry the account can pull the image from, and an evidence
+API reachable from the task's subnet.
 
 ## Not deployed
 
@@ -123,3 +141,9 @@ No AWS account was used. The definition is written and validated; it has never b
 applied, and no claim is made that it works against real AWS beyond what validation
 proves. The worker behaviour it describes is demonstrated locally and that evidence is
 in `artifacts/worker/`.
+
+The image is unbuilt for the same reason: Docker was not available on the machine this
+was written on. What was verified is narrower and worth stating exactly. The worker
+imports and starts from only the files the Dockerfile copies, with no `.env` present, and
+builds its evidence-API client from environment variables alone. That rules out a missing
+file and a missing setting. It does not prove the image builds.
