@@ -195,7 +195,14 @@ point (`request_id`, `organization_id`, `call_id`, `dial_id`, `action_execution_
 | `status.derived` | derivation computed for a call | `status`, `requires_staff_action`, `promise_mismatch` |
 | `evaluation.run.started` / `.completed` / `.failed` | runner or worker | `strategy`, `versioned_prompt_id`, `wall_seconds` |
 | `evaluation.case.completed` | one scenario finished | `mode`, `passed`, `connected_seconds`, `cost_usd` |
-| `worker.job.received` / `.failed` | worker | `job_id`, `receive_count` |
+| `worker.job.received` / `.completed` / `.failed` | worker | `job_id`, `receive_count` |
+| `request.rejected` | a 4xx the API meant to return: unknown route, wrong method, bad token | `reason_code`, `http_status` |
+| `request.failed` | an unhandled exception, answered as 500 | `error_type` |
+| `staff.action_recorded` | a staff member closed a callback | `kind` |
+
+The principal events are above; a few narrower ones exist alongside them
+(`action.duplicate_in_flight`, `call.transcript_scored`, `eval.dial_registered`,
+`worker.started`, `worker.idle`) and carry the same correlation fields.
 
 Never logged: function `params` free text, phone numbers, caller names, transcript text, tokens,
 API keys, full `dial` objects. Payloads are persisted in the database (synthetic), not in logs.

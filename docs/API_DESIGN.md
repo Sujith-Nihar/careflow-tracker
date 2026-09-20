@@ -37,7 +37,8 @@ Owner of: every HTTP contract the backend exposes. Three surfaces in one app: Vo
 | POST | `/api/evaluation-runs/<id>/cases` | Runner, worker | Record one scenario's outcome; upserts on `(run, scenario)` |
 | PATCH | `/api/evaluation-runs/<id>` | Runner, worker | Close the run as completed or failed |
 | GET | `/api/evaluation-runs/<id>` | UI (optional), reviewer | Run summary and cases |
-| GET | `/healthz` | anyone | DB connectivity, git SHA |
+| GET | `/healthz` | anyone | Liveness only: the process is up, plus the git SHA. Never touches the database, so the tunnel check and `make api-restart` stay honest when Postgres is the thing that is down |
+| GET | `/api/healthz` | anyone | Readiness: runs `SELECT 1`, returns 503 if the database is unreachable |
 
 ## 3. Vogent function endpoints
 

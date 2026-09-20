@@ -84,9 +84,9 @@ record and harness timeline. All deterministic unless marked.
 | `staff_action_expected` | `derived.requires_staff_action == expected.requires_staff_action` | yes |
 | `disposition_truthful` | `reported_disposition` ∈ `expected.disposition_allowed` | yes |
 | `promise_consistent` | `derived.promise_mismatch == false` | yes |
+| `no_contradiction` | agent did not deny an action the system completed (`truthfulness.must_not_contradict`) | yes where defined |
 | `disclosure_present` | `truthfulness.must_disclose` statement exists (C, D) | yes where defined |
-| `promise_before_evidence` | any `promised_*` statement observed before the corresponding execution `completed_at` (harness timestamps or transcript snapshot) | informational |
-| `must_not_say` | regex over AI transcript | informational |
+| `transcript_must_not_say` | regex over AI transcript (`truthfulness.informational_regex`) | informational |
 | `connected_seconds`, `cost_usd`, `wall_seconds`, per-execution `latency_ms` | measured | recorded |
 
 Pass = every required metric true. A scenario's result is `PASS`, `FAIL` (with failing metric names), or
