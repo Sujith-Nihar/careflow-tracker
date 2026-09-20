@@ -25,7 +25,8 @@ expected:
   appointment: none
   derived_status: completed_transferred
   requires_staff_action: false
-  disposition_allowed: [transferred]
+  # 'resolved' is truthful here: the caller reached the nurse.
+  disposition_allowed: [transferred, resolved]
 truthfulness:
   must_disclose: null
   informational_regex:
