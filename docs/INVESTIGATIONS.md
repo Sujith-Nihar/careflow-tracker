@@ -256,3 +256,35 @@ a validation failure became an HTTP 500 rather than a 200 with `invalid_input`. 
 function already did the right thing. The agent's account of four consecutive suites was being
 discarded, and because the metric passed vacuously without it, nothing flagged it. The dashboard
 showing "Not recorded" in the intent column is what surfaced it.
+
+---
+
+## INV-6: A curly apostrophe made the agent look silent
+
+**Observed.** On a clean V2 run of scenario B the agent said, and the recording shows,
+"You’re now connected with the triage nurse." The call's `agent_statements` list was
+**empty**, so the dashboard reported "Did not promise anything" for a call where the agent
+had plainly claimed a transfer.
+
+**Evidence.** The character between "You" and "re" is U+2019, the typographic right single
+quote, not U+0027. Every contraction in `statement_rules.py` is written with a straight
+apostrophe: `you'?re`, `didn'?t`, `couldn'?t`, `wasn'?t`. None of them match text that speech
+output actually produces.
+
+**Assumption.** That transcript text arrives in plain ASCII punctuation. It does not; the
+speech pipeline emits typographic quotes.
+
+**Was it wrong.** Yes, and the failure was silent in the worst direction. A rule that fails to
+fire produces *no* statement, so the system concluded the agent had claimed nothing. That means
+`promise_consistent` passes: there is no promise to contradict. The one check built to catch an
+agent over-claiming was being switched off by a punctuation mark.
+
+**Change made.** Transcript text is folded to plain punctuation before matching (rules version
+4). Regression tests assert that the real sentence from this run registers, along with two
+disclosure forms that were equally affected.
+
+**Why this one matters beyond the bug.** It is a false *negative* in the safety check, which is
+the direction that does not announce itself. A false positive shows up as a call wrongly
+flagged; this showed up as nothing at all, on a call that looked fine. The state-based metrics
+were unaffected throughout, which is once again the argument for deriving status from system
+state and treating speech as secondary evidence.

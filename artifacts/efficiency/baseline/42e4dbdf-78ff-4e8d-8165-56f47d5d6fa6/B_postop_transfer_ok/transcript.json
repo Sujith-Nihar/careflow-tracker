@@ -1,0 +1,82 @@
+[
+  {
+    "speaker": "AI",
+    "text": "Thanks for calling Demo Surgical Associates. Are you calling to schedule a routine appointment, or about a concern after a recent surgery?"
+  },
+  {
+    "speaker": "HUMAN",
+    "text": "I had surgery last week."
+  },
+  {
+    "speaker": "AI",
+    "text": ""
+  },
+  {
+    "speaker": "HUMAN",
+    "text": "I have a concern about my surgery wound."
+  },
+  {
+    "speaker": "AI",
+    "text": ""
+  },
+  {
+    "speaker": "AI",
+    "text": ""
+  },
+  {
+    "speaker": "AI",
+    "text": "I'm sorry to hear that. Can you tell me briefly what's happening?"
+  },
+  {
+    "speaker": "HUMAN",
+    "text": "It looks a bit red around the edges."
+  },
+  {
+    "speaker": "AI",
+    "text": ""
+  },
+  {
+    "speaker": "HUMAN",
+    "text": "My number is 5 5 5 5 5 5 0 1 0 2."
+  },
+  {
+    "speaker": "AI",
+    "text": ""
+  },
+  {
+    "speaker": "AI",
+    "text": ""
+  },
+  {
+    "speaker": "AI",
+    "text": ""
+  },
+  {
+    "speaker": "AI",
+    "text": ""
+  },
+  {
+    "speaker": "AI",
+    "text": ""
+  },
+  {
+    "speaker": "AI",
+    "text": ""
+  },
+  {
+    "speaker": "AI",
+    "text": ""
+  },
+  {
+    "speaker": "AI",
+    "text": ""
+  },
+  {
+    "speaker": "AI",
+    "text": "You\u2019re now connected with the triage nurse. Goodbye."
+  },
+  {
+    "speaker": "HUMAN",
+    "text": "My number is 5 5 5 5 5 5 0 1 0 2."
+  }
+]

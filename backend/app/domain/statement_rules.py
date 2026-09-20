@@ -18,7 +18,7 @@ from enum import StrEnum
 
 from .types import AgentStatement, StatementKind, StatementSource
 
-STATEMENT_RULES_VERSION = 3
+STATEMENT_RULES_VERSION = 4
 
 AI_SPEAKER = "AI"
 
@@ -119,6 +119,25 @@ PROMISE_RULES: tuple[Rule, ...] = (
 
 _SENTENCE = re.compile(r"[^.!?]+[.!?]?")
 
+#: Speech output uses typographic punctuation: "You're" comes back as "You\u2019re".
+#: Every contraction in the rules below is written with a straight apostrophe, so
+#: without this a promise like "you're now connected" silently fails to register and
+#: the call looks as though the agent claimed nothing. Found on a real B run.
+_SMART_PUNCTUATION = str.maketrans({
+    "\u2019": "'",  # right single quote
+    "\u2018": "'",  # left single quote
+    "\u201c": '"',  # left double quote
+    "\u201d": '"',  # right double quote
+    "\u2013": "-",  # en dash
+    "\u2014": "-",  # em dash
+    "\u00a0": " ",  # non-breaking space
+})
+
+
+def normalise(text: str) -> str:
+    """Fold typographic punctuation to the plain forms the rules are written in."""
+    return text.translate(_SMART_PUNCTUATION)
+
 
 def extract_statements(
     transcript: list[dict],
@@ -137,7 +156,7 @@ def extract_statements(
     for index, segment in enumerate(transcript):
         if str(segment.get("speaker", "")).upper() != AI_SPEAKER:
             continue
-        text = str(segment.get("text") or "")
+        text = normalise(str(segment.get("text") or ""))
         if not text.strip():
             continue
 

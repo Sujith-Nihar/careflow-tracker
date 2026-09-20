@@ -132,3 +132,21 @@ def test_offering_the_scheduler_is_not_a_promise_to_transfer_to_triage():
     assert StatementKind.PROMISED_TRANSFER not in kinds("I'll get you booked in.")
     # The real thing still registers.
     assert StatementKind.PROMISED_TRANSFER in kinds("I'm connecting you to our triage nurse now.")
+
+
+def test_typographic_apostrophes_do_not_hide_a_promise():
+    """Speech output uses curly quotes, and the rules are written with straight ones.
+
+    Observed on a real run: the agent said "You’re now connected with the triage
+    nurse" and no promise registered at all, so the call looked as though it had
+    claimed nothing. Any contraction in a rule was affected.
+    """
+    curly = "You’re now connected with the triage nurse. Goodbye."
+    assert StatementKind.PROMISED_TRANSFER in kinds(curly)
+
+    assert StatementKind.DISCLOSED_TRANSFER_FAILED in kinds(
+        "The transfer didn’t go through."
+    )
+    assert StatementKind.DISCLOSED_CALLBACK_FAILED in kinds(
+        "I couldn’t arrange a callback either."
+    )

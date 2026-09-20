@@ -58,6 +58,11 @@ ignore = [
 [tool.ruff.lint.per-file-ignores]
 # Fixture and default values that look like credentials to a scanner but are not:
 # test tokens, and the "actor" default on a staff action.
-"tests/*" = ["S105", "S106", "S107"]
+"tests/*" = [
+    "S105", "S106", "S107",
+    # Some tests exist precisely to prove that typographic punctuation is handled,
+    # so the ambiguous characters are the subject matter, not an accident.
+    "RUF001", "RUF002",
+]
 "app/api/*" = ["S107"]
 "app/persistence/*" = ["S107"]
