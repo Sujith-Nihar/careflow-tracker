@@ -8,8 +8,17 @@ truth. No transcript check can make a scenario pass on action state.
 from __future__ import annotations
 
 import re
+import sys
 from dataclasses import dataclass, field
+from pathlib import Path
 from typing import Any
+
+# The backend owns the punctuation folding rules; importing them keeps the
+# evaluator and the statement extractor from drifting apart on what counts as
+# the same sentence.
+sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "backend"))
+
+from app.domain.statement_rules import normalise
 
 from .scenarios import Scenario
 
@@ -179,7 +188,12 @@ def evaluate(
         for seg in (bundle.get("transcript") or {}).get("segments", [])
         if str(seg.get("speaker", "")).upper() == "AI"
     )
-    hits = [p for p in patterns if re.search(p, spoken, re.IGNORECASE)]
+    # Fold typographic punctuation first. A speech model writes a curly apostrophe,
+    # a scenario file is written with a straight one, and without this the check
+    # passes vacuously on the exact phrase it was written to catch (INV-6).
+    hits = [
+        p for p in patterns if re.search(normalise(p), normalise(spoken), re.IGNORECASE)
+    ]
     result.check("transcript_must_not_say", not hits, hits)
 
     if expected.get("callback_count") is not None:
