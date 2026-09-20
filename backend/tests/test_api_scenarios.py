@@ -379,8 +379,11 @@ def test_an_evaluation_run_and_its_cases_are_persisted(client, demo_org):
     recorded = client.post(
         f"/api/evaluation-runs/{run_id}/cases",
         json={
-            "scenario_id": "C_postop_transfer_fail_callback", "mode": "voice", "passed": True,
-            "metrics": {"derived_status_expected": True}, "connected_seconds": 30,
+            "scenario_id": "C_postop_transfer_fail_callback",
+            "mode": "voice",
+            "passed": True,
+            "metrics": {"derived_status_expected": True},
+            "connected_seconds": 30,
             "cost_usd": 0.045,
         },
         headers=headers,
@@ -390,8 +393,12 @@ def test_an_evaluation_run_and_its_cases_are_persisted(client, demo_org):
     # Recording the same scenario twice updates it rather than duplicating it.
     client.post(
         f"/api/evaluation-runs/{run_id}/cases",
-        json={"scenario_id": "C_postop_transfer_fail_callback", "mode": "voice", "passed": False,
-              "metrics": {}},
+        json={
+            "scenario_id": "C_postop_transfer_fail_callback",
+            "mode": "voice",
+            "passed": False,
+            "metrics": {},
+        },
         headers=headers,
     )
 
@@ -410,11 +417,10 @@ def test_an_evaluation_run_and_its_cases_are_persisted(client, demo_org):
 
 def test_another_practice_cannot_read_an_evaluation_run(client, demo_org, other_org):
     opened = client.post(
-        "/api/evaluation-runs", json={"strategy": "replay"},
+        "/api/evaluation-runs",
+        json={"strategy": "replay"},
         headers={"X-Organization-Id": demo_org},
     )
     run_id = opened.json["evaluation_run_id"]
-    denied = client.get(
-        f"/api/evaluation-runs/{run_id}", headers={"X-Organization-Id": other_org}
-    )
+    denied = client.get(f"/api/evaluation-runs/{run_id}", headers={"X-Organization-Id": other_org})
     assert denied.status_code == 404

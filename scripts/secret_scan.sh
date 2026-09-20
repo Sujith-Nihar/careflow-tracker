@@ -13,8 +13,10 @@ patterns=(
   'ngrok[_-]?auth?token[[:space:]]*[=:][[:space:]]*[A-Za-z0-9_]{20,}'
 )
 
-# Placeholders in the example file and docs are expected, not secrets.
-allow='(\.env\.example|docs/|README\.md|scripts/secret_scan\.sh)'
+# Only two files are exempt: the template of placeholders, and this script's own
+# patterns. Documentation is deliberately in scope, because a setup walkthrough is
+# the likeliest place for a real key to be pasted by accident.
+allow='(\.env\.example|scripts/secret_scan\.sh)'
 
 found=0
 for pattern in "${patterns[@]}"; do

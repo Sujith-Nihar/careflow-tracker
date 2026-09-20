@@ -338,14 +338,22 @@ def open_evaluation_run() -> Any:
     with transaction() as conn:
         principal = auth.from_organization_header(conn, request)
         run = repo.create_evaluation_run(
-            conn, organization_id=principal.organization_id, suite=body.suite,
-            strategy=body.strategy, versioned_prompt_id=body.versioned_prompt_id,
-            backend_git_sha=body.backend_git_sha, rate_usd_per_second=body.rate_usd_per_second,
-            rate_source=body.rate_source, cost_label=body.cost_label, job_id=body.job_id,
+            conn,
+            organization_id=principal.organization_id,
+            suite=body.suite,
+            strategy=body.strategy,
+            versioned_prompt_id=body.versioned_prompt_id,
+            backend_git_sha=body.backend_git_sha,
+            rate_usd_per_second=body.rate_usd_per_second,
+            rate_source=body.rate_source,
+            cost_label=body.cost_label,
+            job_id=body.job_id,
             run_id=body.run_id,
         )
         log.info(
-            "evaluation.run.started", evaluation_run_id=str(run["id"]), strategy=body.strategy,
+            "evaluation.run.started",
+            evaluation_run_id=str(run["id"]),
+            strategy=body.strategy,
             versioned_prompt_id=body.versioned_prompt_id,
         )
         return jsonify({"evaluation_run_id": str(run["id"])}), 201
@@ -362,16 +370,29 @@ def record_case(run_id: str) -> Any:
     with transaction() as conn:
         principal = auth.from_organization_header(conn, request)
         repo.record_evaluation_case(
-            conn, run_id=run_id, organization_id=principal.organization_id,
-            scenario_id=body.scenario_id, scenario_version=body.scenario_version,
-            mode=body.mode, passed=body.passed, metrics=body.metrics, dial_id=body.dial_id,
-            call_id=body.call_id, wall_seconds=body.wall_seconds,
-            connected_seconds=body.connected_seconds, cost_usd=body.cost_usd,
-            artifact_path=body.artifact_path, cache_key=body.cache_key,
+            conn,
+            run_id=run_id,
+            organization_id=principal.organization_id,
+            scenario_id=body.scenario_id,
+            scenario_version=body.scenario_version,
+            mode=body.mode,
+            passed=body.passed,
+            metrics=body.metrics,
+            dial_id=body.dial_id,
+            call_id=body.call_id,
+            wall_seconds=body.wall_seconds,
+            connected_seconds=body.connected_seconds,
+            cost_usd=body.cost_usd,
+            artifact_path=body.artifact_path,
+            cache_key=body.cache_key,
         )
         log.info(
-            "evaluation.case.completed", evaluation_run_id=run_id, scenario_id=body.scenario_id,
-            mode=body.mode, passed=bool(body.passed), connected_seconds=body.connected_seconds,
+            "evaluation.case.completed",
+            evaluation_run_id=run_id,
+            scenario_id=body.scenario_id,
+            mode=body.mode,
+            passed=bool(body.passed),
+            connected_seconds=body.connected_seconds,
         )
         return jsonify({"recorded": True}), 201
 
@@ -387,11 +408,16 @@ def close_run(run_id: str) -> Any:
     with transaction() as conn:
         principal = auth.from_organization_header(conn, request)
         repo.close_evaluation_run(
-            conn, run_id=run_id, organization_id=principal.organization_id,
-            status=body.status, wall_seconds=body.wall_seconds, error=body.error,
+            conn,
+            run_id=run_id,
+            organization_id=principal.organization_id,
+            status=body.status,
+            wall_seconds=body.wall_seconds,
+            error=body.error,
         )
         log.info(
-            f"evaluation.run.{body.status}", evaluation_run_id=run_id,
+            f"evaluation.run.{body.status}",
+            evaluation_run_id=run_id,
             wall_seconds=body.wall_seconds,
         )
         return jsonify({"closed": True}), 200

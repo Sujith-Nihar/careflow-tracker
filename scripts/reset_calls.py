@@ -39,7 +39,9 @@ KEPT = ["organizations", "agent_registrations"]
 
 def main() -> int:
     parser = argparse.ArgumentParser(description="Clear call and evaluation data")
-    parser.add_argument("--yes", action="store_true", help="skip the confirmation prompt")
+    parser.add_argument(
+        "--yes", action="store_true", help="skip the confirmation prompt"
+    )
     parser.add_argument("--schema", default="public")
     args = parser.parse_args()
 

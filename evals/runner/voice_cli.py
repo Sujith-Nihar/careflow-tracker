@@ -73,7 +73,9 @@ def main(argv: list[str] | None = None) -> int:
     # The run is persisted under the same id the artifacts use on disk, so a row in
     # the database and a directory of evidence are the same run.
     backend.open_run(
-        run_id=run_id, suite="careflow", strategy="naive_voice",
+        run_id=run_id,
+        suite="careflow",
+        strategy="naive_voice",
         versioned_prompt_id=versioned_prompt_id,
         rate_usd_per_second=DEFAULT_RATE_USD_PER_SECOND,
         rate_source="https://docs.vogent.ai/platform-overview/billing (read 2026-09-18)",
@@ -109,10 +111,17 @@ def main(argv: list[str] | None = None) -> int:
         )
         cases.append(case)
         backend.record_case(
-            run_id, scenario_id=case.scenario_id, scenario_version=case.scenario_version,
-            mode="voice", passed=case.passed, metrics=case.metrics, dial_id=case.dial_id,
-            call_id=case.call_id, wall_seconds=case.wall_seconds,
-            connected_seconds=case.connected_seconds, cost_usd=case.cost_usd,
+            run_id,
+            scenario_id=case.scenario_id,
+            scenario_version=case.scenario_version,
+            mode="voice",
+            passed=case.passed,
+            metrics=case.metrics,
+            dial_id=case.dial_id,
+            call_id=case.call_id,
+            wall_seconds=case.wall_seconds,
+            connected_seconds=case.connected_seconds,
+            cost_usd=case.cost_usd,
             artifact_path=case.artifact_path,
         )
         verdict = (

@@ -109,7 +109,9 @@ def run_voice_case(
     # Feed the fuller record to the backend so statements are scored from what was
     # actually said. It changes no action state: transcripts are evidence of speech.
     dial_record_early = _read_dial(vogent, dial.dial_id)
-    best_transcript = _most_complete(outcome.transcript, dial_record_early.get("transcript") or [])
+    best_transcript = _most_complete(
+        outcome.transcript, dial_record_early.get("transcript") or []
+    )
     if best_transcript:
         try:
             backend.send_webhook(
@@ -167,9 +169,11 @@ def _most_complete(browser: list[dict], vendor: list[dict]) -> list[dict]:
     def spoken(segments: list[dict]) -> int:
         return sum(len(str(s.get("text") or "")) for s in segments)
 
-    return browser if spoken(browser) >= spoken(vendor) else [
-        {"speaker": s.get("speaker"), "text": s.get("text")} for s in vendor
-    ]
+    return (
+        browser
+        if spoken(browser) >= spoken(vendor)
+        else [{"speaker": s.get("speaker"), "text": s.get("text")} for s in vendor]
+    )
 
 
 def _read_dial(vogent: VogentClient, dial_id: str, *, attempts: int = 8) -> dict:

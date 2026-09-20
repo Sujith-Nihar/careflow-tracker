@@ -144,9 +144,5 @@ def test_typographic_apostrophes_do_not_hide_a_promise():
     curly = "You’re now connected with the triage nurse. Goodbye."
     assert StatementKind.PROMISED_TRANSFER in kinds(curly)
 
-    assert StatementKind.DISCLOSED_TRANSFER_FAILED in kinds(
-        "The transfer didn’t go through."
-    )
-    assert StatementKind.DISCLOSED_CALLBACK_FAILED in kinds(
-        "I couldn’t arrange a callback either."
-    )
+    assert StatementKind.DISCLOSED_TRANSFER_FAILED in kinds("The transfer didn’t go through.")
+    assert StatementKind.DISCLOSED_CALLBACK_FAILED in kinds("I couldn’t arrange a callback either.")

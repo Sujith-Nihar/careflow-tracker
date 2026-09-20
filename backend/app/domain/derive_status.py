@@ -369,9 +369,7 @@ def _with_overlay(
         )
         and not connected
     ):
-        details.append(
-            "The agent told the caller they were being put through, and they were not."
-        )
+        details.append("The agent told the caller they were being put through, and they were not.")
     if (
         _promise_stands(
             evidence, StatementKind.PROMISED_CALLBACK, StatementKind.DISCLOSED_CALLBACK_FAILED
@@ -391,9 +389,7 @@ def _with_overlay(
         None,
     )
     if claim is not None and base.requires_staff_action:
-        details.append(
-            "The agent signed this call off as finished when it was not."
-        )
+        details.append("The agent signed this call off as finished when it was not.")
 
     if not details:
         return base

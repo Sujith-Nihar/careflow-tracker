@@ -93,7 +93,9 @@ class BackendClient:
         return body["evaluation_run_id"]
 
     def record_case(self, run_id: str, **fields) -> None:
-        self._json("POST", f"/api/evaluation-runs/{run_id}/cases", org=True, json=fields)
+        self._json(
+            "POST", f"/api/evaluation-runs/{run_id}/cases", org=True, json=fields
+        )
 
     def close_run(self, run_id: str, **fields) -> None:
         self._json("PATCH", f"/api/evaluation-runs/{run_id}", org=True, json=fields)
