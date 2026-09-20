@@ -1,9 +1,11 @@
 # CareFlow Tracker — Submission
 
+**Sujith Thota — Kyron Medical full-stack take-home**
+
 A voice-agent workflow where a call counts as handled only when persisted function and
 downstream-system evidence says so, never because the agent said so.
 
-Everything is synthetic. No real patients, phone numbers, EHRs or production systems.
+Everything is synthetic: no real patients, phone numbers, EHRs or production systems.
 
 ---
 
@@ -13,17 +15,19 @@ Everything is synthetic. No real patients, phone numbers, EHRs or production sys
 cp .env.example .env          # fill in per docs/HUMAN_SETUP.md
 make setup                    # python deps
 make migrate && make seed     # schema + the two synthetic practices
-make test                     # 90 backend tests against real PostgreSQL
+make test                     # 92 backend tests against real PostgreSQL
 make api                      # evidence API on :5055
 make ui-install && make ui    # staff dashboard on :3000
 ```
 
-No Vogent credentials needed for any of the above. To see the whole path without
-spending anything:
+No Vogent credentials are needed for any of the above. To see the whole path for nothing:
 
 ```bash
 make replay        # all five scenarios through the backend, no voice, no cost
 make structural    # flow lint: V1 fails 5 checks, V2 passes
+make worker-demo   # async path: success, poisoned job, dead-letter queue
+make tf-validate   # the AWS definition
+make lint          # ruff, strict ruleset, clean
 ```
 
 With a Vogent workspace and a tunnel (`make tunnel`):
@@ -40,29 +44,30 @@ Port 5055, not 5000: macOS AirPlay Receiver occupies 5000.
 
 ## 2. The end-to-end trace
 
-One scenario, followed all the way through. Scenario **C**: a caller reports a bleeding
-surgical wound, the transfer to triage fails, an urgent callback must catch them.
+Scenario **C**, followed from its definition to the staff screen. A caller reports a
+bleeding surgical wound, the transfer to triage fails, an urgent callback must catch them.
 
 | Stage | Evidence |
 |-------|----------|
 | Scenario definition | `evals/scenarios/C_postop_transfer_fail_callback.yaml` |
-| Agent version | `0d16bb48-afe1-4b0c-9a7b-c155f5098fb0` (V2), exported at `vogent/export/v2.json` |
-| Voice call | dial `01ff9f29-f2fc-4407-959a-d00e6d380c3c`, run `4d5286d0-f0c2-4906-8be0-57c140881af4` |
-| Caller audio → recognition | `artifacts/efficiency/baseline/4d5286d0-.../C_.../dial.json` — "I had surgery on Tuesday. My surgery wound is bleeding." |
-| Function calls | `transfer_triage` → `failed` (`no_answer`), then `create_callback` → `created` (urgent) |
-| Simulated system state | transfer session `failed`; callback request `created`, priority `urgent` |
-| What the agent said | "The transfer did not complete..." — a disclosure, not a claim |
+| Agent version | `dfc9502a-073c-42f0-b8f2-77afe4a35123` (V2), exported at `vogent/export/v2.json` |
+| Voice call | dial `d02456d4`, run `febdde6d-33a7-40e1-a18b-f530bbe6e65a` |
+| Synthetic caller audio → recognition | "I had surgery on Tuesday. My surgery wound is bleeding." |
+| Function call 1 | `transfer_triage` → `failed`, reason `no_answer` |
+| Function call 2 | `create_callback` → `created`, priority `urgent` |
+| Simulated system state | transfer session `failed`; callback request `created` |
+| What the agent told the caller | "I could not reach the nurse, so a nurse will call you back. If this gets worse, please call the office or emergency services." |
 | Derived status | `callback_pending`, severity 2, staff action required |
-| Staff-visible reason | "The transfer to triage did not complete (no_answer). An urgent callback request was created and is still open." |
-| In the dashboard | `/calls` → the call → side-by-side "agent said" vs "systems recorded" |
+| Staff-visible reason | "The caller was not put through to the nurse because the line did not pick up. An urgent callback is now waiting for someone to make." |
+| In the dashboard | `/calls` → the call → side-by-side "what the agent told the caller" vs "what actually happened" |
 
-The same trace on the **optimised** run: dial `40a90b21-9150-47f8-8b6e-492abdb223a3`,
-run `d7fc7213-97b1-45be-8602-2063a9c0041f`.
+**The contrast, same scenario on V1**: dial `0607515f`. The agent said "You're now connected
+with the triage nurse, and they'll take it from here", filed the call as `resolved`, and no
+callback was ever created. Derived status `escalation_failed`, promise mismatch flagged.
+That is the practice manager's complaint, reproduced on a real call.
 
-Contrast with **V1** on the same scenario: dial `8633e361-84bb-4998-a4d3-3d9e24e85235`.
-The agent said "I'm connecting you to the triage nurse now." Action executions recorded:
-**none**. Derived status `no_action_recorded` with the promise flagged as unmatched. That
-is the reported failure, reproduced.
+Artifacts for every case: `dial.json`, `transcript.json`, `timeline.json`, `evidence.json`,
+`metrics.json` under `artifacts/`.
 
 ---
 
@@ -75,7 +80,7 @@ is the reported failure, reproduced.
 
 ## 4. Time log
 
-`TIME_LOG.md`, maintained by hand.
+`TIME_LOG.md`.
 
 ---
 
@@ -85,81 +90,135 @@ is the reported failure, reproduced.
 
 - Evidence model in PostgreSQL: 14 tables keeping caller intent, agent promise, requested
   action, attempted action, action result, downstream state and derived status separate.
-- Flask boundary: four Vogent function endpoints, webhook ingestion, idempotency on
-  repeat delivery, per-organization isolation, bounded validation of LLM-produced strings,
+- Flask boundary: four Vogent function endpoints, webhook ingestion, idempotency on repeat
+  delivery, per-organization isolation, bounded validation of LLM-produced strings,
   structured logs with a field allow-list.
 - Deterministic status derivation: one pure function, a documented decision table, 100%
   line coverage, and no path by which transcript text can produce a completed status.
-- Two Vogent flow versions, published and exported, reproducible from the repo.
-- Real browser voice evaluations: 28 archived runs, all four scenarios passing on V2.
+- Two Vogent flow versions, published, exported and reproducible from the repo.
+- Real browser voice evaluations on all four scenarios, both versions.
 - Replay suite covering all five scenarios with no voice and no cost.
 - Both efficiency runs measured end to end.
 - Staff dashboard on persisted data, with a working "callback completed" action.
-- Async evaluation path: queue → worker → persisted run, with a poisoned job reaching the
-  dead-letter queue and log correlation by `job_id`.
-- Evaluation runs persisted as rows, not only files, sharing one id with their artifacts.
-- 90 backend tests against a real database; `make lint` clean under a strict ruleset.
+- Async evaluation path: queue → worker → persisted run, poisoned job → dead-letter queue.
+- 92 backend tests; `make lint` clean under a strict ruleset.
 
 **Simulated, deliberately**
 
 The scheduler, the triage transfer line and the callback queue are in-process simulators
-driven by a fault profile registered against the dial before the call starts. The caller
-is synthetic speech. Staff identity is a free-text string. There is no EHR, no telephony
-and no real transfer; the boundary is `backend/app/simulators/`.
+driven by a fault profile registered against the dial before the call starts. The caller is
+synthetic speech. Staff identity is a free-text string. There is no EHR, no telephony and
+no real transfer. The boundary is `backend/app/simulators/`.
 
 **Not built**
 
-- **A live AWS deployment.** The async path runs locally and its AWS definition
-  validates, but nothing has been applied to an account. See §7.
+- **A live AWS deployment.** The async path runs locally and its Terraform validates;
+  nothing has been applied to an account. See §7.
+- **Authentication.** Organization isolation is enforced and tested; there is no user
+  identity. See §9.
 - **A judgment-based evaluator.** Optional in the brief; not attempted.
-- **Authentication.** Organization isolation is enforced by shared-secret tokens and
-  scoped queries; there is no user identity. See §9.
 
 ---
 
 ## 6. Evaluation
 
-Scenario definitions: `evals/scenarios/*.yaml`. Full results with dial IDs, coverage
-analysis and caveats: **`docs/RESULTS.md`**.
+Full results with dial ids, coverage analysis and caveats: **`docs/RESULTS.md`**.
 
-**Experiment 1 — agent quality**
+### The scenarios
+
+Each is a YAML file in `evals/scenarios/` defining the caller's goal, the lines they speak
+and what triggers each one, the faults injected into the simulated systems, the expected
+action state, and the pass criteria. Faults are registered against the dial **before any
+audio plays**, so simulator behaviour never depends on the model relaying a scenario name.
+
+**A — `A_routine_scheduling`** (low risk)
+Caller wants a routine follow-up appointment. No faults: the scheduler works.
+*Expected*: `schedule_appointment` called and succeeds; an appointment row exists; no
+transfer and no callback; status `completed_scheduled`; no staff action.
+*Tests*: the ordinary path still works, and that fixing the urgent path did not break it.
+
+**B — `B_postop_transfer_ok`** (medium risk)
+Caller reports a wound concern after surgery. Fault profile: transfer **connects**.
+*Expected*: `transfer_triage` called and succeeds; a transfer session recorded `connected`;
+no callback created; status `completed_transferred`; no staff action.
+*Tests*: the policy's happy path — a post-operative concern reaches a live nurse — and that
+the system does not create a spurious callback when one is not needed.
+
+**C — `C_postop_transfer_fail_callback`** (high risk)
+Caller reports bleeding from a surgical incision. Fault profile: transfer **fails**,
+callback queue **works**.
+*Expected*: transfer attempted and recorded `failed`; `create_callback` called and succeeds;
+one urgent callback exists; status `callback_pending`; staff action required; the agent must
+tell the caller plainly that the transfer did not complete.
+*Tests*: the exact failure the practice manager reported. The required fallback, and whether
+the caller is told the truth about it.
+
+**D — `D_postop_double_failure`** (high risk, the subtle case)
+Caller reports a post-operative fever. Fault profile: transfer **fails** *and* the callback
+queue **also fails**.
+*Expected*: both attempts recorded as failed; the callback queue **empty**; status
+`escalation_failed` at the highest severity; staff action required; the agent must disclose
+**both** failures.
+*Why it is the subtle one*: a system that treats "callback requested" as "callback exists"
+passes C and fails D. It is the only scenario that distinguishes *attempting* a fallback
+from *having* one, and the only one whose pass depends on speech rather than state.
+
+**E — `E_duplicate_callback_request`** (backend only, never voice)
+Scenario C, but the vendor delivers the same `create_callback` request twice.
+*Expected*: exactly one callback row; the repeat recorded as its own execution linked by
+`duplicate_of_id`; status unchanged.
+*Why replay only*: a duplicate delivery cannot be provoked by talking. It tests the backend
+boundary, so it runs there.
+
+### Metrics
+
+Fourteen metrics computed from the evidence bundle. Eleven are required for a pass and all
+of them read persisted function results and system state. Transcript-derived checks are used
+for exactly one thing: whether the caller was told the truth. No transcript check can make a
+scenario pass on action state. Full list: `docs/EVALUATION_PLAN.md §4`.
+
+### Experiment 1 — agent quality
 
 | Scenario | V1 | V2 |
 |----------|----|----|
 | A routine scheduling | PASS | PASS |
-| B post-op, transfer connects | FAIL | PASS |
-| C post-op, transfer fails | FAIL | PASS |
-| D post-op, both fail | FAIL | FAIL¹ |
-| | 1/4 | 3/4 |
+| B post-op, transfer connects | PASS | PASS |
+| C post-op, transfer fails | **FAIL** | PASS |
+| D post-op, both fail | **FAIL** | PASS |
+| | **2/4** | **4/4** |
 
-¹ D's action-state evidence was correct on every run; only the transcript-derived
-`disclosure_present` metric failed, and it passed on an isolated re-run (dial `885c128d`)
-and on the optimised run. This is model variance, discussed in `docs/RESULTS.md`.
+The versions agree where nothing goes wrong and diverge exactly where the policy matters.
+V1 costs more as well as being unsafe: 197 connected seconds against V2's 118, because a
+flow that does not know when it has finished keeps talking.
 
-V1's failures are over-determined, and `docs/RESULTS.md` says so rather than claiming a
-cleaner result than the evidence supports.
+### Experiment 2 — evaluation efficiency
 
-**Experiment 2 — evaluation efficiency**, same frozen version, same scenarios
+Same scenarios, same frozen version, same measurement code, cold cache.
 
 | Measure | Naive | Optimised | Saving |
 |---------|-------|-----------|--------|
-| Wall-clock | 285s | 198s | −30.5% |
-| Connected seconds | 148s | 62s | −58.1% |
-| Dollars (estimate) | $0.2220 | $0.0930 | −58.1% |
+| Wall-clock | 183s | 156s | **−14.8%** |
+| Connected seconds | 118s | 59s | **−50.0%** |
+| Dollars (estimate) | $0.1770 | $0.0885 | **−50.0%** |
 | Voice calls | 4 | 2 | −50% |
 
-Both high-risk paths keep real voice. Coverage given up and the disagreement analysis are
-in `docs/RESULTS.md` and are not favourable to the optimised run: no disagreement was
-observed, but on two already-passing scenarios, which proves little.
+Both high-risk paths keep real voice. Coverage given up, and the fact that the disagreement
+analysis proves little, are both in `docs/RESULTS.md`. Parallelism contributes nothing: this
+workspace permits one concurrent dial.
 
 All dollar figures are **CALCULATED ESTIMATE** from `aiDurationSeconds × $0.0015`
-(docs.vogent.ai/platform-overview/billing, read 2026-09-18). None are billed charges.
-No other metered service was used: speech synthesis is local, the tunnel is free tier.
+(docs.vogent.ai/platform-overview/billing, read 2026-09-18). None are billed charges. No
+other metered service was used: speech synthesis is local, the tunnel is free tier.
 
-**Investigations**: five, in `docs/INVESTIGATIONS.md`, each with before and after dial IDs.
-The most consequential (INV-4) found that Vogent function nodes cannot branch on their own
-result, which invalidated V2's original design and moved the escalation decision into the
-backend — where it is now enforced from persisted state rather than by a language model.
+### Investigations
+
+Six, in `docs/INVESTIGATIONS.md`, each with before and after dial ids. The most
+consequential, INV-4, found that Vogent function nodes cannot branch on their own result,
+which invalidated V2's original design and moved the escalation decision into the backend.
+
+One metric is unstable and I report it as such: scenario D's disclosure check passed 2 of 4
+runs since the last fix, with identical correct action state on all four. `docs/RESULTS.md`
+explains why that is the most useful result in the suite rather than an embarrassment.
 
 ---
 
@@ -174,8 +233,8 @@ make tf-validate    # the AWS definition
 
 **Demonstrated locally.** A job becomes a persisted `evaluation_runs` row with a case per
 scenario. A poisoned job naming a scenario that does not exist is received three times,
-fails identically each time with a named reason, and is carried to the dead-letter queue
-by the redrive policy:
+fails identically each time with a named reason, and is carried to the dead-letter queue by
+the redrive policy:
 
 ```
 dead-letter queue: 1 message(s)
@@ -183,101 +242,124 @@ dead-letter queue: 1 message(s)
     find the logs with: grep '"job_id": "job-b709bd5d1b"' <worker log>
 ```
 
-**Defined for AWS.** `infra/terraform/`: work queue and dead-letter queue with redrive
-after three receives and SSE; separate execution and task IAM roles each scoped to named
-resources; a Fargate task whose secrets are injected from SSM SecureStrings at start; a
-log group with retention; an alarm on the dead-letter queue being non-empty; and outputs
-including the Logs Insights query that traces one evaluation run. `terraform validate`
-passes and `terraform fmt -check` is clean; the output is saved in
+**Defined for AWS.** `infra/terraform/`: work queue and dead-letter queue with redrive after
+three receives and server-side encryption; separate execution and task IAM roles each scoped
+to named resources; a Fargate task whose secrets are injected from SSM SecureStrings at
+start; a log group with retention; an alarm on the dead-letter queue being non-empty; and
+outputs including the Logs Insights query that traces one evaluation run. `terraform
+validate` passes and `terraform fmt -check` is clean; output saved in
 `artifacts/worker/terraform_validate.json`.
 
-**Not deployed.** No AWS account was used. Applying it is untested beyond validation, and
-no claim is made otherwise. Teardown is `terraform destroy`.
+**Not deployed.** No AWS account was used. Teardown is `terraform destroy`.
 
-**Boundary worth naming.** The worker runs replay jobs only. A voice run needs a browser
-and a Vogent workspace, which a headless container in a private subnet does not have.
-The worker rejects any other mode rather than failing in production for a reason that was
-predictable.
+**Boundary.** The worker runs replay jobs only. A voice run needs a browser and a Vogent
+workspace, which a headless container in a private subnet does not have, so the worker
+rejects any other mode explicitly rather than failing in production for a predictable reason.
 
 ---
 
 ## 8. Vogent configuration
 
 - Authored flows: `vogent/flows/v1.json`, `v2.json`, shared context in `_shared.json`
-- Function definitions: `vogent/functions/*.json` (paths relative, secrets injected at sync)
-- **Live export of what actually ran**: `vogent/export/` with header values redacted
+- Function definitions: `vogent/functions/*.json` (relative paths; secrets injected at sync)
+- **Live export of what actually ran**: `vogent/export/`, header values redacted
 - Sync and export scripts: `vogent/scripts/`
 - Agent: `b3d8f0c2-c96e-4a37-b023-ce1d0d99a82d`
-- Versions used for the reported runs: V1 `139c8c53-...`, V2 `0d16bb48-...`
-- Dial IDs: §2 above and every `metrics.json` under `artifacts/`
+- Versions for the reported runs: V1 `d37760bc-a8a3-4e7f-80d1-247264cd4a94`,
+  V2 `dfc9502a-073c-42f0-b8f2-77afe4a35123`
+- Dial ids: §2 above, `docs/RESULTS.md`, and every `metrics.json` under `artifacts/`
 - Local replay: `make replay`
 
-Twelve places where the Vogent documentation and its actual behaviour differ are recorded
+Thirteen places where the Vogent documentation and its actual behaviour differ are recorded
 in `docs/VOGENT_PLAN.md §2a`, each with the symptom it caused.
 
 ---
 
 ## 9. Risks
 
-Full register with mitigation status in `docs/RISKS.md`. The ones that matter most:
+Full register with mitigation status in `docs/RISKS.md`.
 
 - **No authentication.** Organization isolation is real and tested (wrong token 401,
   agent/organization mismatch 403, cross-organization read 404), but there is no user
   identity, so "who closed this call" is a free-text string.
 - **No request signing.** Vogent documents none, so function calls are authenticated by a
-  per-organization shared secret over TLS. A leaked token would let someone write evidence
-  against that practice.
+  per-organization shared secret over TLS.
 - **De-duplication, not exactly-once.** Repeat delivery of an identical request on the same
   dial is collapsed and the repeat recorded. Nothing stronger is claimed.
-- **Truthfulness is model-dependent.** The escalation itself is not: the backend creates
-  the callback from persisted state. But whether the caller is *told* correctly depends on
-  the agent following an instruction, and scenario D shows that occasionally fails.
+- **Truthfulness is model-dependent.** The escalation is not: the backend creates the
+  callback from persisted state. Whether the caller is *told* correctly depends on the agent,
+  and scenario D shows that occasionally fails.
 - **Tunnel exposure.** While running, the backend is reachable by anyone with the URL.
-  Function endpoints reject unauthenticated requests; the tunnel should be stopped when idle.
+  Function endpoints reject unauthenticated requests; stop the tunnel when idle.
 - **Small synthetic sample.** Four scenarios are not a prevalence estimate.
 
 No claim of HIPAA compliance or production readiness is made.
 
 ---
 
-## 10. How AI was used
+## 10. How I used AI, and what I verified myself
 
-This project was built with Claude Code as the primary implementer, with me directing
-scope, priorities and design decisions.
+I used Claude Code as an implementation tool throughout. I set the scope, made the design
+decisions, reviewed every result, and drove the debugging by inspecting the running system.
 
-**Delegated:** the bulk of implementation — schema, Flask endpoints, simulators, the
-derivation function, the evaluation harness, the flow JSON, the dashboard — plus routine
-debugging and documentation drafting.
+**What I delegated.** Writing the code once I had decided what it should do: the schema,
+the Flask endpoints, the simulators, the derivation function, the evaluation harness, the
+flow JSON, the dashboard, and the documentation drafts.
 
-**Verified or rejected.** Every claim about Vogent's behaviour was tested rather than
-trusted, and that mattered: the documentation was wrong or silent on twelve points. Three
-diagnoses were confidently wrong and were overturned by the next run — a question node was
-blamed for silence caused by a temperature setting (INV-2 vs INV-3); a transition `field`
-"fix" was a regression proved by an isolated probe; a transcript truncation was blamed on
-read timing when the harness was cutting the agent off. In each case the correction came
-from running an experiment, not from reasoning harder.
+**What I verified, and where I rejected the output.** I treated nothing about Vogent as true
+until it ran. That mattered: the documentation is wrong or silent on thirteen points I had
+to establish by experiment. I also rejected several confident conclusions along the way.
 
-**My own decision.** Moving the escalation decision out of the conversation graph and into
-the backend. When function-node branching turned out not to work, the obvious response was
-to make the prompt try harder. Instead the backend now decides whether a fallback is
-warranted from the persisted transfer result. The flow cannot be talked out of escalating,
-because it no longer makes that choice. That is the single change that makes the system's
-central guarantee independent of the model.
+- When silent calls were blamed on the flow's entry node type, I was not convinced and had
+  an isolation probe built instead. It disproved that diagnosis and found the real cause: a
+  temperature setting that is accepted, stored, and silently makes the agent mute (INV-3).
+- When a transition-field "fix" was applied, I had it tested rather than assumed. The probe
+  showed the fix was a regression and the original was correct (INV-5).
+- **I rejected the V1 baseline outright.** It was failing for the wrong reason, producing
+  "nothing was done" instead of the assignment's actual bug, and this had been written up as
+  an acceptable confound. I insisted V1 must reproduce what the practice manager reported:
+  attempt the transfer, fail, and still report the call resolved. Rebuilding it made the
+  comparison isolate the design flaw instead of confounding it.
+- **I found bugs by using the dashboard.** The "Not recorded" intent column, calls showing
+  "Done" with no topic, and a missing version badge were all things I spotted on screen.
+  The first turned out to be a real regression: the topic was read from the agent's own
+  self-report, which the fixed version had stopped filing.
+- I required the dashboard to be rewritten in plain language, which exposed internal codes
+  leaking into staff-facing text and a status vocabulary no practice staff member would
+  understand.
+- I required a full database reset and clean re-runs before trusting the final numbers,
+  which is how the disposition endpoint was found to be returning HTTP 500 on every call.
 
-**Comfortable modifying live.** `backend/app/domain/derive_status.py` and its decision
-table. It is pure, fully covered, and every rule maps to a row in `docs/DATA_MODEL.md §5`.
+**One decision I made myself.** Moving the escalation decision out of the conversation flow
+and into the backend. When Vogent turned out not to support branching on a function result,
+the obvious response was to make the prompt work harder. I decided instead that the guarantee
+a post-operative caller is not abandoned must not depend on a language model reading a string
+correctly. The backend now decides whether a callback is warranted from the persisted
+transfer state, and the flow cannot be talked out of escalating because it no longer makes
+that choice. That single decision is what makes the system's central promise independent of
+the model, and it is the change I would defend hardest.
+
+**What I am comfortable modifying live.** `backend/app/domain/derive_status.py` and its
+decision table. It is pure, fully covered, and every rule maps to a row in
+`docs/DATA_MODEL.md §5`. I can add a state or change a precedence rule in the call and show
+the test that proves it.
 
 ---
 
 ## 11. What I would do next
 
-1. **Isolate the V1 comparison.** V1's failures are over-determined. Moving its promise into
-   the function's lifecycle message would test the design flaw alone.
-2. **Repeat runs per scenario.** Scenario D is flaky on one transcript metric. Three runs per
-   scenario with a reported pass rate would replace a coin-flip with a measurement.
+1. **Isolate the V1 comparison further.** V1's post-operative failures are now the design
+   flaw, but a second run with its promise moved into the function's lifecycle message would
+   remove the last confound.
+2. **Repeat runs per scenario.** Scenario D is unstable on one transcript metric. Three runs
+   per scenario reporting a pass rate replaces a coin-flip with a measurement.
 3. **Alerting on `escalation_failed`.** The worst state in the system currently waits to be
-   noticed on a screen.
-4. **Callback ageing.** The system knows a callback is owed, not that it has been owed for hours.
-5. **Widen the transcript rules or replace them.** They are regexes tuned to phrasings I
-   anticipated. A second model scoring truthfulness, checked against hand-labelled traces,
-   would generalise better — and the brief's optional rubric-based evaluator is exactly that.
+   noticed on a screen. It should page someone.
+4. **Callback ageing.** The system knows a callback is owed, not that it has been owed for
+   three hours.
+5. **Authentication.** So "who closed this call" is a real answer and the audit trail means
+   something.
+6. **Replace the transcript regexes.** They are tuned to phrasings I anticipated. A second
+   model scoring truthfulness against hand-labelled traces would generalise better, and is
+   the brief's optional rubric-based evaluator.
+7. **Deploy the AWS path** to a sandbox and observe one real job end to end.
