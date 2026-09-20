@@ -47,6 +47,19 @@ const SAID: Record<string, { text: string; icon: string }> = {
   disclosed_scheduling_failed: { text: "Admitted the booking was not confirmed", icon: "✓" },
 };
 
+/** How each attempt went, in words rather than result codes. */
+const ATTEMPT_RESULT: Record<string, string> = {
+  connected: "connected",
+  no_answer: "no answer",
+  busy: "busy",
+  timeout: "timed out",
+  accepted_unconfirmed: "accepted but unconfirmed",
+  booked: "booked",
+  created: "created",
+  rejected: "refused",
+  unavailable: "unavailable",
+};
+
 /** Failure codes belong in logs. On screen they become a phrase. */
 const WHY_NO_TRANSFER: Record<string, string> = {
   no_answer: "nobody picked up",
@@ -295,8 +308,13 @@ export default async function CallDetailPage({ params }: { params: Promise<{ cal
                     </td>
                     <td className="muted num">
                       {(e.attempts ?? [])
-                        .map((a) => `#${a.attempt_no} ${a.result} ${a.latency_ms}ms`)
-                        .join(", ") || "—"}
+                        .map(
+                          (a) =>
+                            `try ${a.attempt_no}: ${
+                              ATTEMPT_RESULT[a.result] ?? a.result.replace(/_/g, " ")
+                            }, ${a.latency_ms}ms`,
+                        )
+                        .join(" · ") || "—"}
                     </td>
                     <td className="mono">{e.downstream_ref ?? "—"}</td>
                     <td className="muted num">
