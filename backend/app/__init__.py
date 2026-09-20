@@ -5,6 +5,7 @@ from __future__ import annotations
 import uuid
 
 from flask import Flask, g, jsonify, request
+from werkzeug.exceptions import HTTPException
 
 from .config import settings
 from .observability.logging import bind, clear, configure, get_logger
@@ -18,10 +19,11 @@ def create_app() -> Flask:
 
     app = Flask(__name__)
 
-    from .api.auth import AuthError
+    from .api.errors import RequestError
     from .api.evidence import bp as evidence_bp
     from .api.vogent_functions import bp as functions_bp
     from .api.vogent_webhooks import bp as webhooks_bp
+    from .persistence.repositories import CrossOrganizationAccess
 
     app.register_blueprint(functions_bp)
     app.register_blueprint(webhooks_bp)
@@ -38,11 +40,25 @@ def create_app() -> Flask:
         response.headers["X-Request-Id"] = g.get("request_id", "")
         return response
 
-    @app.errorhandler(AuthError)
-    def _auth_error(exc: AuthError):
-        # Log the reason, never the presented token.
+    @app.errorhandler(RequestError)
+    def _request_error(exc: RequestError):
+        # Log the reason, never the presented token or the body that failed to parse.
         log.info("vogent.function.rejected", reason_code=exc.reason, http_status=exc.status)
         return jsonify({"error": exc.reason, "request_id": g.get("request_id")}), exc.status
+
+    @app.errorhandler(CrossOrganizationAccess)
+    def _cross_organization(exc: CrossOrganizationAccess):
+        # Refusing another practice's dial is a correct answer, not a server fault.
+        log.info("request.rejected", reason_code="organization_mismatch", http_status=403)
+        return jsonify({"error": "organization_mismatch", "request_id": g.get("request_id")}), 403
+
+    @app.errorhandler(HTTPException)
+    def _http_error(exc: HTTPException):
+        # Flask's own 404s and 405s are answers, not failures; the catch-all below
+        # would otherwise turn every unknown route into a 500.
+        status = exc.code or 500
+        log.info("request.rejected", reason_code=exc.name, http_status=status)
+        return jsonify({"error": exc.name, "request_id": g.get("request_id")}), status
 
     @app.errorhandler(Exception)
     def _unhandled(exc: Exception):

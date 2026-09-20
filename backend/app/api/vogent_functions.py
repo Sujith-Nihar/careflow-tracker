@@ -21,6 +21,7 @@ from ..services.actions import rejected_action, run_action
 from ..simulators import callback_queue, scheduler, triage_line
 from ..simulators.base import Clock, SimulatorResult
 from . import auth
+from .errors import RequestError
 from .schemas import (
     CreateCallbackParams,
     FunctionEnvelope,
@@ -49,7 +50,16 @@ def _open_call(
 
 
 def _envelope() -> FunctionEnvelope:
-    return FunctionEnvelope.model_validate(request.get_json(silent=True) or {})
+    """Parse the outer envelope, or reject the request.
+
+    Params are parsed leniently further in, because a speech model producing an odd
+    value is expected and recoverable. The envelope is different: with no dial_id
+    there is no call to attach anything to, so there is nothing to recover.
+    """
+    try:
+        return FunctionEnvelope.model_validate(request.get_json(silent=True) or {})
+    except ValidationError:
+        raise RequestError(400, "malformed_envelope") from None
 
 
 def _finish(conn: psycopg.Connection, call: dict, principal: auth.Principal, body: dict) -> Any:
@@ -400,12 +410,21 @@ def report_disposition() -> Any:
         except ValidationError:
             # Unreadable, but the agent still tried to file an account of the call.
             # Record the attempt rather than losing it behind a 500.
-            return _finish(conn, call, principal, rejected_action(
-                conn, organization_id=principal.organization_id, call=call,
-                dial_id=envelope.dial_id, kind="report_disposition", params=envelope.params,
-                request_id=g.get("request_id"),
-                agent_message="",
-            ))
+            return _finish(
+                conn,
+                call,
+                principal,
+                rejected_action(
+                    conn,
+                    organization_id=principal.organization_id,
+                    call=call,
+                    dial_id=envelope.dial_id,
+                    kind="report_disposition",
+                    params=envelope.params,
+                    request_id=g.get("request_id"),
+                    agent_message="",
+                ),
+            )
 
         def simulate(_profile: dict) -> SimulatorResult:
             from ..domain.types import ActionOutcome

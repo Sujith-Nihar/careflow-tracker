@@ -8,7 +8,7 @@ from __future__ import annotations
 
 import pytest
 
-from tests.helpers import bundle_for, call_function, dial_id, register_dial
+from tests.helpers import DEMO_FUNCTION_TOKEN, bundle_for, call_function, dial_id, register_dial
 
 pytestmark = pytest.mark.db
 
@@ -193,9 +193,16 @@ def test_a_disposition_report_is_never_lost_to_a_validation_error(client, demo_o
     """
     dial = dial_id()
     register_dial(client, demo_org, dial, "loose_disposition", {}, "routine_scheduling")
-    response = call_function(client, "report_disposition", dial, {
-        "category": "routine", "disposition": "booked", "summary": "all done",
-    })
+    response = call_function(
+        client,
+        "report_disposition",
+        dial,
+        {
+            "category": "routine",
+            "disposition": "booked",
+            "summary": "all done",
+        },
+    )
     assert response.status_code == 200
     assert response.json["status"] == "recorded"
 
@@ -209,11 +216,40 @@ def test_an_unreadable_disposition_falls_back_to_the_least_flattering_reading(cl
     """A garbled report must never be read as a success."""
     dial = dial_id()
     register_dial(client, demo_org, dial, "garbled_disposition", {}, "routine_scheduling")
-    response = call_function(client, "report_disposition", dial, {
-        "category": "%%%", "disposition": "%%%",
-    })
+    response = call_function(
+        client,
+        "report_disposition",
+        dial,
+        {
+            "category": "%%%",
+            "disposition": "%%%",
+        },
+    )
     assert response.status_code == 200
 
     bundle = bundle_for(client, demo_org, dial)
     claim = next(s for s in bundle["agent_statements"] if s["kind"] == "reported_disposition")
     assert claim["disposition"] == "unresolved"
+
+
+def test_a_body_with_no_dial_id_is_a_client_error_not_a_server_error(client):
+    """A malformed envelope is the one shape that cannot be recovered.
+
+    Params are parsed leniently, because a speech model producing an odd value is
+    expected. An envelope without a dial id is different: there is no call to attach
+    anything to, and answering 500 would tell Vogent to retry a request that can
+    never succeed.
+    """
+    response = client.post(
+        "/vogent/functions/transfer_triage",
+        json={"params": {"patient_ref": "PT"}},
+        headers={"X-CareFlow-Token": DEMO_FUNCTION_TOKEN},
+    )
+    assert response.status_code == 400
+    assert response.json["error"] == "malformed_envelope"
+
+
+def test_an_unknown_route_stays_a_404(client):
+    """The catch-all handler used to turn Flask's own 404 into a 500."""
+    assert client.get("/vogent/functions/does_not_exist").status_code == 404
+    assert client.delete("/healthz").status_code == 405

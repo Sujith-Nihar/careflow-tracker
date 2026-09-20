@@ -13,16 +13,14 @@ import psycopg
 from flask import Request
 
 from ..persistence import repositories as repo
+from .errors import RequestError
 
 FUNCTION_TOKEN_HEADER = "X-CareFlow-Token"  # noqa: S105 - a header name, not a secret
 ORGANIZATION_HEADER = "X-Organization-Id"
 
 
-class AuthError(Exception):
-    def __init__(self, status: int, reason: str) -> None:
-        super().__init__(reason)
-        self.status = status
-        self.reason = reason
+class AuthError(RequestError):
+    """The request did not prove which organization it belongs to."""
 
 
 @dataclass(frozen=True, slots=True)
