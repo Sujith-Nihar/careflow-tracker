@@ -79,7 +79,7 @@
       "name": "Tell the caller the real booking outcome",
       "type": "freeform",
       "nodeData": {
-        "prompt": "The scheduler result was: {{node.book.status}}. If that value is exactly 'booked', read back exactly what it confirmed: {{node.book.agent_message}}. Otherwise tell the caller plainly that you could not confirm a booking and that the office will call them back. Never say an appointment exists unless the value is exactly 'booked'. Say this once and then move on immediately. Do not wait for the caller to reply, do not ask a question, and do not repeat yourself."
+        "prompt": "The scheduler result was: {{node.book.status}}. If that value is exactly 'booked', read back what it confirmed: {{node.book.agent_message}}, then say goodbye and end the call. Otherwise say plainly that you could not confirm a booking and that the office will call them back, then say goodbye and end the call. Never say an appointment exists unless the value is exactly 'booked'. Do not ask any further questions and do not continue the conversation."
       },
       "transitionRules": []
     },
@@ -174,7 +174,7 @@
       "name": "Tell the caller what actually happened",
       "type": "freeform",
       "nodeData": {
-        "prompt": "Two results were recorded for this caller. The transfer result was: {{node.transfer.status}}. The callback result was: {{node.urgent_callback.status}}. Tell the caller the truth about both, in at most two short sentences, using these rules. If the transfer result is exactly 'connected', say they are now connected with the triage nurse and say nothing about a callback. Otherwise say plainly that the transfer did not complete. Then, if the callback result is exactly 'created', say a nurse will call them back on the number they gave and that they should call the office line or emergency services if their symptoms get worse. If the callback result is anything else, say plainly that you could not arrange a callback either and that they should call the office directly, or emergency services if this is an emergency. Never say they were transferred unless the transfer result is exactly 'connected'. Never say anyone will call them back unless the callback result is exactly 'created'. Then say goodbye and end the call."
+        "prompt": "Two results were recorded. Transfer: {{node.transfer.status}}. Callback: {{node.urgent_callback.status}}. Say exactly one of the following three, then say goodbye and end the call.\n\nCASE 1 - transfer is 'connected': say they are now connected with the triage nurse. Say nothing about a callback.\n\nCASE 2 - transfer is not 'connected' and callback is 'created': say two things. First, that the transfer did not go through. Second, that a nurse will call them back on the number they gave, and that if their symptoms get worse they should call the office or emergency services.\n\nCASE 3 - transfer is not 'connected' and callback is anything other than 'created': say two separate things and do not omit either. First, that the transfer did not go through. Second, that you could not arrange a callback either. Then tell them to call the office directly, or emergency services if this is an emergency.\n\nNever say they were transferred unless the transfer result is exactly 'connected'. Never say anyone will call them back unless the callback result is exactly 'created'."
       },
       "transitionRules": []
     },
@@ -226,7 +226,7 @@
       "name": "Tell the caller whether a callback exists",
       "type": "freeform",
       "nodeData": {
-        "prompt": "The callback result was: {{node.unsupported_callback.status}}. If that value is exactly 'created', tell the caller someone from the office will call them back. Otherwise tell them plainly that you could not arrange a callback and that they should call the office directly. Never say anyone will call them unless the value is exactly 'created'. Then say goodbye and end the call."
+        "prompt": "The callback result was: {{node.unsupported_callback.status}}. If that value is exactly 'created', say someone from the office will call them back. Otherwise say plainly that you could not arrange a callback and that they should call the office directly. Never say anyone will call them unless the value is exactly 'created'. Then say goodbye and end the call."
       },
       "transitionRules": []
     }

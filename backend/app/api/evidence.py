@@ -14,7 +14,7 @@ from flask import Blueprint, g, jsonify, request
 from pydantic import ValidationError
 
 from ..config import settings
-from ..domain.derive_status import derive_status
+from ..domain.derive_status import derive_status, observed_intent
 from ..observability.logging import bind, get_logger
 from ..persistence import repositories as repo
 from ..persistence.db import query_one, transaction
@@ -110,6 +110,9 @@ def list_calls() -> Any:
                     "ended_at": _iso(row["ended_at"]),
                     "connected_seconds": row["connected_seconds"],
                     "agent_classified_intent": row["agent_classified_intent"],
+                    "observed_intent": (
+                        str(observed_intent(evidence)) if observed_intent(evidence) else None
+                    ),
                     "derived": as_dict(derived),
                 }
             )
@@ -185,6 +188,10 @@ def get_call(call_id: str) -> Any:
                     "system_result_type": row["system_result_type"],
                 },
                 "intent": {
+                    # What the actions show, and separately what the agent claimed.
+                    "observed": (
+                        str(observed_intent(evidence)) if observed_intent(evidence) else None
+                    ),
                     "agent_classified": row["agent_classified_intent"],
                     "true_intent": row["true_intent"],
                 },

@@ -143,7 +143,7 @@ export default async function CallsPage({
                       </td>
                       <td>
                         <div className="cell-strong">
-                          {intentLabel(call.agent_classified_intent)}
+                          {intentLabel(call.observed_intent ?? call.agent_classified_intent)}
                         </div>
                         <div className="cell-sub">
                           {call.agent_version && (

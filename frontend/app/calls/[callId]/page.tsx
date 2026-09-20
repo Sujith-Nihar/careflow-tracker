@@ -151,7 +151,7 @@ export default async function CallDetailPage({ params }: { params: Promise<{ cal
       </Link>
 
       <div className="page-head">
-        <h1>{intentLabel(detail.intent.agent_classified)}</h1>
+        <h1>{intentLabel(detail.intent.observed ?? detail.intent.agent_classified)}</h1>
         <p className="lede">
           {d ? STATUS_MEANING[d.status] ?? statusLabel(d.status) : "No status derived."}
         </p>

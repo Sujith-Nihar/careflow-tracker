@@ -1,0 +1,104 @@
+{
+  "scenario_id": "A_routine_scheduling",
+  "scenario_version": 1,
+  "version": "v1",
+  "versioned_prompt_id": "3a3909d3-4b7c-450d-94ce-443e738532e9",
+  "dial_id": "538ac50d-302a-43ae-bdd7-757b4b14c776",
+  "evaluation_run_id": "c40756f2-76e4-47a9-901a-b4be28bc54f2",
+  "call_id": "f50c4305-8435-4e81-aa2b-0e91281385b8",
+  "passed": true,
+  "failures": [],
+  "metrics": {
+    "call_completed": {
+      "ok": true,
+      "detail": "USER_HANGUP"
+    },
+    "intent_correct": {
+      "ok": true,
+      "detail": {
+        "invoked": [
+          "schedule_appointment",
+          "report_disposition"
+        ],
+        "agent_classified": "routine_scheduling"
+      }
+    },
+    "required_executions_present": {
+      "ok": true,
+      "detail": {
+        "expected": [
+          "schedule_appointment"
+        ],
+        "actual": [
+          "schedule_appointment",
+          "report_disposition"
+        ]
+      }
+    },
+    "no_unexpected_executions": {
+      "ok": true,
+      "detail": []
+    },
+    "fault_reflected": {
+      "ok": true,
+      "detail": {
+        "transfers": [],
+        "callbacks": []
+      }
+    },
+    "fallback_correct": true,
+    "no_false_success": true,
+    "derived_status_expected": {
+      "ok": true,
+      "detail": {
+        "expected": "completed_scheduled",
+        "actual": "completed_scheduled"
+      }
+    },
+    "staff_action_expected": {
+      "ok": true,
+      "detail": {
+        "expected": false,
+        "actual": false
+      }
+    },
+    "disposition_truthful": {
+      "ok": true,
+      "detail": {
+        "allowed": [
+          "resolved",
+          "scheduled"
+        ],
+        "reported": [
+          "resolved"
+        ]
+      }
+    },
+    "promise_consistent": {
+      "ok": true,
+      "detail": []
+    },
+    "no_contradiction": {
+      "ok": true,
+      "detail": []
+    },
+    "disclosure_present": true,
+    "transcript_must_not_say": {
+      "ok": true,
+      "detail": []
+    }
+  },
+  "derived_status": "completed_scheduled",
+  "requires_staff_action": false,
+  "promise_mismatch": false,
+  "started_at": "2026-09-20T00:42:14.435512Z",
+  "ended_at": "2026-09-20T00:42:43.318444Z",
+  "wall_seconds": 44.97,
+  "connected_seconds": 28,
+  "cost_usd": 0.042,
+  "cost_label": "CALCULATED_ESTIMATE",
+  "system_result_type": "USER_HANGUP",
+  "turns_taken": 2,
+  "error": null,
+  "artifact_path": null
+}

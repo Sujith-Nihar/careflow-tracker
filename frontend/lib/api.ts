@@ -33,6 +33,8 @@ export type CallSummary = {
   ended_at: string | null;
   connected_seconds: number | null;
   agent_classified_intent: string | null;
+  /** The topic judged from the actions taken, which outranks the agent's own label. */
+  observed_intent: string | null;
   derived: Derived;
 };
 
@@ -73,7 +75,11 @@ export type CallDetail = {
     connected_seconds: number | null;
     system_result_type: string | null;
   };
-  intent: { agent_classified: string | null; true_intent: string | null };
+  intent: {
+    observed: string | null;
+    agent_classified: string | null;
+    true_intent: string | null;
+  };
   agent_statements: Statement[];
   action_executions: Execution[];
   downstream: {

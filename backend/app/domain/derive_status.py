@@ -57,6 +57,22 @@ def _attempted(executions: list[ActionExecution], kind: ActionKind) -> list[Acti
     ]
 
 
+def observed_intent(evidence: CallEvidence) -> Intent | None:
+    """What the caller wanted, judged by what the agent actually did.
+
+    Preferred over the agent's own classification for the same reason completion is:
+    an action taken is evidence, a self-report is a claim. Falls back to the claim
+    only when no action was taken at all, which is exactly when there is nothing
+    better to go on.
+    """
+    executions = _primary(evidence.action_executions)
+    if _attempted(executions, ActionKind.TRANSFER_TRIAGE):
+        return Intent.POST_OPERATIVE_CONCERN
+    if _attempted(executions, ActionKind.SCHEDULE_APPOINTMENT):
+        return Intent.ROUTINE_SCHEDULING
+    return evidence.call.agent_classified_intent
+
+
 def derive_status(evidence: CallEvidence) -> DerivedStatus:
     """Return the staff-visible status for one call, with its justification."""
     executions = _primary(evidence.action_executions)
