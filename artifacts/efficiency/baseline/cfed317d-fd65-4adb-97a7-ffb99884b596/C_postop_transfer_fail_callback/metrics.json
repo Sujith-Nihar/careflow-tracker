@@ -1,0 +1,115 @@
+{
+  "scenario_id": "C_postop_transfer_fail_callback",
+  "scenario_version": 1,
+  "version": "v2",
+  "versioned_prompt_id": "6bd05539-c01c-44f8-86a2-b642591e5c07",
+  "dial_id": "327dfff9-f634-438c-a5b5-b79a51e22ced",
+  "evaluation_run_id": "cfed317d-fd65-4adb-97a7-ffb99884b596",
+  "call_id": "645bccc7-a5a6-4adf-a0d1-e7447781d9a8",
+  "passed": false,
+  "failures": [
+    "disposition_truthful"
+  ],
+  "metrics": {
+    "call_completed": {
+      "ok": true,
+      "detail": "USER_HANGUP"
+    },
+    "intent_correct": {
+      "ok": true,
+      "detail": {
+        "invoked": [
+          "transfer_triage",
+          "create_callback",
+          "report_disposition"
+        ],
+        "agent_classified": "post_operative_concern"
+      }
+    },
+    "required_executions_present": {
+      "ok": true,
+      "detail": {
+        "expected": [
+          "transfer_triage",
+          "create_callback"
+        ],
+        "actual": [
+          "transfer_triage",
+          "create_callback",
+          "report_disposition"
+        ]
+      }
+    },
+    "no_unexpected_executions": {
+      "ok": true,
+      "detail": []
+    },
+    "fault_reflected": {
+      "ok": true,
+      "detail": {
+        "transfers": [
+          "failed"
+        ],
+        "callbacks": [
+          "created"
+        ]
+      }
+    },
+    "fallback_correct": true,
+    "no_false_success": true,
+    "derived_status_expected": {
+      "ok": true,
+      "detail": {
+        "expected": "callback_pending",
+        "actual": "callback_pending"
+      }
+    },
+    "staff_action_expected": {
+      "ok": true,
+      "detail": {
+        "expected": true,
+        "actual": true
+      }
+    },
+    "disposition_truthful": {
+      "ok": false,
+      "detail": {
+        "allowed": [
+          "callback_pending"
+        ],
+        "reported": [
+          "escalation_failed"
+        ]
+      }
+    },
+    "promise_consistent": {
+      "ok": true,
+      "detail": []
+    },
+    "no_contradiction": {
+      "ok": true,
+      "detail": []
+    },
+    "disclosure_present": {
+      "ok": true,
+      "detail": "disclosed_transfer_failed"
+    },
+    "transcript_must_not_say": {
+      "ok": true,
+      "detail": []
+    }
+  },
+  "derived_status": "callback_pending",
+  "requires_staff_action": true,
+  "promise_mismatch": false,
+  "started_at": "2026-09-20T00:19:24.606867Z",
+  "ended_at": "2026-09-20T00:19:57.945538Z",
+  "wall_seconds": 49.02,
+  "connected_seconds": 33,
+  "cost_usd": 0.0495,
+  "cost_label": "CALCULATED_ESTIMATE",
+  "system_result_type": "USER_HANGUP",
+  "turns_taken": 2,
+  "error": null,
+  "artifact_path": null
+}

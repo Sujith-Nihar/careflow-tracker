@@ -1,0 +1,62 @@
+[
+  {
+    "speaker": "AI",
+    "text": "Thanks for calling Demo Surgical Associates. Are you calling to schedule a routine appointment, or about a concern after a recent surgery?"
+  },
+  {
+    "speaker": "HUMAN",
+    "text": "I would like to make a routine appointment, please."
+  },
+  {
+    "speaker": "AI",
+    "text": ""
+  },
+  {
+    "speaker": "AI",
+    "text": ""
+  },
+  {
+    "speaker": "AI",
+    "text": "Which day would you like to come in?"
+  },
+  {
+    "speaker": "HUMAN",
+    "text": "Next Tuesday would work well for me."
+  },
+  {
+    "speaker": "AI",
+    "text": ""
+  },
+  {
+    "speaker": "AI",
+    "text": ""
+  },
+  {
+    "speaker": "AI",
+    "text": ""
+  },
+  {
+    "speaker": "AI",
+    "text": ""
+  },
+  {
+    "speaker": "AI",
+    "text": ""
+  },
+  {
+    "speaker": "AI",
+    "text": ""
+  },
+  {
+    "speaker": "AI",
+    "text": "Booked for Tuesday 29 September at 10:00 AM."
+  },
+  {
+    "speaker": "HUMAN",
+    "text": "I would like to make a routine appointment, please."
+  },
+  {
+    "speaker": "AI",
+    "text": "Which day would you like to come in?"
+  }
+]

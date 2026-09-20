@@ -1,0 +1,299 @@
+{
+  "action_executions": [
+    {
+      "attempts": [
+        {
+          "attempt_no": 1,
+          "latency_ms": 301,
+          "result": "connected"
+        }
+      ],
+      "completed_at": "2026-09-20T00:18:56.159115+00:00",
+      "downstream_ref": "725fcaa9-990a-45a4-9eff-9b3e70684b2c",
+      "duplicate_of_id": null,
+      "id": "42ee70dd-1d96-41ac-8988-7b8bcdd8419f",
+      "kind": "transfer_triage",
+      "outcome": "succeeded",
+      "request_payload": {
+        "callback_phone": "5555550102",
+        "concern_summary": "It looks a bit red around the edges.",
+        "patient_ref": "PT-SYN-0002"
+      },
+      "requested_at": "2026-09-20T00:18:56.159115+00:00",
+      "response_payload": {
+        "agent_message": "Connected to the triage nurse.",
+        "status": "connected",
+        "transfer_session_id": "725fcaa9-990a-45a4-9eff-9b3e70684b2c"
+      }
+    },
+    {
+      "attempts": [],
+      "completed_at": "2026-09-20T00:18:58.515228+00:00",
+      "downstream_ref": null,
+      "duplicate_of_id": null,
+      "id": "273ff029-4aff-4195-91f8-2f54af611a8b",
+      "kind": "create_callback",
+      "outcome": "not_applicable",
+      "request_payload": {
+        "callback_phone": "+15555550102",
+        "patient_ref": "",
+        "priority": "urgent",
+        "reason_code": "transfer_failed"
+      },
+      "requested_at": "2026-09-20T00:18:58.515228+00:00",
+      "response_payload": {
+        "agent_message": "No callback is needed; the caller reached the triage nurse.",
+        "status": "not_needed"
+      }
+    },
+    {
+      "attempts": [],
+      "completed_at": "2026-09-20T00:19:01.014862+00:00",
+      "downstream_ref": null,
+      "duplicate_of_id": null,
+      "id": "74574fa2-4014-4dc0-911b-9662a9f27673",
+      "kind": "report_disposition",
+      "outcome": "succeeded",
+      "request_payload": {
+        "category": "post_operative_concern",
+        "disposition": "escalation_failed",
+        "summary": "Transfer connected, callback not_needed."
+      },
+      "requested_at": "2026-09-20T00:19:01.014862+00:00",
+      "response_payload": {
+        "agent_message": "",
+        "status": "recorded"
+      }
+    }
+  ],
+  "agent_statements": [
+    {
+      "disposition": null,
+      "evidence_text": "You're now connected with the triage nurse.",
+      "kind": "promised_transfer",
+      "observed_at": "2026-09-20T00:19:08.752677+00:00",
+      "sequence_no": 0,
+      "source": "transcript_rule"
+    },
+    {
+      "disposition": null,
+      "evidence_text": "You're now connected with the triage nurse.",
+      "kind": "promised_transfer",
+      "observed_at": "2026-09-20T00:19:08.758907+00:00",
+      "sequence_no": 0,
+      "source": "transcript_rule"
+    },
+    {
+      "disposition": null,
+      "evidence_text": "You're now connected with the triage nurse.",
+      "kind": "promised_transfer",
+      "observed_at": "2026-09-20T00:19:08.992046+00:00",
+      "sequence_no": 0,
+      "source": "transcript_rule"
+    },
+    {
+      "disposition": "escalation_failed",
+      "evidence_text": "Transfer connected, callback not_needed.",
+      "kind": "reported_disposition",
+      "observed_at": "2026-09-20T00:19:01.014862+00:00",
+      "sequence_no": 1000,
+      "source": "function_param"
+    }
+  ],
+  "call": {
+    "connected_seconds": 39,
+    "dial_id": "dc266b18-51b2-4203-950c-ec14d6f345e8",
+    "ended_at": "2026-09-20T00:19:08.736321+00:00",
+    "evaluation_run_id": "cfed317d-fd65-4adb-97a7-ffb99884b596",
+    "id": "924850c1-457f-41f0-b7a7-96fa0e6aeef9",
+    "lifecycle": "ended",
+    "scenario_id": "B_postop_transfer_ok",
+    "started_at": "2026-09-20T00:18:29.086793+00:00",
+    "system_result_type": "USER_HANGUP",
+    "versioned_prompt_id": "6bd05539-c01c-44f8-86a2-b642591e5c07",
+    "vogent_agent_id": "b3d8f0c2-c96e-4a37-b023-ce1d0d99a82d"
+  },
+  "derived": {
+    "evidence_refs": {
+      "transfer_execution_id": "42ee70dd-1d96-41ac-8988-7b8bcdd8419f",
+      "transfer_session_id": "725fcaa9-990a-45a4-9eff-9b3e70684b2c"
+    },
+    "mismatch_details": [],
+    "next_step": "No further action.",
+    "promise_mismatch": false,
+    "reason": "The caller was put through to the nurse and the line confirmed it.",
+    "requires_staff_action": false,
+    "severity": 0,
+    "status": "completed_transferred"
+  },
+  "downstream": {
+    "appointments": [],
+    "callback_requests": [],
+    "transfer_sessions": [
+      {
+        "action_execution_id": "42ee70dd-1d96-41ac-8988-7b8bcdd8419f",
+        "failure_reason": null,
+        "id": "725fcaa9-990a-45a4-9eff-9b3e70684b2c",
+        "status": "connected"
+      }
+    ]
+  },
+  "intent": {
+    "agent_classified": "post_operative_concern",
+    "true_intent": "post_operative_concern"
+  },
+  "staff_actions": [],
+  "transcript": {
+    "authoritative": false,
+    "note": "Shows what was said, not what happened.",
+    "segments": [
+      {
+        "detailType": null,
+        "endTimeMs": 8340,
+        "speaker": "AI",
+        "startTimeMs": 660,
+        "text": "Thanks for calling Demo Surgical Associates. Are you calling to schedule a routine appointment, or about a concern after a recent surgery?"
+      },
+      {
+        "detailType": null,
+        "endTimeMs": 14580,
+        "speaker": "HUMAN",
+        "startTimeMs": 10350,
+        "text": "I had surgery last week. I have a concern about my surgery wound."
+      },
+      {
+        "detailType": "node-transition",
+        "functionCallId": "call_HePXsvMRuk0jCMS3vUGgVEMr",
+        "nodeTransition": {
+          "toNodeId": "collect_concern",
+          "transitionData": {
+            "answer": "post_op"
+          }
+        },
+        "speaker": "AI",
+        "text": ""
+      },
+      {
+        "detailType": null,
+        "endTimeMs": 19688,
+        "speaker": "AI",
+        "startTimeMs": 15880,
+        "text": "I'm sorry to hear that. Can you tell me briefly what's"
+      },
+      {
+        "detailType": null,
+        "endTimeMs": 24830,
+        "speaker": "HUMAN",
+        "startTimeMs": 17970,
+        "text": "It looks a bit red around the edges. My number is 5 5 5 5 5 5 0 1 0 2."
+      },
+      {
+        "detailType": "node-transition",
+        "functionCallId": "call_tyBBUuwtDQUdFITiVQhJCm7N",
+        "nodeTransition": {
+          "toNodeId": "collect_phone",
+          "transitionData": {
+            "answer": "It looks a bit red around the edges."
+          }
+        },
+        "speaker": "AI",
+        "text": ""
+      },
+      {
+        "detailType": "node-transition",
+        "functionCallId": "call_taWLvrAkcoUR4dqb4l3KecVH",
+        "nodeTransition": {
+          "toNodeId": "transfer",
+          "transitionData": {
+            "answer": "5555550102"
+          }
+        },
+        "speaker": "AI",
+        "text": ""
+      },
+      {
+        "detailType": null,
+        "functionCalls": [
+          {
+            "args": "{\"callback_phone\":\"5555550102\",\"concern_summary\":\"It looks a bit red around the edges.\"}",
+            "functionCallId": "087ef7ce-8eb9-4c34-adf7-871ab9b13f7d",
+            "name": "Attempt transfer to triage"
+          }
+        ],
+        "speaker": "AI",
+        "text": ""
+      },
+      {
+        "detailType": "node-transition",
+        "functionCallId": "call_taWLvrAkcoUR4dqb4l3KecVH",
+        "nodeTransition": {
+          "toNodeId": "urgent_callback",
+          "transitionData": {
+            "agent_message": "Connected to the triage nurse.",
+            "status": "connected",
+            "transfer_session_id": "725fcaa9-990a-45a4-9eff-9b3e70684b2c"
+          }
+        },
+        "speaker": "AI",
+        "text": ""
+      },
+      {
+        "detailType": null,
+        "functionCalls": [
+          {
+            "args": "{\"callback_phone\":\"5555550102\",\"priority\":\"urgent\",\"reason_code\":\"transfer_failed\"}",
+            "functionCallId": "8ccf682c-4ef7-4852-b21a-a7ee14d9b3cc",
+            "name": "Queue an urgent callback"
+          }
+        ],
+        "speaker": "AI",
+        "text": ""
+      },
+      {
+        "detailType": "node-transition",
+        "functionCallId": "call_taWLvrAkcoUR4dqb4l3KecVH",
+        "nodeTransition": {
+          "toNodeId": "disposition_from_evidence",
+          "transitionData": {
+            "agent_message": "No callback is needed; the caller reached the triage nurse.",
+            "status": "not_needed"
+          }
+        },
+        "speaker": "AI",
+        "text": ""
+      },
+      {
+        "detailType": null,
+        "functionCalls": [
+          {
+            "args": "{\"category\":\"post_operative_concern\",\"disposition\":\"transferred when connected is connected, otherwise callback_pending when not_needed is created, otherwise escalation_failed\",\"summary\":\"Transfer connected, callback not_needed.\"}",
+            "functionCallId": "2f01a970-0379-4965-8f28-36c33788728b",
+            "name": "Report the disposition the evidence supports"
+          }
+        ],
+        "speaker": "AI",
+        "text": ""
+      },
+      {
+        "detailType": "node-transition",
+        "functionCallId": "call_taWLvrAkcoUR4dqb4l3KecVH",
+        "nodeTransition": {
+          "toNodeId": "callback_outcome_notice",
+          "transitionData": {
+            "agent_message": "",
+            "status": "recorded"
+          }
+        },
+        "speaker": "AI",
+        "text": ""
+      },
+      {
+        "detailType": null,
+        "endTimeMs": 38900,
+        "speaker": "AI",
+        "startTimeMs": 35860,
+        "text": "You're now connected with the triage nurse. Goodbye."
+      }
+    ]
+  }
+}

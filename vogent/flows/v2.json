@@ -1,6 +1,6 @@
 {
   "version_name": "careflow-v2-evidence-aware",
-  "note": "V2 - evidence-aware. Vogent function nodes cannot branch on a function result (INVESTIGATIONS.md INV-4), so the graph after a function call is linear and every spoken line reads the real result through {{node.<id>.status}}. The escalation decision itself lives in the backend, which holds the authoritative transfer state: the flow always asks for a callback after a transfer attempt and the backend returns 'not_needed' when the transfer actually connected. Compare with v1.json: same intake, same functions, same policy; V1 never consults a result.",
+  "note": "V2 - evidence-aware. Function nodes cannot branch on a function result and a function input value is a template rather than a prompt (INVESTIGATIONS.md INV-4, INV-5), so V2's post-function path is linear and it does not file a self-reported disposition at all: it has no way to choose the right one, and a wrong one would be worse than none. Every spoken line reads the real result through {{node.<id>.status}}, and the escalation decision lives in the backend, which holds the authoritative transfer state. Compare with v1.json: same intake, same functions, same policy; V1 files 'resolved' whatever happened.",
   "nodes": [
     {
       "id": "greet_intake",
@@ -70,7 +70,7 @@
       "transitionRules": [
         {
           "conditionType": "always",
-          "transitionNodeId": "disposition_scheduled"
+          "transitionNodeId": "close_scheduled"
         }
       ]
     },
@@ -165,7 +165,7 @@
       "transitionRules": [
         {
           "conditionType": "always",
-          "transitionNodeId": "disposition_from_evidence"
+          "transitionNodeId": "callback_outcome_notice"
         }
       ]
     },
@@ -217,94 +217,7 @@
       "transitionRules": [
         {
           "conditionType": "always",
-          "transitionNodeId": "disposition_unresolved"
-        }
-      ]
-    },
-    {
-      "id": "disposition_scheduled",
-      "name": "Report scheduled",
-      "type": "function",
-      "nodeData": {
-        "functionId": "__report_disposition__",
-        "inputs": [
-          {
-            "name": "category",
-            "value": "routine_scheduling"
-          },
-          {
-            "name": "disposition",
-            "value": "scheduled when {{node.book.status}} is booked, otherwise unresolved"
-          },
-          {
-            "name": "summary",
-            "value": "Scheduler returned {{node.book.status}}."
-          }
-        ],
-        "outputs": "__outputs.report_disposition__"
-      },
-      "transitionRules": [
-        {
-          "conditionType": "always",
-          "transitionNodeId": "close_scheduled"
-        }
-      ]
-    },
-    {
-      "id": "disposition_unresolved",
-      "name": "Report unresolved",
-      "type": "function",
-      "nodeData": {
-        "functionId": "__report_disposition__",
-        "inputs": [
-          {
-            "name": "category",
-            "value": "other"
-          },
-          {
-            "name": "disposition",
-            "value": "unresolved"
-          },
-          {
-            "name": "summary",
-            "value": "Request was outside the supported workflow and was routed to a person."
-          }
-        ],
-        "outputs": "__outputs.report_disposition__"
-      },
-      "transitionRules": [
-        {
-          "conditionType": "always",
           "transitionNodeId": "unsupported_notice"
-        }
-      ]
-    },
-    {
-      "id": "disposition_from_evidence",
-      "name": "Report the disposition the evidence supports",
-      "type": "function",
-      "nodeData": {
-        "functionId": "__report_disposition__",
-        "inputs": [
-          {
-            "name": "category",
-            "value": "post_operative_concern"
-          },
-          {
-            "name": "disposition",
-            "value": "transferred when {{node.transfer.status}} is connected, otherwise callback_pending when {{node.urgent_callback.status}} is created, otherwise escalation_failed"
-          },
-          {
-            "name": "summary",
-            "value": "Transfer {{node.transfer.status}}, callback {{node.urgent_callback.status}}."
-          }
-        ],
-        "outputs": "__outputs.report_disposition__"
-      },
-      "transitionRules": [
-        {
-          "conditionType": "always",
-          "transitionNodeId": "callback_outcome_notice"
         }
       ]
     },

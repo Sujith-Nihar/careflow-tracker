@@ -206,3 +206,53 @@ because no metric compared the agent's claim about the booking against the booki
 state metrics are sound; the truthfulness coverage was thinner than intended on the scheduling path,
 where only the post-operative scenarios had a required `must_disclose`. That is a real weakness in my
 own suite, found by reading a transcript on a passing run.
+
+---
+
+## INV-5: A function input value is a template, not a prompt
+
+**Observed.** With `report_disposition` finally recording (it had been returning 500 on every
+call, see below), the definitive V2 run scored 0 of 4 on `disposition_truthful` while every
+derived status was correct.
+
+| Scenario | Derived status | Agent filed | Summary it filed alongside |
+|----------|----------------|-------------|-----------------------------|
+| A | `completed_scheduled` | `unresolved` | "Scheduler returned booked." |
+| B | `completed_transferred` | `escalation_failed` | "Transfer connected, callback not_needed." |
+| C | `callback_pending` | `escalation_failed` | "Transfer failed, callback created." |
+| D | `escalation_failed` | `escalation_failed` | "Transfer failed, callback failed." |
+
+**Evidence.** The `summary` field is free text and resolved perfectly every time: "Transfer
+connected, callback not_needed" is exactly right. So `{{node.<id>.status}}` substitution works.
+The `disposition` field carried a rule — *"transferred when {{node.transfer.status}} is
+connected, otherwise callback_pending when ... is created, otherwise escalation_failed"* — and
+the model never evaluated it. Vogent substituted the values and passed the sentence through as
+literal text.
+
+**Assumption.** That a function input value is a place the model reasons, the way a node prompt
+is. It is not: it is a template. Substitution happens; evaluation does not.
+
+**Was it wrong.** Yes, and my parser made it worse. It scanned the resulting sentence for any
+term it recognised, longest first, so "…otherwise escalation_failed" always won and A's sentence
+matched `unresolved` ahead of `scheduled`. A flow bug was being converted into a plausible wrong
+answer instead of an obvious one. The parser is now strict: an exact term or a known alias, and
+nothing else.
+
+**Change made.** V2 no longer files a disposition at all. Its graph is linear, because function
+nodes cannot branch on their own result (INV-4), so it has no way to choose the right one — and
+a confidently wrong disposition is worse than none, since the disposition is precisely the
+"agent's claim" half of the comparison this project is built on.
+
+V2's claim is now what it actually told the caller, read from the recording. That is the more
+meaningful claim anyway: it is what the patient heard. V1 keeps its disposition node, because
+V1's value is the fixed literal `resolved` and needs no evaluation — filing "resolved" whatever
+happened *is* the reported bug.
+
+`disposition_truthful` now reports **not applicable** when no disposition was filed, rather than
+passing. A metric that passes because its input is missing looks like coverage and is not.
+
+**Found on the way.** `report_disposition` was the one function route with no error handling, so
+a validation failure became an HTTP 500 rather than a 200 with `invalid_input`. Every other
+function already did the right thing. The agent's account of four consecutive suites was being
+discarded, and because the metric passed vacuously without it, nothing flagged it. The dashboard
+showing "Not recorded" in the intent column is what surfaced it.

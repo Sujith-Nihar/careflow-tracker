@@ -113,29 +113,20 @@ _DISPOSITION_ALIASES = {
 
 
 def _normalise(value: Any, aliases: dict[str, str], allowed: set[str], fallback: str) -> Any:
-    """Recognise the shorthand a flow or a model produces, else fall back.
+    """Recognise the shorthand a flow legitimately sends, else fall back.
 
-    A disposition report is the agent's own account of the call, and that account is
-    the thing we compare against the evidence. Rejecting it because the wording
-    differs would lose the claim entirely, which is worse than reading it loosely.
-    The fallback is always the least flattering option, so a garbled report can never
-    be read as a success.
+    Deliberately strict: an exact term or a known alias, nothing else. An earlier
+    version scanned a sentence for any term it recognised, which turned a flow bug
+    into a plausible-looking wrong answer rather than an obvious one. The fallback is
+    always the least flattering option, so an unreadable report can never be read as
+    a success.
     """
     if not isinstance(value, str):
         return value
     text = value.strip().lower().replace(" ", "_").replace("-", "_")
     if text in allowed:
         return text
-    if text in aliases:
-        return aliases[text]
-    # The model sometimes answers in a sentence rather than a bare term.
-    for term in sorted(allowed, key=len, reverse=True):
-        if term in text:
-            return term
-    for alias, target in sorted(aliases.items(), key=lambda kv: -len(kv[0])):
-        if alias in text:
-            return target
-    return fallback
+    return aliases.get(text, fallback)
 
 
 class ReportDispositionParams(Strict):

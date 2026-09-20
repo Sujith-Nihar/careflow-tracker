@@ -124,7 +124,7 @@
             "arrayConditionType": null,
             "conditionType": "always",
             "field": null,
-            "transitionNodeId": "disposition_scheduled",
+            "transitionNodeId": "close_scheduled",
             "value": null,
             "values": null
           }
@@ -301,7 +301,7 @@
             "arrayConditionType": null,
             "conditionType": "always",
             "field": null,
-            "transitionNodeId": "disposition_from_evidence",
+            "transitionNodeId": "callback_outcome_notice",
             "value": null,
             "values": null
           }
@@ -392,139 +392,7 @@
             "arrayConditionType": null,
             "conditionType": "always",
             "field": null,
-            "transitionNodeId": "disposition_unresolved",
-            "value": null,
-            "values": null
-          }
-        ],
-        "type": "function"
-      },
-      {
-        "id": "disposition_scheduled",
-        "name": "Report scheduled",
-        "nodeData": {
-          "functionId": "d04a30e7-4fc4-49ba-b4a7-7ed4a2de646d",
-          "includeTranscript": false,
-          "inputs": [
-            {
-              "name": "category",
-              "value": "routine_scheduling"
-            },
-            {
-              "name": "disposition",
-              "value": "scheduled when {{node.book.status}} is booked, otherwise unresolved"
-            },
-            {
-              "name": "summary",
-              "value": "Scheduler returned {{node.book.status}}."
-            }
-          ],
-          "outputs": [
-            {
-              "customFieldJsonSchema": null,
-              "customFieldTs": null,
-              "description": "recorded",
-              "name": "status",
-              "nullable": false,
-              "type": "STRING"
-            }
-          ]
-        },
-        "outputSchema": "{\"properties\":{\"status\":{\"additionalProperties\":false,\"type\":\"string\",\"description\":\"recorded\"}},\"additionalProperties\":false,\"type\":\"object\",\"required\":[\"status\"]}",
-        "transitionRules": [
-          {
-            "arrayConditionType": null,
-            "conditionType": "always",
-            "field": null,
-            "transitionNodeId": "close_scheduled",
-            "value": null,
-            "values": null
-          }
-        ],
-        "type": "function"
-      },
-      {
-        "id": "disposition_unresolved",
-        "name": "Report unresolved",
-        "nodeData": {
-          "functionId": "d04a30e7-4fc4-49ba-b4a7-7ed4a2de646d",
-          "includeTranscript": false,
-          "inputs": [
-            {
-              "name": "category",
-              "value": "other"
-            },
-            {
-              "name": "disposition",
-              "value": "unresolved"
-            },
-            {
-              "name": "summary",
-              "value": "Request was outside the supported workflow and was routed to a person."
-            }
-          ],
-          "outputs": [
-            {
-              "customFieldJsonSchema": null,
-              "customFieldTs": null,
-              "description": "recorded",
-              "name": "status",
-              "nullable": false,
-              "type": "STRING"
-            }
-          ]
-        },
-        "outputSchema": "{\"properties\":{\"status\":{\"additionalProperties\":false,\"type\":\"string\",\"description\":\"recorded\"}},\"additionalProperties\":false,\"type\":\"object\",\"required\":[\"status\"]}",
-        "transitionRules": [
-          {
-            "arrayConditionType": null,
-            "conditionType": "always",
-            "field": null,
             "transitionNodeId": "unsupported_notice",
-            "value": null,
-            "values": null
-          }
-        ],
-        "type": "function"
-      },
-      {
-        "id": "disposition_from_evidence",
-        "name": "Report the disposition the evidence supports",
-        "nodeData": {
-          "functionId": "d04a30e7-4fc4-49ba-b4a7-7ed4a2de646d",
-          "includeTranscript": false,
-          "inputs": [
-            {
-              "name": "category",
-              "value": "post_operative_concern"
-            },
-            {
-              "name": "disposition",
-              "value": "transferred when {{node.transfer.status}} is connected, otherwise callback_pending when {{node.urgent_callback.status}} is created, otherwise escalation_failed"
-            },
-            {
-              "name": "summary",
-              "value": "Transfer {{node.transfer.status}}, callback {{node.urgent_callback.status}}."
-            }
-          ],
-          "outputs": [
-            {
-              "customFieldJsonSchema": null,
-              "customFieldTs": null,
-              "description": "recorded",
-              "name": "status",
-              "nullable": false,
-              "type": "STRING"
-            }
-          ]
-        },
-        "outputSchema": "{\"properties\":{\"status\":{\"additionalProperties\":false,\"type\":\"string\",\"description\":\"recorded\"}},\"additionalProperties\":false,\"type\":\"object\",\"required\":[\"status\"]}",
-        "transitionRules": [
-          {
-            "arrayConditionType": null,
-            "conditionType": "always",
-            "field": null,
-            "transitionNodeId": "callback_outcome_notice",
             "value": null,
             "values": null
           }
@@ -545,7 +413,7 @@
     ],
     "openingLineType": "INBOUND_OUTBOUND"
   },
-  "id": "6bd05539-c01c-44f8-86a2-b642591e5c07",
+  "id": "6557ccaf-4dbf-4698-a979-61a68944a6f8",
   "modelOptionValues": [
     {
       "optionId": "temperature",

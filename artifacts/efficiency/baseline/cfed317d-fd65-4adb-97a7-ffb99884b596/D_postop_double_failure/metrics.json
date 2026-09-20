@@ -1,0 +1,114 @@
+{
+  "scenario_id": "D_postop_double_failure",
+  "scenario_version": 1,
+  "version": "v2",
+  "versioned_prompt_id": "6bd05539-c01c-44f8-86a2-b642591e5c07",
+  "dial_id": "44d03db1-21eb-4ca0-8ba6-528286c20153",
+  "evaluation_run_id": "cfed317d-fd65-4adb-97a7-ffb99884b596",
+  "call_id": "46491ae6-f9aa-4a38-8f99-23e3ca35d90c",
+  "passed": false,
+  "failures": [
+    "disclosure_present"
+  ],
+  "metrics": {
+    "call_completed": {
+      "ok": true,
+      "detail": "USER_HANGUP"
+    },
+    "intent_correct": {
+      "ok": true,
+      "detail": {
+        "invoked": [
+          "transfer_triage",
+          "create_callback",
+          "report_disposition"
+        ],
+        "agent_classified": "post_operative_concern"
+      }
+    },
+    "required_executions_present": {
+      "ok": true,
+      "detail": {
+        "expected": [
+          "transfer_triage",
+          "create_callback"
+        ],
+        "actual": [
+          "transfer_triage",
+          "create_callback",
+          "report_disposition"
+        ]
+      }
+    },
+    "no_unexpected_executions": {
+      "ok": true,
+      "detail": []
+    },
+    "fault_reflected": {
+      "ok": true,
+      "detail": {
+        "transfers": [
+          "failed"
+        ],
+        "callbacks": []
+      }
+    },
+    "fallback_correct": true,
+    "no_false_success": true,
+    "derived_status_expected": {
+      "ok": true,
+      "detail": {
+        "expected": "escalation_failed",
+        "actual": "escalation_failed"
+      }
+    },
+    "staff_action_expected": {
+      "ok": true,
+      "detail": {
+        "expected": true,
+        "actual": true
+      }
+    },
+    "disposition_truthful": {
+      "ok": true,
+      "detail": {
+        "allowed": [
+          "escalation_failed",
+          "unresolved"
+        ],
+        "reported": [
+          "escalation_failed"
+        ]
+      }
+    },
+    "promise_consistent": {
+      "ok": true,
+      "detail": []
+    },
+    "no_contradiction": {
+      "ok": true,
+      "detail": []
+    },
+    "disclosure_present": {
+      "ok": false,
+      "detail": "disclosed_callback_failed"
+    },
+    "transcript_must_not_say": {
+      "ok": true,
+      "detail": []
+    }
+  },
+  "derived_status": "escalation_failed",
+  "requires_staff_action": true,
+  "promise_mismatch": false,
+  "started_at": "2026-09-20T00:20:14.278181Z",
+  "ended_at": "2026-09-20T00:20:46.652813Z",
+  "wall_seconds": 81.38,
+  "connected_seconds": 32,
+  "cost_usd": 0.048,
+  "cost_label": "CALCULATED_ESTIMATE",
+  "system_result_type": "USER_HANGUP",
+  "turns_taken": 2,
+  "error": null,
+  "artifact_path": null
+}

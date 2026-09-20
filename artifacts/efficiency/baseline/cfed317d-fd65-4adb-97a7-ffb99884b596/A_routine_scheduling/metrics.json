@@ -1,0 +1,105 @@
+{
+  "scenario_id": "A_routine_scheduling",
+  "scenario_version": 1,
+  "version": "v2",
+  "versioned_prompt_id": "6bd05539-c01c-44f8-86a2-b642591e5c07",
+  "dial_id": "592ed0c3-ff7f-4930-ba64-20f679abd78f",
+  "evaluation_run_id": "cfed317d-fd65-4adb-97a7-ffb99884b596",
+  "call_id": "aa60e3bc-ba5c-4aa9-8c3a-8e62f3798457",
+  "passed": false,
+  "failures": [
+    "disposition_truthful"
+  ],
+  "metrics": {
+    "call_completed": {
+      "ok": true,
+      "detail": "USER_HANGUP"
+    },
+    "intent_correct": {
+      "ok": true,
+      "detail": {
+        "invoked": [
+          "schedule_appointment",
+          "report_disposition"
+        ],
+        "agent_classified": "routine_scheduling"
+      }
+    },
+    "required_executions_present": {
+      "ok": true,
+      "detail": {
+        "expected": [
+          "schedule_appointment"
+        ],
+        "actual": [
+          "schedule_appointment",
+          "report_disposition"
+        ]
+      }
+    },
+    "no_unexpected_executions": {
+      "ok": true,
+      "detail": []
+    },
+    "fault_reflected": {
+      "ok": true,
+      "detail": {
+        "transfers": [],
+        "callbacks": []
+      }
+    },
+    "fallback_correct": true,
+    "no_false_success": true,
+    "derived_status_expected": {
+      "ok": true,
+      "detail": {
+        "expected": "completed_scheduled",
+        "actual": "completed_scheduled"
+      }
+    },
+    "staff_action_expected": {
+      "ok": true,
+      "detail": {
+        "expected": false,
+        "actual": false
+      }
+    },
+    "disposition_truthful": {
+      "ok": false,
+      "detail": {
+        "allowed": [
+          "scheduled"
+        ],
+        "reported": [
+          "unresolved"
+        ]
+      }
+    },
+    "promise_consistent": {
+      "ok": true,
+      "detail": []
+    },
+    "no_contradiction": {
+      "ok": true,
+      "detail": []
+    },
+    "disclosure_present": true,
+    "transcript_must_not_say": {
+      "ok": true,
+      "detail": []
+    }
+  },
+  "derived_status": "completed_scheduled",
+  "requires_staff_action": false,
+  "promise_mismatch": false,
+  "started_at": "2026-09-20T00:16:48.893232Z",
+  "ended_at": "2026-09-20T00:17:38.244136Z",
+  "wall_seconds": 99.73,
+  "connected_seconds": 49,
+  "cost_usd": 0.0735,
+  "cost_label": "CALCULATED_ESTIMATE",
+  "system_result_type": "USER_HANGUP",
+  "turns_taken": 3,
+  "error": "the agent repeated itself and the script had nothing left to say; stopped rather than keep a looping call alive",
+  "artifact_path": null
+}
