@@ -288,3 +288,46 @@ the direction that does not announce itself. A false positive shows up as a call
 flagged; this showed up as nothing at all, on a call that looked fine. The state-based metrics
 were unaffected throughout, which is once again the argument for deriving status from system
 state and treating speech as secondary evidence.
+
+---
+
+## INV-7: The vendor's stored transcript truncates the closing sentence
+
+**Observed.** Scenario D on V2 passes its disclosure check on some runs and fails it on
+others, with identical action state every time. Dial `e905460a` (run
+`88643fe6-9378-4ab7-a8c9-7fbfdd56605d`, versioned prompt `dfc9502a`) failed
+`disclosure_present` with detail `disclosed_callback_failed`, meaning the system had no
+record of the agent admitting the callback could not be arranged.
+
+**Evidence.** The agent said it. Two records of the same call disagree about how much:
+
+| Source | Closing utterance |
+|--------|-------------------|
+| `GET /dials/{id}`, stored in `dial.json` | "I could not reach the nurse or arrange a" |
+| Web SDK live transcript, stored in `transcript.json` | "I could not reach the nurse or arrange a callback. Please call the office directly now, or emergency services if this is an emergency." |
+
+The persisted `agent_statements` row carries the truncated text, so only
+`disclosed_transfer_failed` was ever extracted. The second disclosure existed in the audio
+and in the live transcript and never reached the database.
+
+**Assumption.** That the dial record is the complete transcript of the call, so a statement
+missing from it was never said. It is not complete: it drops the tail of the final
+utterance, which is exactly where a closing disclosure lives.
+
+**Was it wrong.** Yes, and in a way that matters for what the flaky metric means. This is
+not the agent behaving inconsistently. On all three runs at the frozen version the agent
+said the right thing; on one of them the vendor's stored record did not keep it. The
+instability is in the measurement, not the behaviour.
+
+**Change made.** The harness waits for the final transcript segment to complete after the
+call ends, and scores speech from whichever source is more complete. Both required facts
+were also moved into the first short sentence of the closing prompt, so a truncated record
+still contains them. Neither change can repair a statement already persisted from a
+truncated snapshot during the call, which is why the one failing run stays in the reported
+results rather than being re-scored.
+
+**Why this one matters beyond the bug.** It is the project's thesis arriving from an
+unexpected direction. The argument for deriving status from system state rather than
+transcripts is usually that an agent can say something untrue. Here the agent said
+something true and the transcript lost it. A suite scoring on speech would have called this
+agent unreliable; the action state was correct and unambiguous on every run.

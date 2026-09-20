@@ -44,7 +44,8 @@ than confounding it, which an earlier iteration of this comparison did not.
 V1, scenario C, dial `0607515f`:
 
 ```
-AI: "You're now connected with the triage nurse, and they'll take it from here."
+AI: "You're now connected with the triage nurse, and they'll take it from here.
+     I hope all goes well."
 ```
 
 | Evidence | Value |
@@ -63,8 +64,9 @@ The backend caught it regardless of what the flow did: the derived status is dri
 absence of a connected transfer session and the absence of a callback row, and the
 unmatched promise is flagged separately.
 
-V1's failing metrics name the fault precisely: `required_executions_present` (no callback),
-`fallback_correct` (no escalation), `promise_consistent` (claimed a transfer that failed),
+V1's six failing metrics name the fault precisely: `required_executions_present` (no
+callback), `fallback_correct` (no escalation), `derived_status_expected` (`escalation_failed`
+where the policy requires a callback), `promise_consistent` (claimed a transfer that failed),
 `disposition_truthful` (filed `resolved`), `disclosure_present` (never told the caller).
 
 ### What V2 changes
@@ -207,12 +209,22 @@ failed, callback queue empty, `escalation_failed` at severity 4, staff action re
 the failing run, `disclosure_present` was the only metric of the fourteen that failed. Only
 whether the sentence survived to the end of the call varied.
 
-Root cause, established in `INVESTIGATIONS.md`: Vogent tears the call down while the agent
-is still speaking, at a point that varies. Two independent transcript sources agree on where
-the speech stopped, which rules out capture error. Mitigated by putting both required facts
-in the first short sentence; not eliminated.
+Root cause, established in `INVESTIGATIONS.md` INV-7: the agent said the right thing on all
+three runs, and on the failing one the vendor's stored transcript did not keep it. The two
+records of that call disagree. `GET /dials/{id}` ends the closing utterance at "I could not
+reach the nurse or arrange a", while the Web SDK's live transcript holds the whole sentence
+including the callback disclosure. The statement extracted during the call came from the
+truncated snapshot, so `disclosed_callback_failed` never reached the database.
 
-The action state was correct on all three runs; only the wording varied. The evidence that
-decides whether a post-operative caller reaches a nurse never moved. The evidence about what
-the agent *said* is the only thing that wobbles. A suite scoring on transcripts would call
-this agent unreliable a third of the time; a suite scoring on system state knows it is not.
+This is a measurement failure, not an agent failure, and it is the more useful of the two.
+Mitigations: the harness now waits for the final segment and scores from whichever source is
+more complete, and both required facts were moved into the first short sentence so a
+truncated record still contains them. Neither repairs a statement already persisted from a
+truncated snapshot, which is why the failing run stays in the results rather than being
+re-scored.
+
+The action state was correct on all three runs, and so was the speech. What varied was
+whether the record of the speech survived. The evidence that decides whether a
+post-operative caller reaches a nurse never moved. A suite scoring on transcripts would have
+called this agent unreliable a third of the time; a suite scoring on system state knows it
+was not.
