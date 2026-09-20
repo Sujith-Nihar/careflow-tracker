@@ -27,13 +27,24 @@ class BackendClient:
     timeout: float = 30.0
 
     def register_dial(
-        self, scenario: Scenario, dial_id: str, run_id: str | None
+        self,
+        scenario: Scenario,
+        dial_id: str,
+        run_id: str | None,
+        agent_version: str | None = None,
     ) -> dict:
+        """Bind a dial to its scenario and fault profile before any audio plays.
+
+        `agent_version` is recorded now rather than worked out later: versioned
+        prompt ids change on every republish, so a label derived afterwards would
+        mislabel older calls.
+        """
         return self._json(
             "POST",
             "/api/eval/dials",
             org=True,
             json={
+                "agent_version": agent_version,
                 "dial_id": dial_id,
                 "scenario_id": scenario.id,
                 "scenario_version": scenario.version,
@@ -122,7 +133,7 @@ def replay(
     """Drive one scenario and return the evidence bundle plus timing."""
     dial_id = f"replay-{scenario.id}-{uuid.uuid4().hex[:8]}"
     started = time.monotonic()
-    client.register_dial(scenario, dial_id, run_id)
+    client.register_dial(scenario, dial_id, run_id, agent_version="replay")
 
     transcript: list[dict] = []
     calls: list[dict] = []

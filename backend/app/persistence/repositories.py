@@ -506,6 +506,14 @@ def append_event(
 
 
 # ---------------------------------------------------------------- fault profiles
+def set_agent_version(conn: psycopg.Connection, dial_id: str, version: str) -> None:
+    execute(
+        conn,
+        "UPDATE calls SET agent_version = COALESCE(agent_version, %s) WHERE dial_id = %s",
+        (version, dial_id),
+    )
+
+
 def register_fault_profile(
     conn: psycopg.Connection,
     *,

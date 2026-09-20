@@ -171,6 +171,9 @@ class ReportDispositionParams(Strict):
 
 class RegisterDialRequest(Strict):
     dial_id: str = Field(min_length=1, max_length=128)
+    #: Which flow version is being dialled, recorded now because versioned prompt ids
+    #: change on every republish and a label derived later would mislabel old calls.
+    agent_version: str | None = Field(default=None, max_length=16)
     scenario_id: str = Field(min_length=1, max_length=128)
     scenario_version: int = 1
     evaluation_run_id: str | None = None

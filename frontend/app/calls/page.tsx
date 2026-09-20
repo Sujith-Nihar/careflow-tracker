@@ -145,9 +145,12 @@ export default async function CallsPage({
                         <div className="cell-strong">
                           {intentLabel(call.agent_classified_intent)}
                         </div>
-                        {call.scenario_id && (
-                          <div className="cell-sub mono">{call.scenario_id}</div>
-                        )}
+                        <div className="cell-sub">
+                          {call.agent_version && (
+                            <span className="version-tag">{call.agent_version.toUpperCase()}</span>
+                          )}
+                          {call.scenario_id && <span className="mono">{call.scenario_id}</span>}
+                        </div>
                       </td>
                       <td>
                         {call.agent_promised ? (

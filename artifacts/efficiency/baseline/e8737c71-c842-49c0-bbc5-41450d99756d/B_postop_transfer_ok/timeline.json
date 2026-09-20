@@ -1,0 +1,331 @@
+[
+  {
+    "t": 1789863928308,
+    "type": "ready",
+    "value": true
+  },
+  {
+    "t": 1789863930366,
+    "type": "audio_connected",
+    "value": true
+  },
+  {
+    "t": 1789863930486,
+    "type": "status",
+    "value": "in-progress"
+  },
+  {
+    "t": 1789863931116,
+    "type": "transcript",
+    "value": {
+      "speaker": "AI",
+      "text": "Thanks for calling Demo Surgical Associates. Are you calling to schedule a routine appointment, or about a concern after a recent surgery?"
+    }
+  },
+  {
+    "t": 1789863940616,
+    "type": "caller_clip",
+    "value": "http://127.0.0.1:53956/clips/de1023253a399b2f.wav"
+  },
+  {
+    "t": 1789863941498,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "I have searched"
+    }
+  },
+  {
+    "t": 1789863942428,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "I had surgery last week."
+    }
+  },
+  {
+    "t": 1789863942429,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "I had surgery last week."
+    }
+  },
+  {
+    "t": 1789863942546,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "I had surgery last week."
+    }
+  },
+  {
+    "t": 1789863943069,
+    "type": "transcript",
+    "value": {
+      "speaker": "AI",
+      "text": ""
+    }
+  },
+  {
+    "t": 1789863943628,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "I have a concern"
+    }
+  },
+  {
+    "t": 1789863944644,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "I have a concern about my surgery"
+    }
+  },
+  {
+    "t": 1789863944977,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "I have a concern about my surgery wound."
+    }
+  },
+  {
+    "t": 1789863945003,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "I have a concern about my surgery wound."
+    }
+  },
+  {
+    "t": 1789863945586,
+    "type": "transcript",
+    "value": {
+      "speaker": "AI",
+      "text": ""
+    }
+  },
+  {
+    "t": 1789863945689,
+    "type": "transcript",
+    "value": {
+      "speaker": "AI",
+      "text": ""
+    }
+  },
+  {
+    "t": 1789863946218,
+    "type": "transcript",
+    "value": {
+      "speaker": "AI",
+      "text": "I'm sorry to hear that. Can you tell me briefly what's happening?"
+    }
+  },
+  {
+    "t": 1789863948249,
+    "type": "caller_clip",
+    "value": "http://127.0.0.1:53956/clips/d4c3c2a90dfeba59.wav"
+  },
+  {
+    "t": 1789863948949,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "It looks a"
+    }
+  },
+  {
+    "t": 1789863949759,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "It looks a"
+    }
+  },
+  {
+    "t": 1789863950072,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "It looks a bit right around the edge"
+    }
+  },
+  {
+    "t": 1789863950457,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "It looks a bit right around the edges."
+    }
+  },
+  {
+    "t": 1789863950478,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "It looks a bit right around the edges."
+    }
+  },
+  {
+    "t": 1789863951201,
+    "type": "transcript",
+    "value": {
+      "speaker": "AI",
+      "text": ""
+    }
+  },
+  {
+    "t": 1789863951319,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "My number is 5"
+    }
+  },
+  {
+    "t": 1789863953261,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "My number is 5 5 5 5 5 5"
+    }
+  },
+  {
+    "t": 1789863954646,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "My number is 5 5 5 5 5 5 0 1 0"
+    }
+  },
+  {
+    "t": 1789863956263,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "My number is 5 5 5 5 5 5 0 1 0 2."
+    }
+  },
+  {
+    "t": 1789863956286,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "My number is 5 5 5 5 5 5 0 1 0 2."
+    }
+  },
+  {
+    "t": 1789863956929,
+    "type": "transcript",
+    "value": {
+      "speaker": "AI",
+      "text": ""
+    }
+  },
+  {
+    "t": 1789863956930,
+    "type": "transcript",
+    "value": {
+      "speaker": "AI",
+      "text": ""
+    }
+  },
+  {
+    "t": 1789863957226,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "My number is 5 5 5 5 5 5 0 1 0 2."
+    }
+  },
+  {
+    "t": 1789863957642,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "My number is 5 5 5 5 5 5 0 1 0 2."
+    }
+  },
+  {
+    "t": 1789863957645,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "My number is 5 5 5 5 5 5 0 1 0 2."
+    }
+  },
+  {
+    "t": 1789863957649,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "My number is 5 5 5 5 5 5 0 1 0 2."
+    }
+  },
+  {
+    "t": 1789863958273,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "My number is 5 5 5 5 5 5 0 1 0 2."
+    }
+  },
+  {
+    "t": 1789863959197,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "My number is 5 5 5 5 5 5 0 1 0 2."
+    }
+  },
+  {
+    "t": 1789863960158,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "My number is 5 5 5 5 5 5 0 1 0 2."
+    }
+  },
+  {
+    "t": 1789863960160,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "My number is 5 5 5 5 5 5 0 1 0 2."
+    }
+  },
+  {
+    "t": 1789863960215,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "My number is 5 5 5 5 5 5 0 1 0 2."
+    }
+  },
+  {
+    "t": 1789863963295,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "My number is 5 5 5 5 5 5 0 1 0 2."
+    }
+  },
+  {
+    "t": 1789863963944,
+    "type": "transcript",
+    "value": {
+      "speaker": "AI",
+      "text": "You\u2019re now connected with the triage nurse. Goodbye."
+    }
+  },
+  {
+    "t": 1789863967012,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "My number is 5 5 5 5 5 5 0 1 0 2."
+    }
+  }
+]

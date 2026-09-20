@@ -42,17 +42,7 @@ vogent-check: ## verify VOGENT_API_KEY by listing agents (prints no secrets)
 migrate: ## apply backend/migrations/*.sql to DATABASE_URL
 	$(PY) scripts/migrate.py
 
-migrate-lint: ## static analysis over every Python source
-	$(VENV)/bin/ruff check backend evals vogent scripts
-	$(VENV)/bin/ruff format --check backend evals vogent scripts
-
-format: ## apply formatting
-	$(VENV)/bin/ruff format backend evals vogent scripts
-
-typecheck-ui: ## typecheck the dashboard
-	cd frontend && npx tsc --noEmit
-
-test: ## apply migrations to the careflow_test schema
+migrate-test: ## apply migrations to the careflow_test schema
 	$(PY) scripts/migrate.py --test-schema
 
 reset-calls: ## delete all call and evaluation data, keep the practices

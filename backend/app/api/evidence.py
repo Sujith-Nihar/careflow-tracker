@@ -60,6 +60,8 @@ def register_dial() -> Any:
         call = repo.get_or_create_call(
             conn, organization_id=principal.organization_id, dial_id=body.dial_id
         )
+        if body.agent_version:
+            repo.set_agent_version(conn, body.dial_id, body.agent_version)
         log.info(
             "eval.dial_registered",
             dial_id=body.dial_id,
@@ -99,6 +101,7 @@ def list_calls() -> Any:
             items.append(
                 {
                     "agent_promised": _promise_summary(evidence),
+                    "agent_version": row.get("agent_version"),
                     "call_id": str(row["id"]),
                     "dial_id": row["dial_id"],
                     "scenario_id": row["scenario_id"],
@@ -173,6 +176,7 @@ def get_call(call_id: str) -> Any:
                     "vogent_agent_id": row["vogent_agent_id"],
                     "versioned_prompt_id": row["versioned_prompt_id"],
                     "scenario_id": row["scenario_id"],
+                    "agent_version": row.get("agent_version"),
                     "evaluation_run_id": _str_or_none(row["evaluation_run_id"]),
                     "lifecycle": row["lifecycle"],
                     "started_at": _iso(row["started_at"]),

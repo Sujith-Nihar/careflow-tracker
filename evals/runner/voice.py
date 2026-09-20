@@ -96,7 +96,7 @@ def run_voice_case(
 
     # Register before any audio: the simulators must never learn the scenario
     # from the conversation.
-    backend.register_dial(scenario, dial.dial_id, run_id)
+    backend.register_dial(scenario, dial.dial_id, run_id, agent_version=version)
 
     outcome = run_call(scenario, dial, headless=headless)
     case.turns_taken = outcome.turns_taken

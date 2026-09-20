@@ -163,6 +163,11 @@ export default async function CallDetailPage({ params }: { params: Promise<{ cal
           <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
             {d && <Badge tone={tone}>{severityWord(d.severity)}</Badge>}
             {d && <Badge tone="neutral">{statusLabel(d.status)}</Badge>}
+            {detail.call.agent_version && (
+              <span className="version-tag">
+                {detail.call.agent_version.toUpperCase()} agent
+              </span>
+            )}
             {d?.promise_mismatch && (
               <Badge tone="critical" alarm>
                 agent said otherwise
@@ -343,7 +348,12 @@ export default async function CallDetailPage({ params }: { params: Promise<{ cal
               </tr>
               <tr>
                 <th>Agent version</th>
-                <td className="mono">{detail.call.versioned_prompt_id ?? "—"}</td>
+                <td>
+                  {detail.call.agent_version && (
+                    <span className="version-tag">{detail.call.agent_version.toUpperCase()}</span>
+                  )}{" "}
+                  <span className="mono">{detail.call.versioned_prompt_id ?? "—"}</span>
+                </td>
               </tr>
               <tr>
                 <th>Scenario</th>

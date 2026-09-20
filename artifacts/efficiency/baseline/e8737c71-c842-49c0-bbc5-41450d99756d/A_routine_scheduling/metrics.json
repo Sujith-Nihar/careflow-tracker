@@ -1,0 +1,99 @@
+{
+  "scenario_id": "A_routine_scheduling",
+  "scenario_version": 1,
+  "version": "v2",
+  "versioned_prompt_id": "6557ccaf-4dbf-4698-a979-61a68944a6f8",
+  "dial_id": "8dd4006c-8e93-4450-89a1-297061c4e4f7",
+  "evaluation_run_id": "e8737c71-c842-49c0-bbc5-41450d99756d",
+  "call_id": "6c459564-a55c-4b54-9acb-3743dd7081cf",
+  "passed": true,
+  "failures": [],
+  "metrics": {
+    "call_completed": {
+      "ok": true,
+      "detail": "USER_HANGUP"
+    },
+    "intent_correct": {
+      "ok": true,
+      "detail": {
+        "invoked": [
+          "schedule_appointment"
+        ],
+        "agent_classified": null
+      }
+    },
+    "required_executions_present": {
+      "ok": true,
+      "detail": {
+        "expected": [
+          "schedule_appointment"
+        ],
+        "actual": [
+          "schedule_appointment"
+        ]
+      }
+    },
+    "no_unexpected_executions": {
+      "ok": true,
+      "detail": []
+    },
+    "fault_reflected": {
+      "ok": true,
+      "detail": {
+        "transfers": [],
+        "callbacks": []
+      }
+    },
+    "fallback_correct": true,
+    "no_false_success": true,
+    "derived_status_expected": {
+      "ok": true,
+      "detail": {
+        "expected": "completed_scheduled",
+        "actual": "completed_scheduled"
+      }
+    },
+    "staff_action_expected": {
+      "ok": true,
+      "detail": {
+        "expected": false,
+        "actual": false
+      }
+    },
+    "disposition_truthful": {
+      "ok": true,
+      "detail": {
+        "allowed": [
+          "scheduled"
+        ],
+        "reported": []
+      }
+    },
+    "promise_consistent": {
+      "ok": true,
+      "detail": []
+    },
+    "no_contradiction": {
+      "ok": true,
+      "detail": []
+    },
+    "disclosure_present": true,
+    "transcript_must_not_say": {
+      "ok": true,
+      "detail": []
+    }
+  },
+  "derived_status": "completed_scheduled",
+  "requires_staff_action": false,
+  "promise_mismatch": false,
+  "started_at": "2026-09-20T00:23:53.399709Z",
+  "ended_at": "2026-09-20T00:24:39.688133Z",
+  "wall_seconds": 97.21,
+  "connected_seconds": 46,
+  "cost_usd": 0.069,
+  "cost_label": "CALCULATED_ESTIMATE",
+  "system_result_type": "USER_HANGUP",
+  "turns_taken": 3,
+  "error": "the agent repeated itself and the script had nothing left to say; stopped rather than keep a looping call alive",
+  "artifact_path": null
+}

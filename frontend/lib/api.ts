@@ -23,6 +23,8 @@ export type Derived = {
 export type CallSummary = {
   /** What the agent told the caller it had arranged, if it claimed anything. */
   agent_promised: string | null;
+  /** Which flow version took this call, recorded at dial time so it stays true. */
+  agent_version: string | null;
   call_id: string;
   dial_id: string;
   scenario_id: string | null;
@@ -63,6 +65,7 @@ export type CallDetail = {
     vogent_agent_id: string | null;
     versioned_prompt_id: string | null;
     scenario_id: string | null;
+    agent_version: string | null;
     evaluation_run_id: string | null;
     lifecycle: string;
     started_at: string | null;
