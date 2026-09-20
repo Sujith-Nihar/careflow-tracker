@@ -19,6 +19,15 @@ from vogent_api import REPO_ROOT, Vogent, load_ids
 EXPORT_DIR = REPO_ROOT / "vogent" / "export"
 REDACTED = "<redacted: set from CAREFLOW_DEMO_ORG_FUNCTION_TOKEN at sync time>"
 
+#: The two versions the reported runs used, taken from the versioned_prompt_id
+#: recorded in every artifacts/**/metrics.json. Publishing keeps the same name, so
+#: a name match alone returns whichever of the 60-odd versions the API happens to
+#: list last. Pinning the ids is what makes this directory "what actually ran".
+REPORTED_RUNS = {
+    "v1": "d37760bc-a8a3-4e7f-80d1-247264cd4a94",
+    "v2": "dfc9502a-073c-42f0-b8f2-77afe4a35123",
+}
+
 
 def main() -> int:
     client = Vogent()
@@ -50,11 +59,11 @@ def main() -> int:
     )
 
     prompts = client.list_all(f"/agents/{agent_id}/versioned_prompts")
-    published = {"careflow-v1-baseline": "v1", "careflow-v2-evidence-aware": "v2"}
+    by_id = {prompt_id: short for short, prompt_id in REPORTED_RUNS.items()}
     index = {"agent_id": agent_id, "versions": {}}
 
     for prompt in prompts:
-        short = published.get(prompt["name"])
+        short = by_id.get(prompt["id"])
         if short is None:
             continue
         path = EXPORT_DIR / f"{short}.json"
@@ -74,6 +83,13 @@ def main() -> int:
         print(
             f"  {short}.json                 {prompt['id']}  {len(nodes)} nodes, {conditioned} conditioned"
         )
+
+    missing = sorted(set(REPORTED_RUNS) - set(index["versions"]))
+    if missing:
+        print(
+            f"\nfailed: no versioned prompt in the workspace for {', '.join(missing)}"
+        )
+        return 1
 
     (EXPORT_DIR / "index.json").write_text(
         json.dumps(index, indent=2, sort_keys=True) + "\n"

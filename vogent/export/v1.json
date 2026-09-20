@@ -185,32 +185,12 @@
             "arrayConditionType": null,
             "conditionType": "always",
             "field": null,
-            "transitionNodeId": "promise_transfer",
-            "value": null,
-            "values": null
-          }
-        ],
-        "type": "question"
-      },
-      {
-        "id": "promise_transfer",
-        "name": "Announce the transfer",
-        "nodeData": {
-          "outputs": null,
-          "prompt": "Tell the caller you are connecting them to the triage nurse now. Keep it to one sentence. Say it once, then move on immediately."
-        },
-        "outputSchema": null,
-        "transitionRules": [
-          {
-            "arrayConditionType": null,
-            "conditionType": "always",
-            "field": null,
             "transitionNodeId": "transfer",
             "value": null,
             "values": null
           }
         ],
-        "type": "freeform"
+        "type": "question"
       },
       {
         "id": "transfer",
@@ -273,7 +253,7 @@
         "name": "Hand off",
         "nodeData": {
           "outputs": null,
-          "prompt": "Tell the caller the triage nurse will take it from here, wish them well, and end the call. Say it once, then move on immediately."
+          "prompt": "Tell the caller they are now connected with the triage nurse and that the nurse will take it from here. Wish them well and end the call."
         },
         "outputSchema": null,
         "transitionRules": [],
@@ -425,7 +405,7 @@
     ],
     "openingLineType": "INBOUND_OUTBOUND"
   },
-  "id": "44f4774c-482f-4360-931c-76dc6c27d0c6",
+  "id": "d37760bc-a8a3-4e7f-80d1-247264cd4a94",
   "modelOptionValues": [
     {
       "optionId": "temperature",
