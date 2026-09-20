@@ -23,7 +23,7 @@ variable "log_retention_days" {
 }
 
 variable "worker_image" {
-  description = "Container image for the worker. Built from the repository root Dockerfile."
+  description = "Container image for the worker. Built from the repository root Dockerfile, pushed to a registry this account can pull from."
   type        = string
   default     = "careflow/worker:latest"
 }
@@ -65,6 +65,21 @@ variable "function_token_parameter" {
   description = "SSM SecureString parameter name holding the demo practice's function token."
   type        = string
   default     = "/careflow/dev/function_token"
+}
+
+# The worker replays scenarios through the evidence API exactly as the local runner
+# does, so it needs the same five settings the runner needs. Passing only three was
+# enough to plan and validate, and would have failed on the worker's first boot.
+variable "webhook_token_parameter" {
+  description = "SSM SecureString parameter name holding the demo practice's webhook token."
+  type        = string
+  default     = "/careflow/dev/webhook_token"
+}
+
+variable "organization_id_parameter" {
+  description = "SSM SecureString parameter name holding the demo organization id."
+  type        = string
+  default     = "/careflow/dev/organization_id"
 }
 
 variable "alarm_topic_arn" {

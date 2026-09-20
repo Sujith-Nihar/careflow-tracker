@@ -39,6 +39,8 @@ resource "aws_ecs_task_definition" "worker" {
         { name = "DATABASE_URL", valueFrom = var.database_url_parameter },
         { name = "BACKEND_URL", valueFrom = var.backend_url_parameter },
         { name = "CAREFLOW_DEMO_ORG_FUNCTION_TOKEN", valueFrom = var.function_token_parameter },
+        { name = "CAREFLOW_DEMO_ORG_WEBHOOK_TOKEN", valueFrom = var.webhook_token_parameter },
+        { name = "DEMO_ORGANIZATION_ID", valueFrom = var.organization_id_parameter },
       ]
 
       logConfiguration = {

@@ -35,6 +35,8 @@ data "aws_iam_policy_document" "execution_secrets" {
       "arn:aws:ssm:${var.region}:${data.aws_caller_identity.current.account_id}:parameter${var.database_url_parameter}",
       "arn:aws:ssm:${var.region}:${data.aws_caller_identity.current.account_id}:parameter${var.backend_url_parameter}",
       "arn:aws:ssm:${var.region}:${data.aws_caller_identity.current.account_id}:parameter${var.function_token_parameter}",
+      "arn:aws:ssm:${var.region}:${data.aws_caller_identity.current.account_id}:parameter${var.webhook_token_parameter}",
+      "arn:aws:ssm:${var.region}:${data.aws_caller_identity.current.account_id}:parameter${var.organization_id_parameter}",
     ]
   }
 }

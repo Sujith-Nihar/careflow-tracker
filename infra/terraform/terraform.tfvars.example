@@ -10,4 +10,6 @@ security_group_ids = ["sg-cccc"]
 
 database_url_parameter   = "/careflow/dev/database_url"
 backend_url_parameter    = "/careflow/dev/backend_url"
-function_token_parameter = "/careflow/dev/function_token"
+function_token_parameter  = "/careflow/dev/function_token"
+webhook_token_parameter   = "/careflow/dev/webhook_token"
+organization_id_parameter = "/careflow/dev/organization_id"
