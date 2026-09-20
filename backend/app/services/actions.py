@@ -85,7 +85,7 @@ def run_action(
     execution_id = str(execution["id"])
     log.info("action.requested", kind=kind, action_execution_id=execution_id)
 
-    fault_profile = repo.get_fault_profile(conn, dial_id)
+    fault_profile = repo.get_fault_profile(conn, dial_id, organization_id)
     result = simulate(fault_profile)
 
     for attempt in result.attempts:

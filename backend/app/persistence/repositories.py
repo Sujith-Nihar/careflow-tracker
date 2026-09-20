@@ -39,6 +39,15 @@ from ..domain.types import (
 from .db import execute, query_all, query_one
 
 
+class CrossOrganizationAccess(RuntimeError):
+    """A dial id already belongs to a different practice.
+
+    Dial ids are unique across the whole installation, so this is the one place a
+    write could reach another organization's row. It is a refusal, not a failure:
+    the API answers 403 rather than 500, because nothing is wrong with the server.
+    """
+
+
 def token_hash(token: str) -> str:
     """Tokens are compared by hash so a database dump does not hand over access."""
     return hashlib.sha256(token.encode()).hexdigest()
@@ -177,7 +186,7 @@ def get_or_create_call(
         (dial_id, organization_id),
     )
     if existing is None:
-        raise RuntimeError(f"call for dial {dial_id} is owned by another organization")
+        raise CrossOrganizationAccess(f"call for dial {dial_id} belongs to another organization")
     execute(
         conn,
         """UPDATE calls
@@ -525,7 +534,10 @@ def register_fault_profile(
     true_intent: str | None,
     profile: dict,
 ) -> None:
-    execute(
+    # The WHERE on the conflict branch is the ownership check: dial_id is unique across
+    # the table, so without it one organization could overwrite another's injected faults
+    # and silently change what a running call does.
+    row = query_one(
         conn,
         """INSERT INTO fault_profiles (dial_id, organization_id, scenario_id, scenario_version,
                                        evaluation_run_id, true_intent, profile)
@@ -535,7 +547,9 @@ def register_fault_profile(
                    scenario_version = EXCLUDED.scenario_version,
                    evaluation_run_id = EXCLUDED.evaluation_run_id,
                    true_intent = EXCLUDED.true_intent,
-                   profile = EXCLUDED.profile""",
+                   profile = EXCLUDED.profile
+               WHERE fault_profiles.organization_id = EXCLUDED.organization_id
+           RETURNING dial_id""",
         (
             dial_id,
             organization_id,
@@ -546,10 +560,18 @@ def register_fault_profile(
             json.dumps(profile),
         ),
     )
+    if row is None:
+        raise CrossOrganizationAccess(
+            f"fault profile for dial {dial_id} belongs to another organization"
+        )
 
 
-def get_fault_profile(conn: psycopg.Connection, dial_id: str) -> dict:
-    row = query_one(conn, "SELECT profile FROM fault_profiles WHERE dial_id = %s", (dial_id,))
+def get_fault_profile(conn: psycopg.Connection, dial_id: str, organization_id: str) -> dict:
+    row = query_one(
+        conn,
+        "SELECT profile FROM fault_profiles WHERE dial_id = %s AND organization_id = %s",
+        (dial_id, organization_id),
+    )
     return dict(row["profile"]) if row else {}
 
 
@@ -901,14 +923,29 @@ def create_evaluation_run(
            VALUES (COALESCE(%s::uuid, gen_random_uuid()), %s, %s, %s, %s, %s, %s, %s, %s, %s)
            ON CONFLICT (id) DO UPDATE SET strategy = EXCLUDED.strategy
            RETURNING *""",
-        (run_id, organization_id, suite, strategy, versioned_prompt_id, backend_git_sha,
-         rate_usd_per_second, rate_source, cost_label, job_id),
+        (
+            run_id,
+            organization_id,
+            suite,
+            strategy,
+            versioned_prompt_id,
+            backend_git_sha,
+            rate_usd_per_second,
+            rate_source,
+            cost_label,
+            job_id,
+        ),
     )
 
 
 def close_evaluation_run(
-    conn: psycopg.Connection, *, run_id: str, organization_id: str,
-    status: str, wall_seconds: float | None, error: str | None = None,
+    conn: psycopg.Connection,
+    *,
+    run_id: str,
+    organization_id: str,
+    status: str,
+    wall_seconds: float | None,
+    error: str | None = None,
 ) -> None:
     execute(
         conn,
@@ -952,9 +989,22 @@ def record_evaluation_case(
                    cost_usd = EXCLUDED.cost_usd, artifact_path = EXCLUDED.artifact_path,
                    ended_at = now()
            RETURNING *""",
-        (run_id, organization_id, scenario_id, scenario_version, mode, dial_id, call_id,
-         passed, json.dumps(metrics, default=str), wall_seconds, connected_seconds, cost_usd,
-         artifact_path, cache_key),
+        (
+            run_id,
+            organization_id,
+            scenario_id,
+            scenario_version,
+            mode,
+            dial_id,
+            call_id,
+            passed,
+            json.dumps(metrics, default=str),
+            wall_seconds,
+            connected_seconds,
+            cost_usd,
+            artifact_path,
+            cache_key,
+        ),
     )
 
 

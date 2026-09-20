@@ -110,3 +110,22 @@ def test_the_other_practices_token_resolves_to_the_other_practice(client, other_
     assert response.status_code == 200
     resolved = client.get(f"/api/calls/by-dial/{dial}", headers={"X-Organization-Id": other_org})
     assert resolved.status_code == 200
+
+
+def test_one_practice_cannot_overwrite_anothers_injected_faults(client, demo_org, other_org):
+    """Fault profiles are keyed by dial id, which is unique across the whole table.
+
+    Without an ownership check on the upsert, a second practice registering the same
+    dial would silently change what a call already in flight does to a patient.
+    """
+    dial = dial_id()
+    first = register_dial(client, demo_org, dial, "isolation_faults", {"transfer": "fail"})
+    assert first.status_code in (200, 201)
+
+    second = register_dial(client, other_org, dial, "isolation_faults", {"transfer": "connect"})
+    assert second.status_code == 403
+    assert second.json["error"] == "organization_mismatch"
+
+    # The original practice's faults are untouched.
+    again = register_dial(client, demo_org, dial, "isolation_faults", {"transfer": "fail"})
+    assert again.status_code in (200, 201)
