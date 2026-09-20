@@ -38,14 +38,23 @@ const DISPOSITION_TEXT: Record<string, string> = {
   resolved: "sorted",
 };
 
+/** The category each statement falls into. The words the agent actually used are
+ *  preferred over these wherever the transcript captured them. */
 const SAID: Record<string, { text: string; icon: string }> = {
-  promised_transfer: { text: "\u201cI\u2019m putting you through to the nurse\u201d", icon: "!" },
-  promised_callback: { text: "\u201cSomeone will call you back\u201d", icon: "!" },
-  promised_appointment: { text: "\u201cYour appointment is booked\u201d", icon: "!" },
+  promised_transfer: { text: "Promised to put the caller through to the nurse", icon: "!" },
+  promised_callback: { text: "Promised a callback", icon: "!" },
+  promised_appointment: { text: "Said the appointment was booked", icon: "!" },
   disclosed_transfer_failed: { text: "Admitted the transfer did not go through", icon: "✓" },
   disclosed_callback_failed: { text: "Admitted no callback could be arranged", icon: "✓" },
   disclosed_scheduling_failed: { text: "Admitted the booking was not confirmed", icon: "✓" },
 };
+
+/** What to show for one statement: the agent’s own words when the transcript caught them. */
+function saidText(kind: string, evidenceText: string | null): string {
+  const quote = evidenceText?.trim();
+  if (quote) return `\u201c${quote}\u201d`;
+  return SAID[kind]?.text ?? kind.replace(/_/g, " ");
+}
 
 /** How each attempt went, in words rather than result codes. */
 const ATTEMPT_RESULT: Record<string, string> = {
@@ -229,9 +238,9 @@ export default async function CallDetailPage({ params }: { params: Promise<{ cal
                         color: s.kind.startsWith("promised_") ? "var(--warning)" : "var(--good)",
                       }}
                     >
-                      {SAID[s.kind].icon}
+                      {SAID[s.kind]?.icon ?? "›"}
                     </span>
-                    <span>{SAID[s.kind].text}</span>
+                    <span>{saidText(s.kind, s.evidence_text)}</span>
                   </li>
                 ))}
                 {disposition?.disposition && (
