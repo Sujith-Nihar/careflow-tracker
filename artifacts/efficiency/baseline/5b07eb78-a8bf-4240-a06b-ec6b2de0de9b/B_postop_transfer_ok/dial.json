@@ -1,0 +1,207 @@
+{
+  "agent": {
+    "defaultExtractorId": null,
+    "defaultVersionedPromptId": "b27a8ced-35c7-4d44-bb63-a0469bcde061",
+    "defaultVoiceId": "94c32748-865f-42e1-bb1a-3a6b4abc7d11",
+    "endpointDetectorConfig": {
+      "mode": "DEFAULT",
+      "type": "SEMANTIC"
+    },
+    "fillEmptyStringVariables": false,
+    "id": "b3d8f0c2-c96e-4a37-b023-ce1d0d99a82d",
+    "idleMessageConfig": {
+      "enabled": false,
+      "idleDurationMilliseconds": 0,
+      "maxIdleMessages": 0
+    },
+    "ivrConfiguration": null,
+    "ivrSilenceHangupConfiguration": null,
+    "language": "en",
+    "maxDurationSeconds": 10800,
+    "name": "CareFlow Demo Surgical",
+    "silenceHangupConfiguration": {
+      "silenceDurationSeconds": 0,
+      "type": "DISABLED"
+    },
+    "timeoutBehaviorConfiguration": {
+      "behavior": "HANGUP",
+      "transferNumber": null
+    },
+    "timeoutMessage": null,
+    "transcriberParams": {
+      "type": "deepgram"
+    },
+    "utteranceDetectorConfig": {
+      "interruptionPlayTimeMs": 1000,
+      "sensitivity": "MEDIUM"
+    },
+    "voicemailConfig": {
+      "detection": "DISABLE",
+      "message": null
+    }
+  },
+  "aiDurationSeconds": 36,
+  "aiResult": {
+    "collect_concern": {
+      "answer": "It looks a bit right around the edges."
+    },
+    "collect_phone": {
+      "answer": "5555550102"
+    },
+    "greet_intake": {
+      "answer": "post_op"
+    },
+    "transfer": {
+      "agent_message": "Connected to the triage nurse.",
+      "status": "connected",
+      "transfer_session_id": "a03232a4-80d2-42f1-928d-b3817eeee8d3"
+    },
+    "urgent_callback": {
+      "agent_message": "No callback is needed; the caller reached the triage nurse.",
+      "status": "not_needed"
+    }
+  },
+  "durationSeconds": 36,
+  "endedAt": "2026-09-20T00:54:56.451589Z",
+  "id": "ab52479d-84ae-4d37-80a9-1eb7887a19cf",
+  "inputs": {
+    "callback_phone": "+15555550102",
+    "evaluation_run_id": "5b07eb78-a8bf-4240-a06b-ec6b2de0de9b",
+    "patient_ref": "PT-SYN-0002",
+    "scenario_id": "B_postop_transfer_ok"
+  },
+  "recordings": [
+    {
+      "url": "https://api.vogent.ai/api/recordings/891aabab-241f-4a04-b0af-94a85f3f4e68"
+    }
+  ],
+  "startedAt": "2026-09-20T00:54:19.656545Z",
+  "status": "completed",
+  "systemResultType": "USER_HANGUP",
+  "transcript": [
+    {
+      "detailType": null,
+      "endTimeMs": 9500,
+      "speaker": "AI",
+      "startTimeMs": 620,
+      "text": "Thanks for calling Demo Surgical Associates. Are you calling to schedule a routine appointment, or about a concern after a recent surgery?"
+    },
+    {
+      "detailType": null,
+      "endTimeMs": 14520,
+      "speaker": "HUMAN",
+      "startTimeMs": 10290,
+      "text": "I had surgery last week. I have a concern about my surgery wound."
+    },
+    {
+      "detailType": "node-transition",
+      "functionCallId": "call_uUHIprQNeIHxvJjl1NqniP6q",
+      "nodeTransition": {
+        "toNodeId": "collect_concern",
+        "transitionData": {
+          "answer": "post_op"
+        }
+      },
+      "speaker": "AI",
+      "text": ""
+    },
+    {
+      "detailType": null,
+      "endTimeMs": 19672,
+      "speaker": "AI",
+      "startTimeMs": 15960,
+      "text": "I'm sorry to hear that. Can you tell me briefly what's"
+    },
+    {
+      "detailType": null,
+      "endTimeMs": 24760,
+      "speaker": "HUMAN",
+      "startTimeMs": 18369,
+      "text": "It looks a bit right around the edges. My number is 5 5 5 5 5 5 0 1 0 2."
+    },
+    {
+      "detailType": "node-transition",
+      "functionCallId": "call_Ks8HyFRoTsRsjck3xwoqHx46",
+      "nodeTransition": {
+        "toNodeId": "collect_phone",
+        "transitionData": {
+          "answer": "It looks a bit right around the edges."
+        }
+      },
+      "speaker": "AI",
+      "text": ""
+    },
+    {
+      "detailType": "node-transition",
+      "functionCallId": "call_lyLObYWc22UPnkVmYqMYCPUd",
+      "nodeTransition": {
+        "toNodeId": "transfer",
+        "transitionData": {
+          "answer": "5555550102"
+        }
+      },
+      "speaker": "AI",
+      "text": ""
+    },
+    {
+      "detailType": null,
+      "functionCalls": [
+        {
+          "args": "{\"callback_phone\":\"5555550102\",\"concern_summary\":\"It looks a bit right around the edges.\"}",
+          "functionCallId": "3a8c82d6-76cd-4742-989b-944b095a86b1",
+          "name": "Attempt transfer to triage"
+        }
+      ],
+      "speaker": "AI",
+      "text": ""
+    },
+    {
+      "detailType": "node-transition",
+      "functionCallId": "call_lyLObYWc22UPnkVmYqMYCPUd",
+      "nodeTransition": {
+        "toNodeId": "urgent_callback",
+        "transitionData": {
+          "agent_message": "Connected to the triage nurse.",
+          "status": "connected",
+          "transfer_session_id": "a03232a4-80d2-42f1-928d-b3817eeee8d3"
+        }
+      },
+      "speaker": "AI",
+      "text": ""
+    },
+    {
+      "detailType": null,
+      "functionCalls": [
+        {
+          "args": "{\"callback_phone\":\"5555550102\",\"priority\":\"urgent\",\"reason_code\":\"transfer_failed\"}",
+          "functionCallId": "2f695bbf-0738-49d0-9e15-6fd1b76d3346",
+          "name": "Queue an urgent callback"
+        }
+      ],
+      "speaker": "AI",
+      "text": ""
+    },
+    {
+      "detailType": "node-transition",
+      "functionCallId": "call_lyLObYWc22UPnkVmYqMYCPUd",
+      "nodeTransition": {
+        "toNodeId": "callback_outcome_notice",
+        "transitionData": {
+          "agent_message": "No callback is needed; the caller reached the triage nurse.",
+          "status": "not_needed"
+        }
+      },
+      "speaker": "AI",
+      "text": ""
+    },
+    {
+      "detailType": null,
+      "endTimeMs": 36540,
+      "speaker": "AI",
+      "startTimeMs": 32860,
+      "text": "You are now connected with the triage nurse. Goodbye."
+    }
+  ],
+  "versionedPromptId": "d86541e2-5579-45dc-b309-fdc2d791fe06",
+  "voiceId": "94c32748-865f-42e1-bb1a-3a6b4abc7d11"
+}

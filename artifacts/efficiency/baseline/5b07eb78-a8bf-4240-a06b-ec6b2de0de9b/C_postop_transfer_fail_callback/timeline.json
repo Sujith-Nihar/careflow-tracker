@@ -1,0 +1,328 @@
+[
+  {
+    "t": 1789865746799,
+    "type": "ready",
+    "value": true
+  },
+  {
+    "t": 1789865747499,
+    "type": "status",
+    "value": "queued"
+  },
+  {
+    "t": 1789865748842,
+    "type": "audio_connected",
+    "value": true
+  },
+  {
+    "t": 1789865748964,
+    "type": "status",
+    "value": "in-progress"
+  },
+  {
+    "t": 1789865749594,
+    "type": "transcript",
+    "value": {
+      "speaker": "AI",
+      "text": "Thanks for calling Demo Surgical Associates. Are you calling to schedule a routine appointment, or about a concern after a recent surgery?"
+    }
+  },
+  {
+    "t": 1789865751645,
+    "type": "caller_clip",
+    "value": "http://127.0.0.1:56781/clips/9907b0360c01650c.wav"
+  },
+  {
+    "t": 1789865752912,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "I had surgery on"
+    }
+  },
+  {
+    "t": 1789865752916,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "I had surgery on"
+    }
+  },
+  {
+    "t": 1789865753613,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "I had surgery on Tuesday."
+    }
+  },
+  {
+    "t": 1789865753629,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "I had surgery on Tuesday."
+    }
+  },
+  {
+    "t": 1789865754159,
+    "type": "transcript",
+    "value": {
+      "speaker": "AI",
+      "text": ""
+    }
+  },
+  {
+    "t": 1789865754591,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "My surgery Monday"
+    }
+  },
+  {
+    "t": 1789865755360,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "My surgery went this bleeding."
+    }
+  },
+  {
+    "t": 1789865755376,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "My surgery went this bleeding."
+    }
+  },
+  {
+    "t": 1789865755897,
+    "type": "transcript",
+    "value": {
+      "speaker": "AI",
+      "text": ""
+    }
+  },
+  {
+    "t": 1789865755902,
+    "type": "transcript",
+    "value": {
+      "speaker": "AI",
+      "text": ""
+    }
+  },
+  {
+    "t": 1789865756437,
+    "type": "transcript",
+    "value": {
+      "speaker": "AI",
+      "text": ""
+    }
+  },
+  {
+    "t": 1789865756441,
+    "type": "transcript",
+    "value": {
+      "speaker": "AI",
+      "text": ""
+    }
+  },
+  {
+    "t": 1789865757078,
+    "type": "transcript",
+    "value": {
+      "speaker": "AI",
+      "text": "What's the best number to reach you on?"
+    }
+  },
+  {
+    "t": 1789865758980,
+    "type": "caller_clip",
+    "value": "http://127.0.0.1:56781/clips/cd30dfda596e4c23.wav"
+  },
+  {
+    "t": 1789865759214,
+    "type": "transcript",
+    "value": {
+      "speaker": "AI",
+      "text": "What's the best number to reach you on?"
+    }
+  },
+  {
+    "t": 1789865759414,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "It's"
+    }
+  },
+  {
+    "t": 1789865760412,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "It started this morning."
+    }
+  },
+  {
+    "t": 1789865760603,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "It started this morning."
+    }
+  },
+  {
+    "t": 1789865760605,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "It started this morning."
+    }
+  },
+  {
+    "t": 1789865761542,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "You can reach me at"
+    }
+  },
+  {
+    "t": 1789865762536,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "You can reach me at 5 5 5"
+    }
+  },
+  {
+    "t": 1789865763750,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "You can reach me at 5 5 5 5 5 5"
+    }
+  },
+  {
+    "t": 1789865764966,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "You can reach me at 5 5 5 5 5 5 0 1 0"
+    }
+  },
+  {
+    "t": 1789865766671,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "You can reach me at 5 5 5 5 5 5 0 1 0 3."
+    }
+  },
+  {
+    "t": 1789865766692,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "It started this morning. You can reach me at 5 5 5 5 5 5 0 1 0 3."
+    }
+  },
+  {
+    "t": 1789865767251,
+    "type": "transcript",
+    "value": {
+      "speaker": "AI",
+      "text": ""
+    }
+  },
+  {
+    "t": 1789865767254,
+    "type": "transcript",
+    "value": {
+      "speaker": "AI",
+      "text": ""
+    }
+  },
+  {
+    "t": 1789865767261,
+    "type": "transcript",
+    "value": {
+      "speaker": "AI",
+      "text": ""
+    }
+  },
+  {
+    "t": 1789865767653,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "You can reach me at 5 5 5 5 5 5 0 1 0 3."
+    }
+  },
+  {
+    "t": 1789865768646,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "You can reach me at 5 5 5 5 5 5 0 1 0 3."
+    }
+  },
+  {
+    "t": 1789865769690,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "You can reach me at 5 5 5 5 5 5 0 1 0 3."
+    }
+  },
+  {
+    "t": 1789865770670,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "You can reach me at 5 5 5 5 5 5 0 1 0 3."
+    }
+  },
+  {
+    "t": 1789865770814,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "You can reach me at 5 5 5 5 5 5 0 1 0 3."
+    }
+  },
+  {
+    "t": 1789865770815,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "You can reach me at 5 5 5 5 5 5 0 1 0 3."
+    }
+  },
+  {
+    "t": 1789865774231,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "You can reach me at 5 5 5 5 5 5 0 1 0 3."
+    }
+  },
+  {
+    "t": 1789865774783,
+    "type": "transcript",
+    "value": {
+      "speaker": "AI",
+      "text": "The transfer did not go through. A nurse will call you back on the number you gave, and if your symptoms get worse, please call the office or emergency services. Goodbye."
+    }
+  },
+  {
+    "t": 1789865774787,
+    "type": "transcript",
+    "value": {
+      "speaker": "AI",
+      "text": "The transfer did not go through. A nurse will call you back on the number you gave, and if your symptoms get worse, please call the office or emergency services. Goodbye."
+    }
+  }
+]

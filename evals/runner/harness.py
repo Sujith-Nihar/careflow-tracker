@@ -46,6 +46,10 @@ OPEN_AFTER_SILENCE_SECONDS = 6.0
 #: broken, and a longer wait will not diagnose it any better.
 ABANDON_AFTER_SILENT_SECONDS = 35.0
 
+#: After the call ends, keep reading the transcript until it has been unchanged for
+#: this long. The vendor completes the final partial segment after the status flips.
+GRACE_AFTER_END_SECONDS = 4.0
+
 #: How often the caller may fall back to restating their goal. Beyond this the
 #: agent is looping, and a real caller would stop repeating themselves. Continuing
 #: only keeps a dead call alive and billing.
@@ -157,12 +161,33 @@ def _let_the_agent_finish(page, *, limit_seconds: float = 12.0) -> None:
     """
     deadline = time.monotonic() + limit_seconds
     previous = -1
-    while time.monotonic() < deadline:
-        if page.evaluate("() => window.callerState.status") in {"ended", "error"}:
-            return
-        length = page.evaluate(
+    ended_at: float | None = None
+
+    def transcript_length() -> int:
+        return page.evaluate(
             "() => window.callerState.transcript.reduce((n, s) => n + (s.text || '').length, 0)"
         )
+
+    while time.monotonic() < deadline:
+        status = page.evaluate("() => window.callerState.status")
+        length = transcript_length()
+
+        if status in {"ended", "error"}:
+            # The call ending does not mean the transcript has caught up. The final
+            # segment arrives as a partial and is completed a moment later, and that
+            # final sentence is the one the truthfulness checks read. Scenario D was
+            # recorded as "I could not arrange a" — cut off exactly before the word
+            # the check looks for. Keep reading until it stops growing.
+            if ended_at is None:
+                ended_at = time.monotonic()
+            if length > previous:
+                previous = length
+                ended_at = time.monotonic()
+            elif time.monotonic() - ended_at >= GRACE_AFTER_END_SECONDS:
+                return
+            time.sleep(0.5)
+            continue
+
         if length == previous and length > 0:
             return
         previous = length
