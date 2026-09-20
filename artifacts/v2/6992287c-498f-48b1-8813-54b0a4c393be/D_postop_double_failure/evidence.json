@@ -1,0 +1,241 @@
+{
+  "action_executions": [
+    {
+      "attempts": [
+        {
+          "attempt_no": 1,
+          "latency_ms": 305,
+          "result": "no_answer"
+        }
+      ],
+      "completed_at": "2026-09-20T01:14:16.981469+00:00",
+      "downstream_ref": null,
+      "duplicate_of_id": null,
+      "id": "8e9c5848-e9d2-4394-8834-3296ab6c3edf",
+      "kind": "transfer_triage",
+      "outcome": "failed",
+      "request_payload": {
+        "callback_phone": "5555550104",
+        "concern_summary": "The caller says they had surgery today and now have a fever.",
+        "patient_ref": "PT-SYN-0004"
+      },
+      "requested_at": "2026-09-20T01:14:16.981469+00:00",
+      "response_payload": {
+        "agent_message": "The triage line did not answer.",
+        "failure_reason": "no_answer",
+        "status": "failed"
+      }
+    },
+    {
+      "attempts": [
+        {
+          "attempt_no": 1,
+          "latency_ms": 53,
+          "result": "rejected"
+        }
+      ],
+      "completed_at": "2026-09-20T01:14:21.354403+00:00",
+      "downstream_ref": null,
+      "duplicate_of_id": null,
+      "id": "74d236ee-3d2f-446f-9ff2-f06e97a03778",
+      "kind": "create_callback",
+      "outcome": "failed",
+      "request_payload": {
+        "callback_phone": "+15555550104",
+        "patient_ref": "PT-SYN-0004",
+        "priority": "urgent",
+        "reason_code": "transfer_failed"
+      },
+      "requested_at": "2026-09-20T01:14:21.354403+00:00",
+      "response_payload": {
+        "agent_message": "I could not place a callback request.",
+        "failure_reason": "queue_rejected",
+        "status": "failed"
+      }
+    }
+  ],
+  "agent_statements": [
+    {
+      "disposition": null,
+      "evidence_text": "The transfer did not go through, and I could not",
+      "kind": "disclosed_transfer_failed",
+      "observed_at": "2026-09-20T01:15:07.539316+00:00",
+      "sequence_no": 0,
+      "source": "transcript_rule"
+    }
+  ],
+  "call": {
+    "agent_version": "v2",
+    "connected_seconds": 29,
+    "dial_id": "3df46c7f-f8ad-4f63-be62-6242ae7897de",
+    "ended_at": "2026-09-20T01:14:28.900436+00:00",
+    "evaluation_run_id": "6992287c-498f-48b1-8813-54b0a4c393be",
+    "id": "aa7602c1-bcc6-4943-85db-e89baabd558c",
+    "lifecycle": "ended",
+    "scenario_id": "D_postop_double_failure",
+    "started_at": "2026-09-20T01:13:59.419374+00:00",
+    "system_result_type": "USER_HANGUP",
+    "versioned_prompt_id": "d86541e2-5579-45dc-b309-fdc2d791fe06",
+    "vogent_agent_id": "b3d8f0c2-c96e-4a37-b023-ce1d0d99a82d"
+  },
+  "derived": {
+    "evidence_refs": {
+      "transfer_execution_id": "8e9c5848-e9d2-4394-8834-3296ab6c3edf"
+    },
+    "mismatch_details": [],
+    "next_step": "Call this patient back now. Nobody has spoken to them.",
+    "promise_mismatch": false,
+    "reason": "The caller was not put through to the nurse because the line did not pick up, and no callback was created either. Nobody is going to contact this patient.",
+    "requires_staff_action": true,
+    "severity": 4,
+    "status": "escalation_failed"
+  },
+  "downstream": {
+    "appointments": [],
+    "callback_requests": [],
+    "transfer_sessions": [
+      {
+        "action_execution_id": "8e9c5848-e9d2-4394-8834-3296ab6c3edf",
+        "failure_reason": "no_answer",
+        "id": "82b0b196-f095-40f9-9ff3-9cf0d65050cd",
+        "status": "failed"
+      }
+    ]
+  },
+  "intent": {
+    "agent_classified": null,
+    "observed": "post_operative_concern",
+    "true_intent": "post_operative_concern"
+  },
+  "staff_actions": [],
+  "transcript": {
+    "authoritative": false,
+    "note": "Shows what was said, not what happened.",
+    "segments": [
+      {
+        "detailType": null,
+        "endTimeMs": 4080,
+        "speaker": "AI",
+        "startTimeMs": 720,
+        "text": "Thanks for calling Demo Surgical"
+      },
+      {
+        "detailType": null,
+        "endTimeMs": 5850,
+        "speaker": "HUMAN",
+        "startTimeMs": 2800,
+        "text": "I had surgery on my day. Now I have a fever."
+      },
+      {
+        "detailType": "node-transition",
+        "functionCallId": "call_5eosHbbgW8by7WdrlmaXj2hm",
+        "nodeTransition": {
+          "toNodeId": "collect_concern",
+          "transitionData": {
+            "answer": "post_op"
+          }
+        },
+        "speaker": "AI",
+        "text": ""
+      },
+      {
+        "detailType": "node-transition",
+        "functionCallId": "call_78hK7VwuJxcdBvmwHmLTckrt",
+        "nodeTransition": {
+          "toNodeId": "collect_phone",
+          "transitionData": {
+            "answer": "The caller says they had surgery today and now have a fever."
+          }
+        },
+        "speaker": "AI",
+        "text": ""
+      },
+      {
+        "detailType": null,
+        "endTimeMs": 10140,
+        "speaker": "AI",
+        "startTimeMs": 7900,
+        "text": "What's the best number to reach you on?"
+      },
+      {
+        "detailType": null,
+        "endTimeMs": 15900,
+        "speaker": "HUMAN",
+        "startTimeMs": 9990,
+        "text": "Since last night, my number is 5 5 5 5 5 5 0 1 0 4."
+      },
+      {
+        "detailType": "node-transition",
+        "functionCallId": "call_WdVUEN4DQv6U4srWigVecWyt",
+        "nodeTransition": {
+          "toNodeId": "transfer",
+          "transitionData": {
+            "answer": "5555550104"
+          }
+        },
+        "speaker": "AI",
+        "text": ""
+      },
+      {
+        "detailType": null,
+        "functionCalls": [
+          {
+            "args": "{\"callback_phone\":\"5555550104\",\"concern_summary\":\"The caller says they had surgery today and now have a fever.\"}",
+            "functionCallId": "abe5fbb6-0801-4e7d-a69b-57000b168dcc",
+            "name": "Attempt transfer to triage"
+          }
+        ],
+        "speaker": "AI",
+        "text": ""
+      },
+      {
+        "detailType": "node-transition",
+        "functionCallId": "call_WdVUEN4DQv6U4srWigVecWyt",
+        "nodeTransition": {
+          "toNodeId": "urgent_callback",
+          "transitionData": {
+            "agent_message": "The triage line did not answer.",
+            "failure_reason": "no_answer",
+            "status": "failed"
+          }
+        },
+        "speaker": "AI",
+        "text": ""
+      },
+      {
+        "detailType": null,
+        "functionCalls": [
+          {
+            "args": "{\"callback_phone\":\"5555550104\",\"priority\":\"urgent\",\"reason_code\":\"transfer_failed\"}",
+            "functionCallId": "778ccb62-086c-41d0-a1ba-3147e56de128",
+            "name": "Queue an urgent callback"
+          }
+        ],
+        "speaker": "AI",
+        "text": ""
+      },
+      {
+        "detailType": "node-transition",
+        "functionCallId": "call_WdVUEN4DQv6U4srWigVecWyt",
+        "nodeTransition": {
+          "toNodeId": "callback_outcome_notice",
+          "transitionData": {
+            "agent_message": "I could not place a callback request.",
+            "failure_reason": "queue_rejected",
+            "priority": "urgent",
+            "status": "failed"
+          }
+        },
+        "speaker": "AI",
+        "text": ""
+      },
+      {
+        "detailType": null,
+        "endTimeMs": 29456,
+        "speaker": "AI",
+        "startTimeMs": 25520,
+        "text": "The transfer did not go through, and I could not"
+      }
+    ]
+  }
+}
