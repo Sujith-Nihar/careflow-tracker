@@ -1,0 +1,161 @@
+{
+  "agent": {
+    "defaultExtractorId": null,
+    "defaultVersionedPromptId": "b27a8ced-35c7-4d44-bb63-a0469bcde061",
+    "defaultVoiceId": "94c32748-865f-42e1-bb1a-3a6b4abc7d11",
+    "endpointDetectorConfig": {
+      "mode": "DEFAULT",
+      "type": "SEMANTIC"
+    },
+    "fillEmptyStringVariables": false,
+    "id": "b3d8f0c2-c96e-4a37-b023-ce1d0d99a82d",
+    "idleMessageConfig": {
+      "enabled": false,
+      "idleDurationMilliseconds": 0,
+      "maxIdleMessages": 0
+    },
+    "ivrConfiguration": null,
+    "ivrSilenceHangupConfiguration": null,
+    "language": "en",
+    "maxDurationSeconds": 10800,
+    "name": "CareFlow Demo Surgical",
+    "silenceHangupConfiguration": {
+      "silenceDurationSeconds": 0,
+      "type": "DISABLED"
+    },
+    "timeoutBehaviorConfiguration": {
+      "behavior": "HANGUP",
+      "transferNumber": null
+    },
+    "timeoutMessage": null,
+    "transcriberParams": {
+      "type": "deepgram"
+    },
+    "utteranceDetectorConfig": {
+      "interruptionPlayTimeMs": 1000,
+      "sensitivity": "MEDIUM"
+    },
+    "voicemailConfig": {
+      "detection": "DISABLE",
+      "message": null
+    }
+  },
+  "aiDurationSeconds": 101,
+  "aiResult": {
+    "collect_concern": {
+      "answer": "My surgery wound is bleeding."
+    },
+    "collect_phone": {
+      "answer": "5555550103"
+    },
+    "greet_intake": {
+      "answer": "post_op"
+    }
+  },
+  "durationSeconds": 101,
+  "endedAt": "2026-09-20T00:13:07.182931Z",
+  "id": "8f0ef2fe-425a-44fa-b4ab-e313b01d3111",
+  "inputs": {
+    "callback_phone": "+15555550103",
+    "evaluation_run_id": "dfba51be-49c5-486c-8896-19faf376c36c",
+    "patient_ref": "PT-SYN-0003",
+    "scenario_id": "C_postop_transfer_fail_callback"
+  },
+  "recordings": [
+    {
+      "url": "https://api.vogent.ai/api/recordings/3c4a2f5f-66e3-4e74-9f59-206e9d22c6ca"
+    }
+  ],
+  "startedAt": "2026-09-20T00:11:25.212871Z",
+  "status": "completed",
+  "systemResultType": "USER_HANGUP",
+  "transcript": [
+    {
+      "detailType": null,
+      "endTimeMs": 4064,
+      "speaker": "AI",
+      "startTimeMs": 640,
+      "text": "Thanks for calling Demo Surgical"
+    },
+    {
+      "detailType": null,
+      "endTimeMs": 6440,
+      "speaker": "HUMAN",
+      "startTimeMs": 2720,
+      "text": "I had surgery on Tuesday. My surgery wound is bleeding."
+    },
+    {
+      "detailType": "node-transition",
+      "functionCallId": "call_gvp8o2xHPaB6KduUUB5KzXEf",
+      "nodeTransition": {
+        "toNodeId": "collect_concern",
+        "transitionData": {
+          "answer": "post_op"
+        }
+      },
+      "speaker": "AI",
+      "text": ""
+    },
+    {
+      "detailType": "node-transition",
+      "functionCallId": "call_Z65mnedKUNwFXlhfMUOV7fss",
+      "nodeTransition": {
+        "toNodeId": "collect_phone",
+        "transitionData": {
+          "answer": "My surgery wound is bleeding."
+        }
+      },
+      "speaker": "AI",
+      "text": ""
+    },
+    {
+      "detailType": null,
+      "endTimeMs": 10240,
+      "speaker": "AI",
+      "startTimeMs": 8320,
+      "text": "What's the best number to reach you on?"
+    },
+    {
+      "detailType": null,
+      "endTimeMs": 17020,
+      "speaker": "HUMAN",
+      "startTimeMs": 10430,
+      "text": "It started this morning. You can reach me at 5 5 5 5 5 5 0 1 0 3."
+    },
+    {
+      "detailType": "node-transition",
+      "functionCallId": "call_TgHA5c0UpEXsNjvB5XCc3P0a",
+      "nodeTransition": {
+        "toNodeId": "promise_transfer",
+        "transitionData": {
+          "answer": "5555550103"
+        }
+      },
+      "speaker": "AI",
+      "text": ""
+    },
+    {
+      "detailType": null,
+      "endTimeMs": 22820,
+      "speaker": "AI",
+      "startTimeMs": 19380,
+      "text": "I'm connecting you to the triage nurse now."
+    },
+    {
+      "detailType": null,
+      "endTimeMs": 31570,
+      "speaker": "HUMAN",
+      "startTimeMs": 28590,
+      "text": "I had surgery this week, and I'm worried about the incision."
+    },
+    {
+      "detailType": null,
+      "endTimeMs": 36260,
+      "speaker": "AI",
+      "startTimeMs": 32580,
+      "text": "I'm connecting you to the triage nurse now."
+    }
+  ],
+  "versionedPromptId": "c08e736c-b1e5-415f-b436-aee0943b8acf",
+  "voiceId": "94c32748-865f-42e1-bb1a-3a6b4abc7d11"
+}

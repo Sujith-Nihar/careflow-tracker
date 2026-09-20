@@ -55,6 +55,9 @@ typecheck-ui: ## typecheck the dashboard
 test: ## apply migrations to the careflow_test schema
 	$(PY) scripts/migrate.py --test-schema
 
+reset-calls: ## delete all call and evaluation data, keep the practices
+	$(PY) scripts/reset_calls.py
+
 seed: ## create the synthetic organizations
 	$(PY) scripts/seed.py
 
@@ -97,4 +100,4 @@ worker-demo: ## async path end to end: success, poisoned job, DLQ, log correlati
 secret-scan: ## fail if anything that looks like a credential is tracked by git
 	@scripts/secret_scan.sh
 
-.PHONY: help setup lint format typecheck-ui test test-cov db-check vogent-check migrate migrate-test seed api api-restart tunnel replay eval structural ui ui-install worker-demo tf-validate secret-scan
+.PHONY: help setup lint format typecheck-ui test test-cov db-check vogent-check migrate migrate-test reset-calls seed api api-restart tunnel replay eval structural ui ui-install worker-demo tf-validate secret-scan

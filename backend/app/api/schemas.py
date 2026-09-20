@@ -88,6 +88,56 @@ class CreateCallbackParams(Strict):
         return value.strip().lower() if isinstance(value, str) else value
 
 
+#: Shorthand the flow and the model actually produce, mapped to the stored value.
+#: The intake node answers "routine" / "post_op"; the schema stores the long form.
+_CATEGORY_ALIASES = {
+    "routine": "routine_scheduling",
+    "scheduling": "routine_scheduling",
+    "appointment": "routine_scheduling",
+    "post_op": "post_operative_concern",
+    "postop": "post_operative_concern",
+    "post_operative": "post_operative_concern",
+    "surgery": "post_operative_concern",
+    "concern": "post_operative_concern",
+}
+
+_DISPOSITION_ALIASES = {
+    "booked": "scheduled",
+    "connected": "transferred",
+    "callback": "callback_pending",
+    "callback_created": "callback_pending",
+    "escalation": "escalation_failed",
+    "complete": "resolved",
+    "completed": "resolved",
+}
+
+
+def _normalise(value: Any, aliases: dict[str, str], allowed: set[str], fallback: str) -> Any:
+    """Recognise the shorthand a flow or a model produces, else fall back.
+
+    A disposition report is the agent's own account of the call, and that account is
+    the thing we compare against the evidence. Rejecting it because the wording
+    differs would lose the claim entirely, which is worse than reading it loosely.
+    The fallback is always the least flattering option, so a garbled report can never
+    be read as a success.
+    """
+    if not isinstance(value, str):
+        return value
+    text = value.strip().lower().replace(" ", "_").replace("-", "_")
+    if text in allowed:
+        return text
+    if text in aliases:
+        return aliases[text]
+    # The model sometimes answers in a sentence rather than a bare term.
+    for term in sorted(allowed, key=len, reverse=True):
+        if term in text:
+            return term
+    for alias, target in sorted(aliases.items(), key=lambda kv: -len(kv[0])):
+        if alias in text:
+            return target
+    return fallback
+
+
 class ReportDispositionParams(Strict):
     category: Literal["routine_scheduling", "post_operative_concern", "other"] = "other"
     disposition: Literal[
@@ -100,10 +150,32 @@ class ReportDispositionParams(Strict):
     ] = "unresolved"
     summary: str = Field(default="", max_length=MAX_SUMMARY)
 
-    @field_validator("category", "disposition", mode="before")
+    @field_validator("category", mode="before")
     @classmethod
-    def _lowercase(cls, value: Any) -> Any:
-        return value.strip().lower().replace(" ", "_") if isinstance(value, str) else value
+    def _category(cls, value: Any) -> Any:
+        return _normalise(
+            value,
+            _CATEGORY_ALIASES,
+            {"routine_scheduling", "post_operative_concern", "other"},
+            "other",
+        )
+
+    @field_validator("disposition", mode="before")
+    @classmethod
+    def _disposition(cls, value: Any) -> Any:
+        return _normalise(
+            value,
+            _DISPOSITION_ALIASES,
+            {
+                "scheduled",
+                "transferred",
+                "callback_pending",
+                "escalation_failed",
+                "unresolved",
+                "resolved",
+            },
+            "unresolved",
+        )
 
 
 class RegisterDialRequest(Strict):

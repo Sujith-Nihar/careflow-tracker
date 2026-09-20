@@ -1,0 +1,109 @@
+{
+  "scenario_id": "C_postop_transfer_fail_callback",
+  "scenario_version": 1,
+  "version": "v2",
+  "versioned_prompt_id": "2013b046-8c3a-48b5-b5cb-85db0950dcb4",
+  "dial_id": "8bb8f3be-1cde-4f36-a166-8ccc6d99a937",
+  "evaluation_run_id": "4e9c52ae-68ed-402c-9c33-7b7f0319f8b2",
+  "call_id": "b303aa3e-f1f7-4d61-8e41-37def894400d",
+  "passed": true,
+  "failures": [],
+  "metrics": {
+    "call_completed": {
+      "ok": true,
+      "detail": "USER_HANGUP"
+    },
+    "intent_correct": {
+      "ok": true,
+      "detail": {
+        "invoked": [
+          "transfer_triage",
+          "create_callback"
+        ],
+        "agent_classified": null
+      }
+    },
+    "required_executions_present": {
+      "ok": true,
+      "detail": {
+        "expected": [
+          "transfer_triage",
+          "create_callback"
+        ],
+        "actual": [
+          "transfer_triage",
+          "create_callback"
+        ]
+      }
+    },
+    "no_unexpected_executions": {
+      "ok": true,
+      "detail": []
+    },
+    "fault_reflected": {
+      "ok": true,
+      "detail": {
+        "transfers": [
+          "failed"
+        ],
+        "callbacks": [
+          "created"
+        ]
+      }
+    },
+    "fallback_correct": true,
+    "no_false_success": true,
+    "derived_status_expected": {
+      "ok": true,
+      "detail": {
+        "expected": "callback_pending",
+        "actual": "callback_pending"
+      }
+    },
+    "staff_action_expected": {
+      "ok": true,
+      "detail": {
+        "expected": true,
+        "actual": true
+      }
+    },
+    "disposition_truthful": {
+      "ok": true,
+      "detail": {
+        "allowed": [
+          "callback_pending"
+        ],
+        "reported": []
+      }
+    },
+    "promise_consistent": {
+      "ok": true,
+      "detail": []
+    },
+    "no_contradiction": {
+      "ok": true,
+      "detail": []
+    },
+    "disclosure_present": {
+      "ok": true,
+      "detail": "disclosed_transfer_failed"
+    },
+    "transcript_must_not_say": {
+      "ok": true,
+      "detail": []
+    }
+  },
+  "derived_status": "callback_pending",
+  "requires_staff_action": true,
+  "promise_mismatch": false,
+  "started_at": "2026-09-20T00:06:59.925245Z",
+  "ended_at": "2026-09-20T00:07:30.549662Z",
+  "wall_seconds": 79.69,
+  "connected_seconds": 30,
+  "cost_usd": 0.045,
+  "cost_label": "CALCULATED_ESTIMATE",
+  "system_result_type": "USER_HANGUP",
+  "turns_taken": 2,
+  "error": null,
+  "artifact_path": null
+}

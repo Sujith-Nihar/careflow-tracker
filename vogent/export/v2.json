@@ -412,11 +412,11 @@
             },
             {
               "name": "disposition",
-              "value": "scheduled"
+              "value": "scheduled when {{node.book.status}} is booked, otherwise unresolved"
             },
             {
               "name": "summary",
-              "value": "Scheduler confirmed an appointment and the caller was told the confirmed details."
+              "value": "Scheduler returned {{node.book.status}}."
             }
           ],
           "outputs": [
@@ -500,11 +500,11 @@
             },
             {
               "name": "disposition",
-              "value": "Use exactly one of these, chosen from the function results: 'transferred' if {{node.transfer.status}} is connected; 'callback_pending' if {{node.urgent_callback.status}} is created; otherwise 'escalation_failed'."
+              "value": "transferred when {{node.transfer.status}} is connected, otherwise callback_pending when {{node.urgent_callback.status}} is created, otherwise escalation_failed"
             },
             {
               "name": "summary",
-              "value": "Reported from the recorded function results."
+              "value": "Transfer {{node.transfer.status}}, callback {{node.urgent_callback.status}}."
             }
           ],
           "outputs": [
@@ -545,7 +545,7 @@
     ],
     "openingLineType": "INBOUND_OUTBOUND"
   },
-  "id": "2013b046-8c3a-48b5-b5cb-85db0950dcb4",
+  "id": "6bd05539-c01c-44f8-86a2-b642591e5c07",
   "modelOptionValues": [
     {
       "optionId": "temperature",

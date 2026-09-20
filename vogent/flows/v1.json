@@ -186,7 +186,7 @@
         "inputs": [
           {
             "name": "category",
-            "value": "other"
+            "value": "{{node.greet_intake.answer}}"
           },
           {
             "name": "disposition",

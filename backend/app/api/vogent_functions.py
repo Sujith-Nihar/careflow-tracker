@@ -395,7 +395,17 @@ def report_disposition() -> Any:
         bind(organization_id=principal.organization_id, function="report_disposition")
         log.info("vogent.function.received", function="report_disposition")
         call = _open_call(conn, envelope, principal)
-        params = ReportDispositionParams.model_validate(envelope.params or {})
+        try:
+            params = ReportDispositionParams.model_validate(envelope.params or {})
+        except ValidationError:
+            # Unreadable, but the agent still tried to file an account of the call.
+            # Record the attempt rather than losing it behind a 500.
+            return _finish(conn, call, principal, rejected_action(
+                conn, organization_id=principal.organization_id, call=call,
+                dial_id=envelope.dial_id, kind="report_disposition", params=envelope.params,
+                request_id=g.get("request_id"),
+                agent_message="",
+            ))
 
         def simulate(_profile: dict) -> SimulatorResult:
             from ..domain.types import ActionOutcome

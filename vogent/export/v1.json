@@ -308,7 +308,7 @@
           "inputs": [
             {
               "name": "category",
-              "value": "other"
+              "value": "{{node.greet_intake.answer}}"
             },
             {
               "name": "disposition",
@@ -425,7 +425,7 @@
     ],
     "openingLineType": "INBOUND_OUTBOUND"
   },
-  "id": "c08e736c-b1e5-415f-b436-aee0943b8acf",
+  "id": "abf6a7df-d2aa-4df8-aa8b-b8c1bd3675ed",
   "modelOptionValues": [
     {
       "optionId": "temperature",

@@ -1,0 +1,147 @@
+{
+  "action_executions": [],
+  "agent_statements": [
+    {
+      "disposition": null,
+      "evidence_text": "I'm connecting you to the triage nurse now.",
+      "kind": "promised_transfer",
+      "observed_at": "2026-09-20T00:13:37.586417+00:00",
+      "sequence_no": 0,
+      "source": "transcript_rule"
+    },
+    {
+      "disposition": null,
+      "evidence_text": "I'm connecting you to the triage nurse now.",
+      "kind": "promised_transfer",
+      "observed_at": "2026-09-20T00:13:37.586417+00:00",
+      "sequence_no": 1,
+      "source": "transcript_rule"
+    }
+  ],
+  "call": {
+    "connected_seconds": 101,
+    "dial_id": "8f0ef2fe-425a-44fa-b4ab-e313b01d3111",
+    "ended_at": "2026-09-20T00:13:07.182931+00:00",
+    "evaluation_run_id": "dfba51be-49c5-486c-8896-19faf376c36c",
+    "id": "7e60d2f6-5e3b-4bac-9c32-d6d35ea80601",
+    "lifecycle": "ended",
+    "scenario_id": "C_postop_transfer_fail_callback",
+    "started_at": "2026-09-20T00:11:25.212871+00:00",
+    "system_result_type": "USER_HANGUP",
+    "versioned_prompt_id": "c08e736c-b1e5-415f-b436-aee0943b8acf",
+    "vogent_agent_id": null
+  },
+  "derived": {
+    "evidence_refs": {},
+    "mismatch_details": [
+      "The agent told the caller they were being put through, and they were not."
+    ],
+    "next_step": "Listen to the call and ring the patient back if they needed something.",
+    "promise_mismatch": true,
+    "reason": "The call ended and nothing was done. Whatever the caller was told, no appointment, transfer or callback exists. The agent told the caller they were being put through, and they were not.",
+    "requires_staff_action": true,
+    "severity": 3,
+    "status": "no_action_recorded"
+  },
+  "downstream": {
+    "appointments": [],
+    "callback_requests": [],
+    "transfer_sessions": []
+  },
+  "intent": {
+    "agent_classified": null,
+    "true_intent": "post_operative_concern"
+  },
+  "staff_actions": [],
+  "transcript": {
+    "authoritative": false,
+    "note": "Shows what was said, not what happened.",
+    "segments": [
+      {
+        "detailType": null,
+        "endTimeMs": 4064,
+        "speaker": "AI",
+        "startTimeMs": 640,
+        "text": "Thanks for calling Demo Surgical"
+      },
+      {
+        "detailType": null,
+        "endTimeMs": 6440,
+        "speaker": "HUMAN",
+        "startTimeMs": 2720,
+        "text": "I had surgery on Tuesday. My surgery wound is bleeding."
+      },
+      {
+        "detailType": "node-transition",
+        "functionCallId": "call_gvp8o2xHPaB6KduUUB5KzXEf",
+        "nodeTransition": {
+          "toNodeId": "collect_concern",
+          "transitionData": {
+            "answer": "post_op"
+          }
+        },
+        "speaker": "AI",
+        "text": ""
+      },
+      {
+        "detailType": "node-transition",
+        "functionCallId": "call_Z65mnedKUNwFXlhfMUOV7fss",
+        "nodeTransition": {
+          "toNodeId": "collect_phone",
+          "transitionData": {
+            "answer": "My surgery wound is bleeding."
+          }
+        },
+        "speaker": "AI",
+        "text": ""
+      },
+      {
+        "detailType": null,
+        "endTimeMs": 10240,
+        "speaker": "AI",
+        "startTimeMs": 8320,
+        "text": "What's the best number to reach you on?"
+      },
+      {
+        "detailType": null,
+        "endTimeMs": 17020,
+        "speaker": "HUMAN",
+        "startTimeMs": 10430,
+        "text": "It started this morning. You can reach me at 5 5 5 5 5 5 0 1 0 3."
+      },
+      {
+        "detailType": "node-transition",
+        "functionCallId": "call_TgHA5c0UpEXsNjvB5XCc3P0a",
+        "nodeTransition": {
+          "toNodeId": "promise_transfer",
+          "transitionData": {
+            "answer": "5555550103"
+          }
+        },
+        "speaker": "AI",
+        "text": ""
+      },
+      {
+        "detailType": null,
+        "endTimeMs": 22820,
+        "speaker": "AI",
+        "startTimeMs": 19380,
+        "text": "I'm connecting you to the triage nurse now."
+      },
+      {
+        "detailType": null,
+        "endTimeMs": 31570,
+        "speaker": "HUMAN",
+        "startTimeMs": 28590,
+        "text": "I had surgery this week, and I'm worried about the incision."
+      },
+      {
+        "detailType": null,
+        "endTimeMs": 36260,
+        "speaker": "AI",
+        "startTimeMs": 32580,
+        "text": "I'm connecting you to the triage nurse now."
+      }
+    ]
+  }
+}

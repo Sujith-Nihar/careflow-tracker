@@ -182,3 +182,38 @@ def test_dial_level_identifiers_beat_what_the_model_repeats_back(client, demo_or
     ]
     assert stored["patient_ref"] == "PT-SYN-FIXED"
     assert stored["callback_phone"] == "+15555550140"
+
+
+def test_a_disposition_report_is_never_lost_to_a_validation_error(client, demo_org):
+    """The agent's account of the call is the claim we compare against the evidence.
+
+    Losing it behind a 500 would remove one side of that comparison. The flow's own
+    intake answers are short forms ("routine", "post_op"), and the model sometimes
+    replies with a sentence; both must still produce a usable claim.
+    """
+    dial = dial_id()
+    register_dial(client, demo_org, dial, "loose_disposition", {}, "routine_scheduling")
+    response = call_function(client, "report_disposition", dial, {
+        "category": "routine", "disposition": "booked", "summary": "all done",
+    })
+    assert response.status_code == 200
+    assert response.json["status"] == "recorded"
+
+    bundle = bundle_for(client, demo_org, dial)
+    assert bundle["intent"]["agent_classified"] == "routine_scheduling"
+    claim = next(s for s in bundle["agent_statements"] if s["kind"] == "reported_disposition")
+    assert claim["disposition"] == "scheduled"
+
+
+def test_an_unreadable_disposition_falls_back_to_the_least_flattering_reading(client, demo_org):
+    """A garbled report must never be read as a success."""
+    dial = dial_id()
+    register_dial(client, demo_org, dial, "garbled_disposition", {}, "routine_scheduling")
+    response = call_function(client, "report_disposition", dial, {
+        "category": "%%%", "disposition": "%%%",
+    })
+    assert response.status_code == 200
+
+    bundle = bundle_for(client, demo_org, dial)
+    claim = next(s for s in bundle["agent_statements"] if s["kind"] == "reported_disposition")
+    assert claim["disposition"] == "unresolved"

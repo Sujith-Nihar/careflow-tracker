@@ -1,0 +1,480 @@
+[
+  {
+    "t": 1789863083036,
+    "type": "ready",
+    "value": true
+  },
+  {
+    "t": 1789863085103,
+    "type": "audio_connected",
+    "value": true
+  },
+  {
+    "t": 1789863085231,
+    "type": "status",
+    "value": "in-progress"
+  },
+  {
+    "t": 1789863085850,
+    "type": "transcript",
+    "value": {
+      "speaker": "AI",
+      "text": "Thanks for calling Demo Surgical Associates. Are you calling to schedule a routine appointment, or about a concern after a recent surgery?"
+    }
+  },
+  {
+    "t": 1789863087906,
+    "type": "caller_clip",
+    "value": "http://127.0.0.1:52534/clips/9907b0360c01650c.wav"
+  },
+  {
+    "t": 1789863088175,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "I"
+    }
+  },
+  {
+    "t": 1789863089133,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "I had surgery on"
+    }
+  },
+  {
+    "t": 1789863089134,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "I had surgery on"
+    }
+  },
+  {
+    "t": 1789863089839,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "I had surgery on Tuesday."
+    }
+  },
+  {
+    "t": 1789863089855,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "I had surgery on Tuesday."
+    }
+  },
+  {
+    "t": 1789863090449,
+    "type": "transcript",
+    "value": {
+      "speaker": "AI",
+      "text": ""
+    }
+  },
+  {
+    "t": 1789863090837,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "My surgery Monday"
+    }
+  },
+  {
+    "t": 1789863091618,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "My surgery wound is bleeding."
+    }
+  },
+  {
+    "t": 1789863091631,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "My surgery wound is bleeding."
+    }
+  },
+  {
+    "t": 1789863092150,
+    "type": "transcript",
+    "value": {
+      "speaker": "AI",
+      "text": ""
+    }
+  },
+  {
+    "t": 1789863092151,
+    "type": "transcript",
+    "value": {
+      "speaker": "AI",
+      "text": ""
+    }
+  },
+  {
+    "t": 1789863092709,
+    "type": "transcript",
+    "value": {
+      "speaker": "AI",
+      "text": ""
+    }
+  },
+  {
+    "t": 1789863092711,
+    "type": "transcript",
+    "value": {
+      "speaker": "AI",
+      "text": ""
+    }
+  },
+  {
+    "t": 1789863093424,
+    "type": "transcript",
+    "value": {
+      "speaker": "AI",
+      "text": "What's the best number to reach you on?"
+    }
+  },
+  {
+    "t": 1789863095307,
+    "type": "transcript",
+    "value": {
+      "speaker": "AI",
+      "text": "What's the best number to reach you on?"
+    }
+  },
+  {
+    "t": 1789863095539,
+    "type": "caller_clip",
+    "value": "http://127.0.0.1:52534/clips/cd30dfda596e4c23.wav"
+  },
+  {
+    "t": 1789863096611,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "It started this"
+    }
+  },
+  {
+    "t": 1789863097031,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "It started this morning."
+    }
+  },
+  {
+    "t": 1789863097050,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "It started this morning."
+    }
+  },
+  {
+    "t": 1789863098040,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "You can reach me at"
+    }
+  },
+  {
+    "t": 1789863099072,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "You can reach me at 5 5 5"
+    }
+  },
+  {
+    "t": 1789863100185,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "You can reach me at 5 5 5 5 5 5"
+    }
+  },
+  {
+    "t": 1789863101581,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "You can reach me at 5 5 5 5 5 5 0 1 0"
+    }
+  },
+  {
+    "t": 1789863103241,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "You can reach me at 5 5 5 5 5 5 0 1 0 3."
+    }
+  },
+  {
+    "t": 1789863103262,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "It started this morning. You can reach me at 5 5 5 5 5 5 0 1 0 3."
+    }
+  },
+  {
+    "t": 1789863103877,
+    "type": "transcript",
+    "value": {
+      "speaker": "AI",
+      "text": ""
+    }
+  },
+  {
+    "t": 1789863103880,
+    "type": "transcript",
+    "value": {
+      "speaker": "AI",
+      "text": ""
+    }
+  },
+  {
+    "t": 1789863104203,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "You can reach me at 5 5 5 5 5 5 0 1 0 3."
+    }
+  },
+  {
+    "t": 1789863104478,
+    "type": "transcript",
+    "value": {
+      "speaker": "AI",
+      "text": "I'm connecting you to the triage nurse now."
+    }
+  },
+  {
+    "t": 1789863105246,
+    "type": "transcript",
+    "value": {
+      "speaker": "AI",
+      "text": "I'm connecting you to the triage nurse now."
+    }
+  },
+  {
+    "t": 1789863106200,
+    "type": "transcript",
+    "value": {
+      "speaker": "AI",
+      "text": "I'm connecting you to the triage nurse now."
+    }
+  },
+  {
+    "t": 1789863107178,
+    "type": "transcript",
+    "value": {
+      "speaker": "AI",
+      "text": "I'm connecting you to the triage nurse now."
+    }
+  },
+  {
+    "t": 1789863107920,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "You can reach me at 5 5 5 5 5 5 0 1 0 3."
+    }
+  },
+  {
+    "t": 1789863113588,
+    "type": "caller_clip",
+    "value": "http://127.0.0.1:52534/clips/efc44746db81582f.wav"
+  },
+  {
+    "t": 1789863114161,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "I have"
+    }
+  },
+  {
+    "t": 1789863115256,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "I had surgery this week on"
+    }
+  },
+  {
+    "t": 1789863116164,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "I had surgery this week, and I'm worried about"
+    }
+  },
+  {
+    "t": 1789863116999,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "I had surgery this week, and I'm worried about the incision."
+    }
+  },
+  {
+    "t": 1789863117034,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "I had surgery this week, and I'm worried about the incision."
+    }
+  },
+  {
+    "t": 1789863117642,
+    "type": "transcript",
+    "value": {
+      "speaker": "AI",
+      "text": "I'm connecting you to the triage nurse now."
+    }
+  },
+  {
+    "t": 1789863121277,
+    "type": "transcript",
+    "value": {
+      "speaker": "AI",
+      "text": "I'm connecting you to the triage nurse now."
+    }
+  },
+  {
+    "t": 1789863183600,
+    "type": "transcript",
+    "value": {
+      "speaker": "AI",
+      "text": "I'm connecting you to the triage nurse now. Thanks for calling Demo Surgical"
+    }
+  },
+  {
+    "t": 1789863183600,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "I had surgery on Tuesday."
+    }
+  },
+  {
+    "t": 1789863183603,
+    "type": "transcript",
+    "value": {
+      "speaker": "AI",
+      "text": ""
+    }
+  },
+  {
+    "t": 1789863183604,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "My surgery wound is bleeding."
+    }
+  },
+  {
+    "t": 1789863183604,
+    "type": "transcript",
+    "value": {
+      "speaker": "AI",
+      "text": ""
+    }
+  },
+  {
+    "t": 1789863183604,
+    "type": "transcript",
+    "value": {
+      "speaker": "AI",
+      "text": ""
+    }
+  },
+  {
+    "t": 1789863183605,
+    "type": "transcript",
+    "value": {
+      "speaker": "AI",
+      "text": ""
+    }
+  },
+  {
+    "t": 1789863183605,
+    "type": "transcript",
+    "value": {
+      "speaker": "AI",
+      "text": ""
+    }
+  },
+  {
+    "t": 1789863183605,
+    "type": "transcript",
+    "value": {
+      "speaker": "AI",
+      "text": "What's the best number to reach you on?"
+    }
+  },
+  {
+    "t": 1789863183606,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "It started this morning."
+    }
+  },
+  {
+    "t": 1789863183606,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "It started this morning. You can reach me at 5 5 5 5 5 5 0 1 0 3."
+    }
+  },
+  {
+    "t": 1789863183607,
+    "type": "transcript",
+    "value": {
+      "speaker": "AI",
+      "text": ""
+    }
+  },
+  {
+    "t": 1789863183607,
+    "type": "transcript",
+    "value": {
+      "speaker": "AI",
+      "text": ""
+    }
+  },
+  {
+    "t": 1789863183607,
+    "type": "transcript",
+    "value": {
+      "speaker": "AI",
+      "text": "I'm connecting you to the triage nurse now."
+    }
+  },
+  {
+    "t": 1789863183607,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "I had surgery this week, and I'm worried about the incision."
+    }
+  },
+  {
+    "t": 1789863183608,
+    "type": "transcript",
+    "value": {
+      "speaker": "AI",
+      "text": "I'm connecting you to the triage nurse now."
+    }
+  }
+]
