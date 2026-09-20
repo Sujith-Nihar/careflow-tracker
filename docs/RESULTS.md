@@ -98,9 +98,9 @@ would still exist.
 - **Regressed.** Nothing measured. V2 makes one extra function call per post-operative
   call (`create_callback` even when unnecessary), which the backend answers
   `not_applicable`. One extra round trip for a guarantee that does not depend on the model.
-- **Surprised me.** V1 is *cheaper to be wrong about* than to be right: its broken calls
-  ran longer (197s connected vs 118s) because a flow that does not know when it has
-  finished keeps talking. Worse safety and higher cost, together.
+- **Surprised me.** Being wrong cost more than being right. V1's broken calls ran 197
+  connected seconds against V2's 118, because a flow that never learns it has finished
+  keeps talking. The unsafe version was also the expensive one.
 
 ### What this cannot establish
 
@@ -198,11 +198,13 @@ near-free as scenarios are added while voice cost grows linearly.
 Scenario D's `disclosure_present` — whether the agent mentions **both** the transfer failure
 and the callback failure — is the only metric in the suite that varies run to run.
 
-**Across the four runs since the closing line was shortened: 2 passed, 2 failed.**
-(dials `682b1c74` PASS, `817c92b7` PASS, `a96643f6` FAIL, `e905460a` FAIL.)
+**Across the three runs at the frozen version `dfc9502a`: 2 passed, 1 failed.**
+(dials `682b1c74` PASS, `817c92b7` PASS, `e905460a` FAIL.) Three runs is a small sample and
+is quoted as one; it is enough to show the metric is unstable, not enough to rate it.
 
 Every one of those calls had **identical, correct action state**: transfer failed, callback
-failed, callback queue empty, `escalation_failed` at severity 4, staff action required. Only
+failed, callback queue empty, `escalation_failed` at severity 4, staff action required. On
+the failing run, `disclosure_present` was the only metric of the fourteen that failed. Only
 whether the sentence survived to the end of the call varied.
 
 Root cause, established in `INVESTIGATIONS.md`: Vogent tears the call down while the agent
@@ -210,8 +212,7 @@ is still speaking, at a point that varies. Two independent transcript sources ag
 the speech stopped, which rules out capture error. Mitigated by putting both required facts
 in the first short sentence; not eliminated.
 
-**This is the single most useful result in the suite**, because it is a controlled
-demonstration of the project's central claim. The evidence that decides whether a
-post-operative caller gets a nurse has been correct on every run. The evidence about what
-the agent *said* is the only thing that wobbles. A suite that scored on transcripts would
-call this agent unreliable half the time; a suite that scores on system state knows it is not.
+The action state was correct on all three runs; only the wording varied. The evidence that
+decides whether a post-operative caller reaches a nurse never moved. The evidence about what
+the agent *said* is the only thing that wobbles. A suite scoring on transcripts would call
+this agent unreliable a third of the time; a suite scoring on system state knows it is not.

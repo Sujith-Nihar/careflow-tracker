@@ -15,7 +15,7 @@ Everything is synthetic: no real patients, phone numbers, EHRs or production sys
 cp .env.example .env          # fill in per docs/HUMAN_SETUP.md
 make setup                    # python deps
 make migrate && make seed     # schema + the two synthetic practices
-make test                     # 92 backend tests against real PostgreSQL
+make test                     # 98 backend tests against real PostgreSQL
 make api                      # evidence API on :5055
 make ui-install && make ui    # staff dashboard on :3000
 ```
@@ -72,20 +72,32 @@ the absence of a connected transfer session and the absence of a callback row, i
 of anything the agent said.
 
 Artifacts for every case: `dial.json`, `transcript.json`, `timeline.json`, `evidence.json`,
-`metrics.json` under `artifacts/`.
+`metrics.json` under `artifacts/`. The final screen for both of the calls above is captured in
+`artifacts/ui/`: the call list, the V1 call that claimed a connection it never made, and the
+V2 call with its callback waiting.
 
 ---
 
 ## 3. Plan and customer update
 
-- Initial triage and plan: `docs/PROJECT_PLAN.md §1`
-- Update for the practice manager: `docs/MANAGER_UPDATE.md`
+The plan I wrote before touching code is `docs/PROJECT_PLAN.md §1`: reproduce the reported
+failure first, build the evidence model before any agent work, and treat the voice runs as
+the thing that decides whether the fix is real. The cut order it commits to is the order I
+actually cut in when time ran short, with the UI and hardening last.
+
+The update written for the practice manager, in plain language and with no jargon, is
+`docs/MANAGER_UPDATE.md`. It says what was going wrong, what changed, what staff can trust
+now, what they should not trust yet, and that a four-scenario test set is not a measure of
+how often this happened on their real calls.
 
 ---
 
 ## 4. Time log
 
-`TIME_LOG.md`.
+Coarse hours by workstream are in `TIME_LOG.md`. The heaviest blocks were the Vogent
+boundary (function endpoints, idempotency, simulators, organization scoping) and the voice
+harness that drives real browser calls with synthetic audio. Planning and architecture were
+front-loaded deliberately, which is why the later phases moved quickly.
 
 ---
 
@@ -93,7 +105,7 @@ Artifacts for every case: `dial.json`, `transcript.json`, `timeline.json`, `evid
 
 **Works, verified by running it**
 
-- Evidence model in PostgreSQL: 14 tables keeping caller intent, agent promise, requested
+- Evidence model in PostgreSQL: 13 tables keeping caller intent, agent promise, requested
   action, attempted action, action result, downstream state and derived status separate.
 - Flask boundary: four Vogent function endpoints, webhook ingestion, idempotency on repeat
   delivery, per-organization isolation, bounded validation of LLM-produced strings,
@@ -106,7 +118,8 @@ Artifacts for every case: `dial.json`, `transcript.json`, `timeline.json`, `evid
 - Both efficiency runs measured end to end.
 - Staff dashboard on persisted data, with a working "callback completed" action.
 - Async evaluation path: queue → worker → persisted run, poisoned job → dead-letter queue.
-- 92 backend tests; `make lint` clean under a strict ruleset.
+- 98 backend tests; `make lint` clean under a strict ruleset; lint, type-check, the
+  database-free tests, the frontend build and the secret scan run in CI on every push.
 
 **Simulated, deliberately**
 
@@ -192,9 +205,9 @@ scenario pass on action state. Full list: `docs/EVALUATION_PLAN.md §4`.
 | D post-op, both fail | **FAIL** | PASS |
 | | **2/4** | **4/4** |
 
-The versions agree where nothing goes wrong and diverge exactly where the policy matters.
-V1 costs more as well as being unsafe: 197 connected seconds against V2's 118, because a
-flow that does not know when it has finished keeps talking.
+They differ only on C and D, so the comparison isolates the design change rather than
+some general improvement in the flow. V1 costs more as well as being unsafe: 197 connected
+seconds against V2's 118, because a flow that never learns it has finished keeps talking.
 
 ### Experiment 2 — evaluation efficiency
 
@@ -221,9 +234,10 @@ Six, in `docs/INVESTIGATIONS.md`, each with before and after dial ids. The most
 consequential, INV-4, found that Vogent function nodes cannot branch on their own result,
 which invalidated V2's original design and moved the escalation decision into the backend.
 
-One metric is unstable and I report it as such: scenario D's disclosure check passed 2 of 4
-runs since the last fix, with identical correct action state on all four. `docs/RESULTS.md`
-explains why that is the most useful result in the suite rather than an embarrassment.
+One metric is unstable and I report it as such: scenario D's disclosure check passed 2 of 3
+runs at the frozen V2 version, with identical correct action state on all three. On the
+failing run it was the only one of fourteen metrics to fail. `docs/RESULTS.md` sets out the
+cause and why scoring on system state rather than transcripts is what makes that visible.
 
 ---
 
@@ -275,7 +289,7 @@ rejects any other mode explicitly rather than failing in production for a predic
 - Dial ids: §2 above, `docs/RESULTS.md`, and every `metrics.json` under `artifacts/`
 - Local replay: `make replay`
 
-Thirteen places where the Vogent documentation and its actual behaviour differ are recorded
+Fifteen places where the Vogent documentation and its actual behaviour differ are recorded
 in `docs/VOGENT_PLAN.md §2a`, each with the symptom it caused.
 
 ---
