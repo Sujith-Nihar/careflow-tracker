@@ -8,8 +8,15 @@ Built for the Kyron Medical full-stack take-home. A practice manager reported ca
 on a real voice call, fixes it in the flow's structure rather than its wording, and gives staff a
 screen that shows what the agent promised next to what the systems recorded.
 
-**Walkthrough video** (single take, unedited):
-https://drive.google.com/file/d/1ECUwREK_7O3eHXD1Jec1m4CweCHPa5uu/view?usp=share_link
+---
+
+## ▶ Walkthrough video
+
+> ### **[Watch the walkthrough](https://drive.google.com/file/d/1ECUwREK_7O3eHXD1Jec1m4CweCHPa5uu/view?usp=share_link)**
+>
+> Single take, unedited.
+
+---
 
 **Start with [`SUBMISSION.md`](SUBMISSION.md)** — the end-to-end trace, results, risks and what is
 mocked. Measured voice-run results are in [`docs/RESULTS.md`](docs/RESULTS.md).

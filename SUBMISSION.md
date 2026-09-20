@@ -7,8 +7,14 @@ downstream-system evidence says so, never because the agent said so.
 
 Everything is synthetic: no real patients, phone numbers, EHRs or production systems.
 
-**Walkthrough video** (single take, unedited):
-https://drive.google.com/file/d/1ECUwREK_7O3eHXD1Jec1m4CweCHPa5uu/view?usp=share_link
+---
+
+## ▶ Walkthrough video
+
+> ### **[Watch the walkthrough](https://drive.google.com/file/d/1ECUwREK_7O3eHXD1Jec1m4CweCHPa5uu/view?usp=share_link)**
+>
+> Single take, unedited. The reported bug on a real call, the structural fix, and the
+> vendor-transcript finding that nearly made me draw the wrong conclusion.
 
 ---
 
