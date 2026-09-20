@@ -1,0 +1,220 @@
+{
+  "action_executions": [
+    {
+      "attempts": [
+        {
+          "attempt_no": 1,
+          "latency_ms": 53,
+          "result": "booked"
+        }
+      ],
+      "completed_at": "2026-09-20T00:32:16.910672+00:00",
+      "downstream_ref": "f0b2522c-052a-4850-b903-3a9399145df5",
+      "duplicate_of_id": null,
+      "id": "567b2956-c06d-447b-ab81-277662ce661c",
+      "kind": "schedule_appointment",
+      "outcome": "succeeded",
+      "request_payload": {
+        "patient_ref": "PT-SYN-0001",
+        "preferred_date": "Next Tuesday",
+        "reason": "routine appointment"
+      },
+      "requested_at": "2026-09-20T00:32:16.910672+00:00",
+      "response_payload": {
+        "agent_message": "Booked for Tuesday 29 September at 10:00 AM.",
+        "appointment_id": "f0b2522c-052a-4850-b903-3a9399145df5",
+        "slot_iso": "2026-09-29T10:00:00+00:00",
+        "status": "booked"
+      }
+    },
+    {
+      "attempts": [],
+      "completed_at": "2026-09-20T00:32:19.066372+00:00",
+      "downstream_ref": null,
+      "duplicate_of_id": null,
+      "id": "04b06f95-9ab6-4ad9-b532-728e0034148e",
+      "kind": "report_disposition",
+      "outcome": "succeeded",
+      "request_payload": {
+        "category": "routine_scheduling",
+        "disposition": "resolved",
+        "summary": "Caller was helped and the call was completed."
+      },
+      "requested_at": "2026-09-20T00:32:19.066372+00:00",
+      "response_payload": {
+        "agent_message": "",
+        "status": "recorded"
+      }
+    }
+  ],
+  "agent_statements": [
+    {
+      "disposition": "resolved",
+      "evidence_text": "Caller was helped and the call was completed.",
+      "kind": "reported_disposition",
+      "observed_at": "2026-09-20T00:32:19.066372+00:00",
+      "sequence_no": 1000,
+      "source": "function_param"
+    }
+  ],
+  "call": {
+    "agent_version": "v1",
+    "connected_seconds": 28,
+    "dial_id": "0d95371a-1a40-4fd3-a60f-5d2e1a732bbc",
+    "ended_at": "2026-09-20T00:32:26.590710+00:00",
+    "evaluation_run_id": "c2a51ca7-6be1-422e-a174-6540f2a585b0",
+    "id": "d0a7215f-8c2a-4494-ad2c-feb71c8d17b4",
+    "lifecycle": "ended",
+    "scenario_id": "A_routine_scheduling",
+    "started_at": "2026-09-20T00:31:57.837549+00:00",
+    "system_result_type": "USER_HANGUP",
+    "versioned_prompt_id": "44f4774c-482f-4360-931c-76dc6c27d0c6",
+    "vogent_agent_id": "b3d8f0c2-c96e-4a37-b023-ce1d0d99a82d"
+  },
+  "derived": {
+    "evidence_refs": {
+      "appointment_id": "f0b2522c-052a-4850-b903-3a9399145df5",
+      "scheduling_execution_id": "567b2956-c06d-447b-ab81-277662ce661c"
+    },
+    "mismatch_details": [],
+    "next_step": "No further action.",
+    "promise_mismatch": false,
+    "reason": "An appointment was booked and confirmed.",
+    "requires_staff_action": false,
+    "severity": 0,
+    "status": "completed_scheduled"
+  },
+  "downstream": {
+    "appointments": [
+      {
+        "action_execution_id": "567b2956-c06d-447b-ab81-277662ce661c",
+        "id": "f0b2522c-052a-4850-b903-3a9399145df5",
+        "status": "booked"
+      }
+    ],
+    "callback_requests": [],
+    "transfer_sessions": []
+  },
+  "intent": {
+    "agent_classified": "routine_scheduling",
+    "true_intent": "routine_scheduling"
+  },
+  "staff_actions": [],
+  "transcript": {
+    "authoritative": false,
+    "note": "Shows what was said, not what happened.",
+    "segments": [
+      {
+        "detailType": null,
+        "endTimeMs": 9780,
+        "speaker": "AI",
+        "startTimeMs": 660,
+        "text": "Thanks for calling Demo Surgical Associates. Are you calling to schedule a routine appointment, or about a concern after a recent surgery?"
+      },
+      {
+        "detailType": null,
+        "endTimeMs": 12490,
+        "speaker": "HUMAN",
+        "startTimeMs": 9910,
+        "text": "I would like to make a routine appointment, please."
+      },
+      {
+        "detailType": "node-transition",
+        "functionCallId": "call_X9GaMLEER2KRVR2ChxFtNSmp",
+        "nodeTransition": {
+          "toNodeId": "collect_slot",
+          "transitionData": {
+            "answer": "routine"
+          }
+        },
+        "speaker": "AI",
+        "text": ""
+      },
+      {
+        "detailType": null,
+        "endTimeMs": 16080,
+        "speaker": "AI",
+        "startTimeMs": 14080,
+        "text": "Which day would you like to come in?"
+      },
+      {
+        "detailType": null,
+        "endTimeMs": 18230,
+        "speaker": "HUMAN",
+        "startTimeMs": 16350,
+        "text": "Next Tuesday would work well for me."
+      },
+      {
+        "detailType": "node-transition",
+        "functionCallId": "call_VesCl5nGHwDZphJss3lVLFTs",
+        "nodeTransition": {
+          "toNodeId": "book",
+          "transitionData": {
+            "answer": "Next Tuesday"
+          }
+        },
+        "speaker": "AI",
+        "text": ""
+      },
+      {
+        "detailType": null,
+        "functionCalls": [
+          {
+            "args": "{\"preferred_date\":\"Next Tuesday\",\"reason\":\"routine appointment\"}",
+            "functionCallId": "f68584a1-a1d2-43f5-899f-8b4484e426c1",
+            "name": "Book appointment"
+          }
+        ],
+        "speaker": "AI",
+        "text": ""
+      },
+      {
+        "detailType": "node-transition",
+        "functionCallId": "call_VesCl5nGHwDZphJss3lVLFTs",
+        "nodeTransition": {
+          "toNodeId": "disposition_after_booking",
+          "transitionData": {
+            "agent_message": "Booked for Tuesday 29 September at 10:00 AM.",
+            "appointment_id": "f0b2522c-052a-4850-b903-3a9399145df5",
+            "slot_iso": "2026-09-29T10:00:00+00:00",
+            "status": "booked"
+          }
+        },
+        "speaker": "AI",
+        "text": ""
+      },
+      {
+        "detailType": null,
+        "functionCalls": [
+          {
+            "args": "{\"category\":\"routine\",\"disposition\":\"resolved\",\"summary\":\"Caller was helped and the call was completed.\"}",
+            "functionCallId": "6af2c164-1b80-4340-8470-a81c69c2cc9b",
+            "name": "Report resolved after booking"
+          }
+        ],
+        "speaker": "AI",
+        "text": ""
+      },
+      {
+        "detailType": "node-transition",
+        "functionCallId": "call_VesCl5nGHwDZphJss3lVLFTs",
+        "nodeTransition": {
+          "toNodeId": "close_scheduled",
+          "transitionData": {
+            "agent_message": "",
+            "status": "recorded"
+          }
+        },
+        "speaker": "AI",
+        "text": ""
+      },
+      {
+        "detailType": null,
+        "endTimeMs": 28696,
+        "speaker": "AI",
+        "startTimeMs": 24920,
+        "text": "You\u2019re all set for next Tuesday. Is there anything else I can help"
+      }
+    ]
+  }
+}

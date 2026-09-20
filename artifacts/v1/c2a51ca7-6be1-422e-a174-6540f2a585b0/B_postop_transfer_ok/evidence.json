@@ -1,0 +1,142 @@
+{
+  "action_executions": [],
+  "agent_statements": [
+    {
+      "disposition": null,
+      "evidence_text": "I\u2019m connecting you to the triage nurse now.",
+      "kind": "promised_transfer",
+      "observed_at": "2026-09-20T00:33:48.481724+00:00",
+      "sequence_no": 0,
+      "source": "transcript_rule"
+    },
+    {
+      "disposition": null,
+      "evidence_text": "I\u2019m connecting you to the triage nurse now.",
+      "kind": "promised_transfer",
+      "observed_at": "2026-09-20T00:33:48.547237+00:00",
+      "sequence_no": 0,
+      "source": "transcript_rule"
+    },
+    {
+      "disposition": null,
+      "evidence_text": "I\u2019m connecting you to the triage nurse now.",
+      "kind": "promised_transfer",
+      "observed_at": "2026-09-20T00:33:48.679590+00:00",
+      "sequence_no": 0,
+      "source": "transcript_rule"
+    }
+  ],
+  "call": {
+    "agent_version": "v1",
+    "connected_seconds": 31,
+    "dial_id": "21232ae7-b582-4181-9080-f3b9ccbb8fd9",
+    "ended_at": "2026-09-20T00:33:48.399702+00:00",
+    "evaluation_run_id": "c2a51ca7-6be1-422e-a174-6540f2a585b0",
+    "id": "4486144e-18c3-41ea-be9b-e5dfafcde781",
+    "lifecycle": "ended",
+    "scenario_id": "B_postop_transfer_ok",
+    "started_at": "2026-09-20T00:33:16.831670+00:00",
+    "system_result_type": "USER_HANGUP",
+    "versioned_prompt_id": "44f4774c-482f-4360-931c-76dc6c27d0c6",
+    "vogent_agent_id": null
+  },
+  "derived": {
+    "evidence_refs": {},
+    "mismatch_details": [
+      "The agent told the caller they were being put through, and they were not."
+    ],
+    "next_step": "Listen to the call and ring the patient back if they needed something.",
+    "promise_mismatch": true,
+    "reason": "The call ended and nothing was done. Whatever the caller was told, no appointment, transfer or callback exists. The agent told the caller they were being put through, and they were not.",
+    "requires_staff_action": true,
+    "severity": 3,
+    "status": "no_action_recorded"
+  },
+  "downstream": {
+    "appointments": [],
+    "callback_requests": [],
+    "transfer_sessions": []
+  },
+  "intent": {
+    "agent_classified": null,
+    "true_intent": "post_operative_concern"
+  },
+  "staff_actions": [],
+  "transcript": {
+    "authoritative": false,
+    "note": "Shows what was said, not what happened.",
+    "segments": [
+      {
+        "detailType": null,
+        "endTimeMs": 9040,
+        "speaker": "AI",
+        "startTimeMs": 640,
+        "text": "Thanks for calling Demo Surgical Associates. Are you calling to schedule a routine appointment, or about a concern after a recent surgery?"
+      },
+      {
+        "detailType": null,
+        "endTimeMs": 14460,
+        "speaker": "HUMAN",
+        "startTimeMs": 10150,
+        "text": "I had surgery last week. I have a concern about my surgery wound."
+      },
+      {
+        "detailType": "node-transition",
+        "functionCallId": "call_Mac4NezPrvMQb4RXXoiKrOee",
+        "nodeTransition": {
+          "toNodeId": "collect_concern",
+          "transitionData": {
+            "answer": "post_op"
+          }
+        },
+        "speaker": "AI",
+        "text": ""
+      },
+      {
+        "detailType": null,
+        "endTimeMs": 19616,
+        "speaker": "AI",
+        "startTimeMs": 15840,
+        "text": "I'm sorry to hear that. Can you tell me briefly what's"
+      },
+      {
+        "detailType": null,
+        "endTimeMs": 24700,
+        "speaker": "HUMAN",
+        "startTimeMs": 17789,
+        "text": "It looks a bit ran around the edges. My number is 5 5 5 5 5 5 0 1 0 2."
+      },
+      {
+        "detailType": "node-transition",
+        "functionCallId": "call_nBxIUdu1CxJmB1zItq3wCjx7",
+        "nodeTransition": {
+          "toNodeId": "collect_phone",
+          "transitionData": {
+            "answer": "It looks a bit ran around the edges."
+          }
+        },
+        "speaker": "AI",
+        "text": ""
+      },
+      {
+        "detailType": "node-transition",
+        "functionCallId": "call_mPoqGkqrKAJsdgJhFdZlk384",
+        "nodeTransition": {
+          "toNodeId": "promise_transfer",
+          "transitionData": {
+            "answer": "5555550102"
+          }
+        },
+        "speaker": "AI",
+        "text": ""
+      },
+      {
+        "detailType": null,
+        "endTimeMs": 30200,
+        "speaker": "AI",
+        "startTimeMs": 27560,
+        "text": "I\u2019m connecting you to the triage nurse now."
+      }
+    ]
+  }
+}

@@ -1,6 +1,6 @@
 {
   "version_name": "careflow-v1-baseline",
-  "note": "V1 \u2014 a believable baseline. It announces the transfer before attempting it, then moves on unconditionally, and reports the call resolved. Nothing here is sabotage: every edge is one a reasonable builder would draw when they assume the function succeeds. It is the flow that produces the practice manager's complaint.",
+  "note": "V1 - the believable baseline. It calls the transfer function, then tells the caller they are connected and files the call as 'resolved', without ever reading the result. No callback exists on any path. This reproduces the practice manager's report: calls showing as resolved when no transfer or callback happened. Nothing here is sabotage; every edge is one a reasonable builder draws when they assume the function succeeds.",
   "nodes": [
     {
       "id": "greet_intake",
@@ -111,20 +111,6 @@
       "transitionRules": [
         {
           "conditionType": "always",
-          "transitionNodeId": "promise_transfer"
-        }
-      ]
-    },
-    {
-      "id": "promise_transfer",
-      "name": "Announce the transfer",
-      "type": "freeform",
-      "nodeData": {
-        "prompt": "Tell the caller you are connecting them to the triage nurse now. Keep it to one sentence. Say it once, then move on immediately."
-      },
-      "transitionRules": [
-        {
-          "conditionType": "always",
           "transitionNodeId": "transfer"
         }
       ]
@@ -159,7 +145,7 @@
       "name": "Hand off",
       "type": "freeform",
       "nodeData": {
-        "prompt": "Tell the caller the triage nurse will take it from here, wish them well, and end the call. Say it once, then move on immediately."
+        "prompt": "Tell the caller they are now connected with the triage nurse and that the nurse will take it from here. Wish them well and end the call."
       },
       "transitionRules": []
     },
