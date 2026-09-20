@@ -1,0 +1,104 @@
+{
+  "scenario_id": "B_postop_transfer_ok",
+  "scenario_version": 1,
+  "version": "v2",
+  "versioned_prompt_id": "dfc9502a-073c-42f0-b8f2-77afe4a35123",
+  "dial_id": "cf55bb5f-4554-499c-a448-e5bb7e944864",
+  "evaluation_run_id": "febdde6d-33a7-40e1-a18b-f530bbe6e65a",
+  "call_id": "699ea481-4031-4841-b44f-9cee0c6f849e",
+  "passed": true,
+  "failures": [],
+  "metrics": {
+    "call_completed": {
+      "ok": true,
+      "detail": "USER_HANGUP"
+    },
+    "intent_correct": {
+      "ok": true,
+      "detail": {
+        "invoked": [
+          "transfer_triage",
+          "create_callback"
+        ],
+        "agent_classified": null
+      }
+    },
+    "required_executions_present": {
+      "ok": true,
+      "detail": {
+        "expected": [
+          "transfer_triage"
+        ],
+        "actual": [
+          "transfer_triage",
+          "create_callback"
+        ]
+      }
+    },
+    "no_unexpected_executions": {
+      "ok": true,
+      "detail": []
+    },
+    "fault_reflected": {
+      "ok": true,
+      "detail": {
+        "transfers": [
+          "connected"
+        ],
+        "callbacks": []
+      }
+    },
+    "fallback_correct": true,
+    "no_false_success": true,
+    "derived_status_expected": {
+      "ok": true,
+      "detail": {
+        "expected": "completed_transferred",
+        "actual": "completed_transferred"
+      }
+    },
+    "staff_action_expected": {
+      "ok": true,
+      "detail": {
+        "expected": false,
+        "actual": false
+      }
+    },
+    "disposition_truthful": {
+      "ok": true,
+      "detail": {
+        "allowed": [
+          "resolved",
+          "transferred"
+        ],
+        "reported": []
+      }
+    },
+    "promise_consistent": {
+      "ok": true,
+      "detail": []
+    },
+    "no_contradiction": {
+      "ok": true,
+      "detail": []
+    },
+    "disclosure_present": true,
+    "transcript_must_not_say": {
+      "ok": true,
+      "detail": []
+    }
+  },
+  "derived_status": "completed_transferred",
+  "requires_staff_action": false,
+  "promise_mismatch": false,
+  "started_at": "2026-09-20T01:19:36.63705Z",
+  "ended_at": "2026-09-20T01:20:13.588336Z",
+  "wall_seconds": 52.82,
+  "connected_seconds": 36,
+  "cost_usd": 0.054,
+  "cost_label": "CALCULATED_ESTIMATE",
+  "system_result_type": "USER_HANGUP",
+  "turns_taken": 2,
+  "error": null,
+  "artifact_path": null
+}

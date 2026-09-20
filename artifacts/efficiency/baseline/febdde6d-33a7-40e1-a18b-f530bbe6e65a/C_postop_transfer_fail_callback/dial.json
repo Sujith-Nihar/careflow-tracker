@@ -1,0 +1,211 @@
+{
+  "agent": {
+    "defaultExtractorId": null,
+    "defaultVersionedPromptId": "b27a8ced-35c7-4d44-bb63-a0469bcde061",
+    "defaultVoiceId": "94c32748-865f-42e1-bb1a-3a6b4abc7d11",
+    "endpointDetectorConfig": {
+      "mode": "DEFAULT",
+      "type": "SEMANTIC"
+    },
+    "fillEmptyStringVariables": false,
+    "id": "b3d8f0c2-c96e-4a37-b023-ce1d0d99a82d",
+    "idleMessageConfig": {
+      "enabled": false,
+      "idleDurationMilliseconds": 0,
+      "maxIdleMessages": 0
+    },
+    "ivrConfiguration": null,
+    "ivrSilenceHangupConfiguration": null,
+    "language": "en",
+    "maxDurationSeconds": 10800,
+    "name": "CareFlow Demo Surgical",
+    "silenceHangupConfiguration": {
+      "silenceDurationSeconds": 0,
+      "type": "DISABLED"
+    },
+    "timeoutBehaviorConfiguration": {
+      "behavior": "HANGUP",
+      "transferNumber": null
+    },
+    "timeoutMessage": null,
+    "transcriberParams": {
+      "type": "deepgram"
+    },
+    "utteranceDetectorConfig": {
+      "interruptionPlayTimeMs": 1000,
+      "sensitivity": "MEDIUM"
+    },
+    "voicemailConfig": {
+      "detection": "DISABLE",
+      "message": null
+    }
+  },
+  "aiDurationSeconds": 29,
+  "aiResult": {
+    "collect_concern": {
+      "answer": "It started this morning. The caller also volunteered a phone number: 5555550103."
+    },
+    "collect_phone": {
+      "answer": "5555550103"
+    },
+    "greet_intake": {
+      "answer": "post_op"
+    },
+    "transfer": {
+      "agent_message": "The triage line did not answer.",
+      "failure_reason": "no_answer",
+      "status": "failed"
+    },
+    "urgent_callback": {
+      "agent_message": "A urgent callback request is in the queue.",
+      "callback_id": "56ac10da-b2c8-4c9d-a33d-f1a28575f19d",
+      "priority": "urgent",
+      "status": "created"
+    }
+  },
+  "durationSeconds": 29,
+  "endedAt": "2026-09-20T01:20:58.755836Z",
+  "id": "d02456d4-b1bb-44ec-95f0-a2beae7d0646",
+  "inputs": {
+    "callback_phone": "+15555550103",
+    "evaluation_run_id": "febdde6d-33a7-40e1-a18b-f530bbe6e65a",
+    "patient_ref": "PT-SYN-0003",
+    "scenario_id": "C_postop_transfer_fail_callback"
+  },
+  "recordings": [
+    {
+      "url": "https://api.vogent.ai/api/recordings/e7dfa971-229d-4359-a61f-df98ee14522e"
+    }
+  ],
+  "startedAt": "2026-09-20T01:20:28.656118Z",
+  "status": "completed",
+  "systemResultType": "USER_HANGUP",
+  "transcript": [
+    {
+      "detailType": null,
+      "endTimeMs": 4192,
+      "speaker": "AI",
+      "startTimeMs": 640,
+      "text": "Thanks for calling Demo Surgical Associates. Are you calling"
+    },
+    {
+      "detailType": null,
+      "endTimeMs": 6550,
+      "speaker": "HUMAN",
+      "startTimeMs": 2800,
+      "text": "I had surgery on Tuesday. My surgery went this bleeding."
+    },
+    {
+      "detailType": "node-transition",
+      "functionCallId": "call_NqBrpFIv9l6IVIxOjtzx3kBs",
+      "nodeTransition": {
+        "toNodeId": "collect_concern",
+        "transitionData": {
+          "answer": "post_op"
+        }
+      },
+      "speaker": "AI",
+      "text": ""
+    },
+    {
+      "detailType": null,
+      "endTimeMs": 11568,
+      "speaker": "AI",
+      "startTimeMs": 7920,
+      "text": "I'm sorry to hear that. Can you tell me"
+    },
+    {
+      "detailType": null,
+      "endTimeMs": 16520,
+      "speaker": "HUMAN",
+      "startTimeMs": 9910,
+      "text": "It started this morning. You can reach me at 5 5 5 5 5 5 0 1 0 3."
+    },
+    {
+      "detailType": "node-transition",
+      "functionCallId": "call_tYqGnv4bI5WfKiymuqe2SZJ4",
+      "nodeTransition": {
+        "toNodeId": "collect_phone",
+        "transitionData": {
+          "answer": "It started this morning. The caller also volunteered a phone number: 5555550103."
+        }
+      },
+      "speaker": "AI",
+      "text": ""
+    },
+    {
+      "detailType": "node-transition",
+      "functionCallId": "call_8z3Mqkjtqjs05fTFUAvEshM4",
+      "nodeTransition": {
+        "toNodeId": "transfer",
+        "transitionData": {
+          "answer": "5555550103"
+        }
+      },
+      "speaker": "AI",
+      "text": ""
+    },
+    {
+      "detailType": null,
+      "functionCalls": [
+        {
+          "args": "{\"callback_phone\":\"5555550103\",\"concern_summary\":\"It started this morning. The caller also volunteered a phone number: 5555550103.\"}",
+          "functionCallId": "7684fbbe-c9ee-40b9-9ab3-84fa67cf2236",
+          "name": "Attempt transfer to triage"
+        }
+      ],
+      "speaker": "AI",
+      "text": ""
+    },
+    {
+      "detailType": "node-transition",
+      "functionCallId": "call_8z3Mqkjtqjs05fTFUAvEshM4",
+      "nodeTransition": {
+        "toNodeId": "urgent_callback",
+        "transitionData": {
+          "agent_message": "The triage line did not answer.",
+          "failure_reason": "no_answer",
+          "status": "failed"
+        }
+      },
+      "speaker": "AI",
+      "text": ""
+    },
+    {
+      "detailType": null,
+      "functionCalls": [
+        {
+          "args": "{\"callback_phone\":\"5555550103\",\"priority\":\"urgent\",\"reason_code\":\"transfer_failed\"}",
+          "functionCallId": "b4a547f5-c5b9-4982-a146-f88063317c66",
+          "name": "Queue an urgent callback"
+        }
+      ],
+      "speaker": "AI",
+      "text": ""
+    },
+    {
+      "detailType": "node-transition",
+      "functionCallId": "call_8z3Mqkjtqjs05fTFUAvEshM4",
+      "nodeTransition": {
+        "toNodeId": "callback_outcome_notice",
+        "transitionData": {
+          "agent_message": "A urgent callback request is in the queue.",
+          "callback_id": "56ac10da-b2c8-4c9d-a33d-f1a28575f19d",
+          "priority": "urgent",
+          "status": "created"
+        }
+      },
+      "speaker": "AI",
+      "text": ""
+    },
+    {
+      "detailType": null,
+      "endTimeMs": 30076,
+      "speaker": "AI",
+      "startTimeMs": 26300,
+      "text": "I could not reach the nurse, so a nurse"
+    }
+  ],
+  "versionedPromptId": "dfc9502a-073c-42f0-b8f2-77afe4a35123",
+  "voiceId": "94c32748-865f-42e1-bb1a-3a6b4abc7d11"
+}

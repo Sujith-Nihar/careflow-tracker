@@ -1,0 +1,10 @@
+[
+  {
+    "function": "transfer_triage",
+    "response": {
+      "agent_message": "Connected to the triage nurse.",
+      "status": "connected",
+      "transfer_session_id": "806b9cc2-9198-4d5f-b323-4aa22734094c"
+    }
+  }
+]

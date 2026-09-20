@@ -1,0 +1,211 @@
+{
+  "agent": {
+    "defaultExtractorId": null,
+    "defaultVersionedPromptId": "b27a8ced-35c7-4d44-bb63-a0469bcde061",
+    "defaultVoiceId": "94c32748-865f-42e1-bb1a-3a6b4abc7d11",
+    "endpointDetectorConfig": {
+      "mode": "DEFAULT",
+      "type": "SEMANTIC"
+    },
+    "fillEmptyStringVariables": false,
+    "id": "b3d8f0c2-c96e-4a37-b023-ce1d0d99a82d",
+    "idleMessageConfig": {
+      "enabled": false,
+      "idleDurationMilliseconds": 0,
+      "maxIdleMessages": 0
+    },
+    "ivrConfiguration": null,
+    "ivrSilenceHangupConfiguration": null,
+    "language": "en",
+    "maxDurationSeconds": 10800,
+    "name": "CareFlow Demo Surgical",
+    "silenceHangupConfiguration": {
+      "silenceDurationSeconds": 0,
+      "type": "DISABLED"
+    },
+    "timeoutBehaviorConfiguration": {
+      "behavior": "HANGUP",
+      "transferNumber": null
+    },
+    "timeoutMessage": null,
+    "transcriberParams": {
+      "type": "deepgram"
+    },
+    "utteranceDetectorConfig": {
+      "interruptionPlayTimeMs": 1000,
+      "sensitivity": "MEDIUM"
+    },
+    "voicemailConfig": {
+      "detection": "DISABLE",
+      "message": null
+    }
+  },
+  "aiDurationSeconds": 28,
+  "aiResult": {
+    "collect_concern": {
+      "answer": "Caller says they had surgery and now they have a fever."
+    },
+    "collect_phone": {
+      "answer": "5555550104"
+    },
+    "greet_intake": {
+      "answer": "post_op"
+    },
+    "transfer": {
+      "agent_message": "The triage line did not answer.",
+      "failure_reason": "no_answer",
+      "status": "failed"
+    },
+    "urgent_callback": {
+      "agent_message": "I could not place a callback request.",
+      "failure_reason": "queue_rejected",
+      "priority": "urgent",
+      "status": "failed"
+    }
+  },
+  "durationSeconds": 28,
+  "endedAt": "2026-09-20T01:21:43.535406Z",
+  "id": "817c92b7-073f-470f-b9c0-deeb369643a2",
+  "inputs": {
+    "callback_phone": "+15555550104",
+    "evaluation_run_id": "febdde6d-33a7-40e1-a18b-f530bbe6e65a",
+    "patient_ref": "PT-SYN-0004",
+    "scenario_id": "D_postop_double_failure"
+  },
+  "recordings": [
+    {
+      "url": "https://api.vogent.ai/api/recordings/fc91e57c-7e39-4d32-b99e-161281abf202"
+    }
+  ],
+  "startedAt": "2026-09-20T01:21:14.624613Z",
+  "status": "completed",
+  "systemResultType": "USER_HANGUP",
+  "transcript": [
+    {
+      "detailType": null,
+      "endTimeMs": 4844,
+      "speaker": "AI",
+      "startTimeMs": 780,
+      "text": "Thanks for calling Demo Surgical Associates. Are you calling"
+    },
+    {
+      "detailType": null,
+      "endTimeMs": 6020,
+      "speaker": "HUMAN",
+      "startTimeMs": 2960,
+      "text": "I had surgery on my day. Now I have a fever."
+    },
+    {
+      "detailType": "node-transition",
+      "functionCallId": "call_vNplVIMsJoJekWnOhB4eMrYZ",
+      "nodeTransition": {
+        "toNodeId": "collect_concern",
+        "transitionData": {
+          "answer": "post_op"
+        }
+      },
+      "speaker": "AI",
+      "text": ""
+    },
+    {
+      "detailType": "node-transition",
+      "functionCallId": "call_eTv5SAWIw1iR6M7L3P86WG4f",
+      "nodeTransition": {
+        "toNodeId": "collect_phone",
+        "transitionData": {
+          "answer": "Caller says they had surgery and now they have a fever."
+        }
+      },
+      "speaker": "AI",
+      "text": ""
+    },
+    {
+      "detailType": null,
+      "endTimeMs": 10160,
+      "speaker": "AI",
+      "startTimeMs": 7760,
+      "text": "What's the best number to reach you on?"
+    },
+    {
+      "detailType": null,
+      "endTimeMs": 16079,
+      "speaker": "HUMAN",
+      "startTimeMs": 10010,
+      "text": "Since last night, my number is 5 5 5 5 5 5 0 1 0 4."
+    },
+    {
+      "detailType": "node-transition",
+      "functionCallId": "call_OwfocN9WoB9evgKaT7r16yf1",
+      "nodeTransition": {
+        "toNodeId": "transfer",
+        "transitionData": {
+          "answer": "5555550104"
+        }
+      },
+      "speaker": "AI",
+      "text": ""
+    },
+    {
+      "detailType": null,
+      "functionCalls": [
+        {
+          "args": "{\"callback_phone\":\"5555550104\",\"concern_summary\":\"Caller says they had surgery and now they have a fever.\"}",
+          "functionCallId": "04912b04-3f08-4b1f-9b77-ef88b9a2bd9d",
+          "name": "Attempt transfer to triage"
+        }
+      ],
+      "speaker": "AI",
+      "text": ""
+    },
+    {
+      "detailType": "node-transition",
+      "functionCallId": "call_OwfocN9WoB9evgKaT7r16yf1",
+      "nodeTransition": {
+        "toNodeId": "urgent_callback",
+        "transitionData": {
+          "agent_message": "The triage line did not answer.",
+          "failure_reason": "no_answer",
+          "status": "failed"
+        }
+      },
+      "speaker": "AI",
+      "text": ""
+    },
+    {
+      "detailType": null,
+      "functionCalls": [
+        {
+          "args": "{\"callback_phone\":\"5555550104\",\"priority\":\"urgent\",\"reason_code\":\"transfer_failed\"}",
+          "functionCallId": "186e376b-b62f-4ec4-a5dc-5354915ca670",
+          "name": "Queue an urgent callback"
+        }
+      ],
+      "speaker": "AI",
+      "text": ""
+    },
+    {
+      "detailType": "node-transition",
+      "functionCallId": "call_OwfocN9WoB9evgKaT7r16yf1",
+      "nodeTransition": {
+        "toNodeId": "callback_outcome_notice",
+        "transitionData": {
+          "agent_message": "I could not place a callback request.",
+          "failure_reason": "queue_rejected",
+          "priority": "urgent",
+          "status": "failed"
+        }
+      },
+      "speaker": "AI",
+      "text": ""
+    },
+    {
+      "detailType": null,
+      "endTimeMs": 28996,
+      "speaker": "AI",
+      "startTimeMs": 25060,
+      "text": "I could not reach the nurse or arrange a callback. Please call the"
+    }
+  ],
+  "versionedPromptId": "dfc9502a-073c-42f0-b8f2-77afe4a35123",
+  "voiceId": "94c32748-865f-42e1-bb1a-3a6b4abc7d11"
+}

@@ -1,0 +1,11 @@
+[
+  {
+    "function": "schedule_appointment",
+    "response": {
+      "agent_message": "Booked for Tuesday 29 September at 10:00 AM.",
+      "appointment_id": "82c70fda-680d-4966-a8f6-9d0ddc31cd4f",
+      "slot_iso": "2026-09-29T10:00:00+00:00",
+      "status": "booked"
+    }
+  }
+]

@@ -1,0 +1,213 @@
+{
+  "action_executions": [
+    {
+      "attempts": [
+        {
+          "attempt_no": 1,
+          "latency_ms": 301,
+          "result": "no_answer"
+        }
+      ],
+      "completed_at": "2026-09-20T01:20:47.719111+00:00",
+      "downstream_ref": null,
+      "duplicate_of_id": null,
+      "id": "d02a1328-cb82-441c-8b53-231b72007dd8",
+      "kind": "transfer_triage",
+      "outcome": "failed",
+      "request_payload": {
+        "callback_phone": "5555550103",
+        "concern_summary": "It started this morning. The caller also volunteered a phone number: 5555550103.",
+        "patient_ref": "PT-SYN-0003"
+      },
+      "requested_at": "2026-09-20T01:20:47.719111+00:00",
+      "response_payload": {
+        "agent_message": "The triage line did not answer.",
+        "failure_reason": "no_answer",
+        "status": "failed"
+      }
+    },
+    {
+      "attempts": [
+        {
+          "attempt_no": 1,
+          "latency_ms": 54,
+          "result": "created"
+        }
+      ],
+      "completed_at": "2026-09-20T01:20:51.299200+00:00",
+      "downstream_ref": "56ac10da-b2c8-4c9d-a33d-f1a28575f19d",
+      "duplicate_of_id": null,
+      "id": "2be53ee7-23fd-4d94-8788-867eb9d66925",
+      "kind": "create_callback",
+      "outcome": "succeeded",
+      "request_payload": {
+        "callback_phone": "+15555550103",
+        "patient_ref": "PT-SYN-0003",
+        "priority": "urgent",
+        "reason_code": "transfer_failed"
+      },
+      "requested_at": "2026-09-20T01:20:51.299200+00:00",
+      "response_payload": {
+        "agent_message": "A urgent callback request is in the queue.",
+        "callback_id": "56ac10da-b2c8-4c9d-a33d-f1a28575f19d",
+        "status": "created"
+      }
+    }
+  ],
+  "agent_statements": [
+    {
+      "disposition": null,
+      "evidence_text": "I could not reach the nurse, so a nurse will call you back.",
+      "kind": "disclosed_transfer_failed",
+      "observed_at": "2026-09-20T01:21:03.122790+00:00",
+      "sequence_no": 0,
+      "source": "transcript_rule"
+    },
+    {
+      "disposition": null,
+      "evidence_text": "I could not reach the nurse, so a nurse will call you back.",
+      "kind": "promised_callback",
+      "observed_at": "2026-09-20T01:21:03.122790+00:00",
+      "sequence_no": 1,
+      "source": "transcript_rule"
+    }
+  ],
+  "call": {
+    "agent_version": "v2",
+    "connected_seconds": 29,
+    "dial_id": "d02456d4-b1bb-44ec-95f0-a2beae7d0646",
+    "ended_at": "2026-09-20T01:20:58.755836+00:00",
+    "evaluation_run_id": "febdde6d-33a7-40e1-a18b-f530bbe6e65a",
+    "id": "adfad83b-9c4f-44b1-b8b6-59aad9c54c02",
+    "lifecycle": "ended",
+    "scenario_id": "C_postop_transfer_fail_callback",
+    "started_at": "2026-09-20T01:20:28.656118+00:00",
+    "system_result_type": "USER_HANGUP",
+    "versioned_prompt_id": "dfc9502a-073c-42f0-b8f2-77afe4a35123",
+    "vogent_agent_id": "b3d8f0c2-c96e-4a37-b023-ce1d0d99a82d"
+  },
+  "derived": {
+    "evidence_refs": {
+      "callback_id": "56ac10da-b2c8-4c9d-a33d-f1a28575f19d",
+      "transfer_execution_id": "d02a1328-cb82-441c-8b53-231b72007dd8"
+    },
+    "mismatch_details": [],
+    "next_step": "Ring this patient back on the number they gave.",
+    "promise_mismatch": false,
+    "reason": "The caller was not put through to the nurse because the line did not pick up. An urgent callback is now waiting for someone to make.",
+    "requires_staff_action": true,
+    "severity": 2,
+    "status": "callback_pending"
+  },
+  "downstream": {
+    "appointments": [],
+    "callback_requests": [
+      {
+        "action_execution_id": "2be53ee7-23fd-4d94-8788-867eb9d66925",
+        "id": "56ac10da-b2c8-4c9d-a33d-f1a28575f19d",
+        "priority": "urgent",
+        "status": "created"
+      }
+    ],
+    "transfer_sessions": [
+      {
+        "action_execution_id": "d02a1328-cb82-441c-8b53-231b72007dd8",
+        "failure_reason": "no_answer",
+        "id": "bd6a71b3-4081-4fea-9dde-205fa02c68b1",
+        "status": "failed"
+      }
+    ]
+  },
+  "intent": {
+    "agent_classified": null,
+    "observed": "post_operative_concern",
+    "true_intent": "post_operative_concern"
+  },
+  "staff_actions": [],
+  "transcript": {
+    "authoritative": false,
+    "note": "Shows what was said, not what happened.",
+    "segments": [
+      {
+        "speaker": "AI",
+        "text": "Thanks for calling Demo Surgical Associates. Are you calling"
+      },
+      {
+        "speaker": "HUMAN",
+        "text": "I had surgery on Tuesday."
+      },
+      {
+        "speaker": "AI",
+        "text": ""
+      },
+      {
+        "speaker": "HUMAN",
+        "text": "My surgery went this bleeding."
+      },
+      {
+        "speaker": "AI",
+        "text": ""
+      },
+      {
+        "speaker": "AI",
+        "text": ""
+      },
+      {
+        "speaker": "AI",
+        "text": "I'm sorry to hear that. Can you tell me"
+      },
+      {
+        "speaker": "HUMAN",
+        "text": "It started this morning."
+      },
+      {
+        "speaker": "AI",
+        "text": ""
+      },
+      {
+        "speaker": "HUMAN",
+        "text": "You can reach me at 5 5 5 5 5 5 0 1 0 3."
+      },
+      {
+        "speaker": "AI",
+        "text": ""
+      },
+      {
+        "speaker": "AI",
+        "text": ""
+      },
+      {
+        "speaker": "AI",
+        "text": ""
+      },
+      {
+        "speaker": "AI",
+        "text": ""
+      },
+      {
+        "speaker": "AI",
+        "text": ""
+      },
+      {
+        "speaker": "AI",
+        "text": ""
+      },
+      {
+        "speaker": "AI",
+        "text": ""
+      },
+      {
+        "speaker": "AI",
+        "text": ""
+      },
+      {
+        "speaker": "HUMAN",
+        "text": "You can reach me at 5 5 5 5 5 5 0 1 0 3."
+      },
+      {
+        "speaker": "AI",
+        "text": "I could not reach the nurse, so a nurse will call you back. If this gets worse, please call the office or emergency services."
+      }
+    ]
+  }
+}

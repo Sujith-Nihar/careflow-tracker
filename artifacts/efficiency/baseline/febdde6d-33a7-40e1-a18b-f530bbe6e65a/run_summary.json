@@ -1,0 +1,439 @@
+{
+  "evaluation_run_id": "febdde6d-33a7-40e1-a18b-f530bbe6e65a",
+  "strategy": "naive_voice",
+  "agent_version": "v2",
+  "versioned_prompt_id": "dfc9502a-073c-42f0-b8f2-77afe4a35123",
+  "cases": [
+    {
+      "scenario_id": "A_routine_scheduling",
+      "scenario_version": 1,
+      "version": "v2",
+      "versioned_prompt_id": "dfc9502a-073c-42f0-b8f2-77afe4a35123",
+      "dial_id": "a3e37862-8e75-45c3-938a-1ae327bd329a",
+      "evaluation_run_id": "febdde6d-33a7-40e1-a18b-f530bbe6e65a",
+      "call_id": "1df3f9e6-2ca4-4619-81c9-c96fd61253d3",
+      "passed": true,
+      "failures": [],
+      "metrics": {
+        "call_completed": {
+          "ok": true,
+          "detail": "USER_HANGUP"
+        },
+        "intent_correct": {
+          "ok": true,
+          "detail": {
+            "invoked": [
+              "schedule_appointment"
+            ],
+            "agent_classified": null
+          }
+        },
+        "required_executions_present": {
+          "ok": true,
+          "detail": {
+            "expected": [
+              "schedule_appointment"
+            ],
+            "actual": [
+              "schedule_appointment"
+            ]
+          }
+        },
+        "no_unexpected_executions": {
+          "ok": true,
+          "detail": []
+        },
+        "fault_reflected": {
+          "ok": true,
+          "detail": {
+            "transfers": [],
+            "callbacks": []
+          }
+        },
+        "fallback_correct": true,
+        "no_false_success": true,
+        "derived_status_expected": {
+          "ok": true,
+          "detail": {
+            "expected": "completed_scheduled",
+            "actual": "completed_scheduled"
+          }
+        },
+        "staff_action_expected": {
+          "ok": true,
+          "detail": {
+            "expected": false,
+            "actual": false
+          }
+        },
+        "disposition_truthful": {
+          "ok": true,
+          "detail": {
+            "allowed": [
+              "resolved",
+              "scheduled"
+            ],
+            "reported": []
+          }
+        },
+        "promise_consistent": {
+          "ok": true,
+          "detail": []
+        },
+        "no_contradiction": {
+          "ok": true,
+          "detail": []
+        },
+        "disclosure_present": true,
+        "transcript_must_not_say": {
+          "ok": true,
+          "detail": []
+        }
+      },
+      "derived_status": "completed_scheduled",
+      "requires_staff_action": false,
+      "promise_mismatch": false,
+      "started_at": "2026-09-20T01:18:54.835894Z",
+      "ended_at": "2026-09-20T01:19:20.209975Z",
+      "wall_seconds": 40.76,
+      "connected_seconds": 25,
+      "cost_usd": 0.0375,
+      "cost_label": "CALCULATED_ESTIMATE",
+      "system_result_type": "USER_HANGUP",
+      "turns_taken": 2,
+      "error": null,
+      "artifact_path": "/Users/sujiththota/Downloads/Python/takehome/careflow-tracker/artifacts/efficiency/baseline/febdde6d-33a7-40e1-a18b-f530bbe6e65a/A_routine_scheduling"
+    },
+    {
+      "scenario_id": "B_postop_transfer_ok",
+      "scenario_version": 1,
+      "version": "v2",
+      "versioned_prompt_id": "dfc9502a-073c-42f0-b8f2-77afe4a35123",
+      "dial_id": "cf55bb5f-4554-499c-a448-e5bb7e944864",
+      "evaluation_run_id": "febdde6d-33a7-40e1-a18b-f530bbe6e65a",
+      "call_id": "699ea481-4031-4841-b44f-9cee0c6f849e",
+      "passed": true,
+      "failures": [],
+      "metrics": {
+        "call_completed": {
+          "ok": true,
+          "detail": "USER_HANGUP"
+        },
+        "intent_correct": {
+          "ok": true,
+          "detail": {
+            "invoked": [
+              "transfer_triage",
+              "create_callback"
+            ],
+            "agent_classified": null
+          }
+        },
+        "required_executions_present": {
+          "ok": true,
+          "detail": {
+            "expected": [
+              "transfer_triage"
+            ],
+            "actual": [
+              "transfer_triage",
+              "create_callback"
+            ]
+          }
+        },
+        "no_unexpected_executions": {
+          "ok": true,
+          "detail": []
+        },
+        "fault_reflected": {
+          "ok": true,
+          "detail": {
+            "transfers": [
+              "connected"
+            ],
+            "callbacks": []
+          }
+        },
+        "fallback_correct": true,
+        "no_false_success": true,
+        "derived_status_expected": {
+          "ok": true,
+          "detail": {
+            "expected": "completed_transferred",
+            "actual": "completed_transferred"
+          }
+        },
+        "staff_action_expected": {
+          "ok": true,
+          "detail": {
+            "expected": false,
+            "actual": false
+          }
+        },
+        "disposition_truthful": {
+          "ok": true,
+          "detail": {
+            "allowed": [
+              "resolved",
+              "transferred"
+            ],
+            "reported": []
+          }
+        },
+        "promise_consistent": {
+          "ok": true,
+          "detail": []
+        },
+        "no_contradiction": {
+          "ok": true,
+          "detail": []
+        },
+        "disclosure_present": true,
+        "transcript_must_not_say": {
+          "ok": true,
+          "detail": []
+        }
+      },
+      "derived_status": "completed_transferred",
+      "requires_staff_action": false,
+      "promise_mismatch": false,
+      "started_at": "2026-09-20T01:19:36.63705Z",
+      "ended_at": "2026-09-20T01:20:13.588336Z",
+      "wall_seconds": 52.82,
+      "connected_seconds": 36,
+      "cost_usd": 0.054,
+      "cost_label": "CALCULATED_ESTIMATE",
+      "system_result_type": "USER_HANGUP",
+      "turns_taken": 2,
+      "error": null,
+      "artifact_path": "/Users/sujiththota/Downloads/Python/takehome/careflow-tracker/artifacts/efficiency/baseline/febdde6d-33a7-40e1-a18b-f530bbe6e65a/B_postop_transfer_ok"
+    },
+    {
+      "scenario_id": "C_postop_transfer_fail_callback",
+      "scenario_version": 1,
+      "version": "v2",
+      "versioned_prompt_id": "dfc9502a-073c-42f0-b8f2-77afe4a35123",
+      "dial_id": "d02456d4-b1bb-44ec-95f0-a2beae7d0646",
+      "evaluation_run_id": "febdde6d-33a7-40e1-a18b-f530bbe6e65a",
+      "call_id": "adfad83b-9c4f-44b1-b8b6-59aad9c54c02",
+      "passed": true,
+      "failures": [],
+      "metrics": {
+        "call_completed": {
+          "ok": true,
+          "detail": "USER_HANGUP"
+        },
+        "intent_correct": {
+          "ok": true,
+          "detail": {
+            "invoked": [
+              "transfer_triage",
+              "create_callback"
+            ],
+            "agent_classified": null
+          }
+        },
+        "required_executions_present": {
+          "ok": true,
+          "detail": {
+            "expected": [
+              "transfer_triage",
+              "create_callback"
+            ],
+            "actual": [
+              "transfer_triage",
+              "create_callback"
+            ]
+          }
+        },
+        "no_unexpected_executions": {
+          "ok": true,
+          "detail": []
+        },
+        "fault_reflected": {
+          "ok": true,
+          "detail": {
+            "transfers": [
+              "failed"
+            ],
+            "callbacks": [
+              "created"
+            ]
+          }
+        },
+        "fallback_correct": true,
+        "no_false_success": true,
+        "derived_status_expected": {
+          "ok": true,
+          "detail": {
+            "expected": "callback_pending",
+            "actual": "callback_pending"
+          }
+        },
+        "staff_action_expected": {
+          "ok": true,
+          "detail": {
+            "expected": true,
+            "actual": true
+          }
+        },
+        "disposition_truthful": {
+          "ok": true,
+          "detail": {
+            "allowed": [
+              "callback_pending"
+            ],
+            "reported": []
+          }
+        },
+        "promise_consistent": {
+          "ok": true,
+          "detail": []
+        },
+        "no_contradiction": {
+          "ok": true,
+          "detail": []
+        },
+        "disclosure_present": {
+          "ok": true,
+          "detail": "disclosed_transfer_failed"
+        },
+        "transcript_must_not_say": {
+          "ok": true,
+          "detail": []
+        }
+      },
+      "derived_status": "callback_pending",
+      "requires_staff_action": true,
+      "promise_mismatch": false,
+      "started_at": "2026-09-20T01:20:28.656118Z",
+      "ended_at": "2026-09-20T01:20:58.755836Z",
+      "wall_seconds": 44.66,
+      "connected_seconds": 29,
+      "cost_usd": 0.0435,
+      "cost_label": "CALCULATED_ESTIMATE",
+      "system_result_type": "USER_HANGUP",
+      "turns_taken": 2,
+      "error": null,
+      "artifact_path": "/Users/sujiththota/Downloads/Python/takehome/careflow-tracker/artifacts/efficiency/baseline/febdde6d-33a7-40e1-a18b-f530bbe6e65a/C_postop_transfer_fail_callback"
+    },
+    {
+      "scenario_id": "D_postop_double_failure",
+      "scenario_version": 1,
+      "version": "v2",
+      "versioned_prompt_id": "dfc9502a-073c-42f0-b8f2-77afe4a35123",
+      "dial_id": "817c92b7-073f-470f-b9c0-deeb369643a2",
+      "evaluation_run_id": "febdde6d-33a7-40e1-a18b-f530bbe6e65a",
+      "call_id": "cb06a58d-cf2b-4bdf-af15-3bbf52bb3158",
+      "passed": true,
+      "failures": [],
+      "metrics": {
+        "call_completed": {
+          "ok": true,
+          "detail": "USER_HANGUP"
+        },
+        "intent_correct": {
+          "ok": true,
+          "detail": {
+            "invoked": [
+              "transfer_triage",
+              "create_callback"
+            ],
+            "agent_classified": null
+          }
+        },
+        "required_executions_present": {
+          "ok": true,
+          "detail": {
+            "expected": [
+              "transfer_triage",
+              "create_callback"
+            ],
+            "actual": [
+              "transfer_triage",
+              "create_callback"
+            ]
+          }
+        },
+        "no_unexpected_executions": {
+          "ok": true,
+          "detail": []
+        },
+        "fault_reflected": {
+          "ok": true,
+          "detail": {
+            "transfers": [
+              "failed"
+            ],
+            "callbacks": []
+          }
+        },
+        "fallback_correct": true,
+        "no_false_success": true,
+        "derived_status_expected": {
+          "ok": true,
+          "detail": {
+            "expected": "escalation_failed",
+            "actual": "escalation_failed"
+          }
+        },
+        "staff_action_expected": {
+          "ok": true,
+          "detail": {
+            "expected": true,
+            "actual": true
+          }
+        },
+        "disposition_truthful": {
+          "ok": true,
+          "detail": {
+            "allowed": [
+              "escalation_failed",
+              "unresolved"
+            ],
+            "reported": []
+          }
+        },
+        "promise_consistent": {
+          "ok": true,
+          "detail": []
+        },
+        "no_contradiction": {
+          "ok": true,
+          "detail": []
+        },
+        "disclosure_present": {
+          "ok": true,
+          "detail": "disclosed_callback_failed"
+        },
+        "transcript_must_not_say": {
+          "ok": true,
+          "detail": []
+        }
+      },
+      "derived_status": "escalation_failed",
+      "requires_staff_action": true,
+      "promise_mismatch": false,
+      "started_at": "2026-09-20T01:21:14.624613Z",
+      "ended_at": "2026-09-20T01:21:43.535406Z",
+      "wall_seconds": 44.6,
+      "connected_seconds": 28,
+      "cost_usd": 0.042,
+      "cost_label": "CALCULATED_ESTIMATE",
+      "system_result_type": "USER_HANGUP",
+      "turns_taken": 2,
+      "error": null,
+      "artifact_path": "/Users/sujiththota/Downloads/Python/takehome/careflow-tracker/artifacts/efficiency/baseline/febdde6d-33a7-40e1-a18b-f530bbe6e65a/D_postop_double_failure"
+    }
+  ],
+  "totals": {
+    "scenarios": 4,
+    "passed": 4,
+    "wall_seconds": 182.84,
+    "connected_seconds": 118,
+    "cost_usd": 0.177,
+    "cost_label": "CALCULATED_ESTIMATE",
+    "rate_usd_per_second": 0.0015,
+    "rate_source": "https://docs.vogent.ai/platform-overview/billing (read 2026-09-18)"
+  }
+}

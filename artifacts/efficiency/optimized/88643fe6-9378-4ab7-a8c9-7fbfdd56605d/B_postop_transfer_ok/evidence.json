@@ -1,0 +1,126 @@
+{
+  "action_executions": [
+    {
+      "attempts": [
+        {
+          "attempt_no": 1,
+          "latency_ms": 305,
+          "result": "connected"
+        }
+      ],
+      "completed_at": "2026-09-20T01:27:36.931196+00:00",
+      "downstream_ref": "806b9cc2-9198-4d5f-b323-4aa22734094c",
+      "duplicate_of_id": null,
+      "id": "49fce393-0e7b-4316-be8d-513a521790be",
+      "kind": "transfer_triage",
+      "outcome": "succeeded",
+      "request_payload": {
+        "callback_phone": "+15555550102",
+        "concern_summary": "post-operative concern",
+        "patient_ref": "PT-SYN-0002"
+      },
+      "requested_at": "2026-09-20T01:27:36.931196+00:00",
+      "response_payload": {
+        "agent_message": "Connected to the triage nurse.",
+        "status": "connected",
+        "transfer_session_id": "806b9cc2-9198-4d5f-b323-4aa22734094c"
+      }
+    },
+    {
+      "attempts": [],
+      "completed_at": "2026-09-20T01:27:39.715906+00:00",
+      "downstream_ref": null,
+      "duplicate_of_id": null,
+      "id": "217b5b2e-9bdf-4051-b15a-56a7a04bea53",
+      "kind": "report_disposition",
+      "outcome": "succeeded",
+      "request_payload": {
+        "category": "post_operative_concern",
+        "disposition": "transferred",
+        "summary": "replay"
+      },
+      "requested_at": "2026-09-20T01:27:39.715906+00:00",
+      "response_payload": {
+        "agent_message": "",
+        "status": "recorded"
+      }
+    }
+  ],
+  "agent_statements": [
+    {
+      "disposition": null,
+      "evidence_text": "You're connected with our triage nurse now.",
+      "kind": "promised_transfer",
+      "observed_at": "2026-09-20T01:27:42.717685+00:00",
+      "sequence_no": 0,
+      "source": "transcript_rule"
+    },
+    {
+      "disposition": "transferred",
+      "evidence_text": "replay",
+      "kind": "reported_disposition",
+      "observed_at": "2026-09-20T01:27:39.715906+00:00",
+      "sequence_no": 1000,
+      "source": "function_param"
+    }
+  ],
+  "call": {
+    "agent_version": "replay",
+    "connected_seconds": null,
+    "dial_id": "replay-B_postop_transfer_ok-b813c02a",
+    "ended_at": null,
+    "evaluation_run_id": "88643fe6-9378-4ab7-a8c9-7fbfdd56605d",
+    "id": "a13bf310-dbaf-44b9-87c4-2ac2e2d7f947",
+    "lifecycle": "ended_unconfirmed",
+    "scenario_id": "B_postop_transfer_ok",
+    "started_at": null,
+    "system_result_type": null,
+    "versioned_prompt_id": "replay",
+    "vogent_agent_id": "agent-replay"
+  },
+  "derived": {
+    "evidence_refs": {
+      "transfer_execution_id": "49fce393-0e7b-4316-be8d-513a521790be",
+      "transfer_session_id": "806b9cc2-9198-4d5f-b323-4aa22734094c"
+    },
+    "mismatch_details": [],
+    "next_step": "No further action.",
+    "promise_mismatch": false,
+    "reason": "The caller was put through to the nurse and the line confirmed it.",
+    "requires_staff_action": false,
+    "severity": 0,
+    "status": "completed_transferred"
+  },
+  "downstream": {
+    "appointments": [],
+    "callback_requests": [],
+    "transfer_sessions": [
+      {
+        "action_execution_id": "49fce393-0e7b-4316-be8d-513a521790be",
+        "failure_reason": null,
+        "id": "806b9cc2-9198-4d5f-b323-4aa22734094c",
+        "status": "connected"
+      }
+    ]
+  },
+  "intent": {
+    "agent_classified": "post_operative_concern",
+    "observed": "post_operative_concern",
+    "true_intent": "post_operative_concern"
+  },
+  "staff_actions": [],
+  "transcript": {
+    "authoritative": false,
+    "note": "Shows what was said, not what happened.",
+    "segments": [
+      {
+        "speaker": "AI",
+        "text": "Let me try to reach our triage nurse."
+      },
+      {
+        "speaker": "AI",
+        "text": "You're connected with our triage nurse now."
+      }
+    ]
+  }
+}
