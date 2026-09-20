@@ -15,6 +15,10 @@ The selection rule is risk, not convenience:
   the scenarios where the practice's actual harm lives, and where every bug this
   project found was hiding.
 
+The saving comes entirely from making fewer voice calls, never from making them
+faster or running them together. This workspace permits one concurrent dial
+(`500: Limit of 1 concurrent dials reached`), so every suite is sequential.
+
 Nothing is reused from the naive run. The cache starts cold and its population
 cost is inside the measurement.
 """

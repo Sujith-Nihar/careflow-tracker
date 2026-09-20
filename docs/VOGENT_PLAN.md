@@ -50,7 +50,7 @@ delete for versioned prompts, and they are never dialled.
 | A2: an `equal` rule with `field: "status"` on a function node routes correctly, and a failed result falls through to the `always` rule | **Accepted by the API** (V2 stores 3 outcome-conditioned transitions). Still needs a real voice call to prove it routes at run time. | Freeform node whose prompt reads `{{node.transfer.status}}` and instructs the branch; test harder |
 | A3: the endpoint may return a flat JSON object matching `outputs[]` | Same call | Wrap per whatever the captured error says |
 | A4: function timeout ≥ 10 s, no automatic retry | Stub sleeps 8 s once; count POSTs | Tighten budgets; if retries exist, promote duplicate scenario to voice |
-| A5: two concurrent browser dials are allowed | Two dials in the optimized run | Sequential; report no parallel savings |
+| A5: two concurrent browser dials are allowed | **FALSE.** `POST /dials` returns `500: Limit of 1 concurrent dials reached.` | Confirmed: every suite runs sequentially. Parallelism contributes nothing to the measured efficiency saving. |
 | A6: `dial` in the payload may include a transcript snapshot | Inspect payload | Ordering comes from harness timestamps instead |
 
 ## 3. Manual workspace requirements (human)
