@@ -108,11 +108,13 @@ def run_voice_case(
     # sentence, including the callback failure the caller needed to be told about.
     # Feed the fuller record to the backend so statements are scored from what was
     # actually said. It changes no action state: transcripts are evidence of speech.
-    if outcome.transcript:
+    dial_record_early = _read_dial(vogent, dial.dial_id)
+    best_transcript = _most_complete(outcome.transcript, dial_record_early.get("transcript") or [])
+    if best_transcript:
         try:
             backend.send_webhook(
                 "dial.transcript",
-                {"dial_id": dial.dial_id, "transcript": outcome.transcript},
+                {"dial_id": dial.dial_id, "transcript": best_transcript},
             )
         except Exception as exc:  # noqa: BLE001
             # Non-fatal: scoring falls back to the vendor's transcript, which is
@@ -120,7 +122,7 @@ def run_voice_case(
             # truthfulness metrics were scored from the weaker source.
             case.error = f"browser transcript not delivered ({type(exc).__name__})"
 
-    dial_record = _read_dial(vogent, dial.dial_id)
+    dial_record = dial_record_early or _read_dial(vogent, dial.dial_id)
     case.connected_seconds = _connected_seconds(dial_record)
     case.started_at = dial_record.get("startedAt")
     case.ended_at = dial_record.get("endedAt")
@@ -147,6 +149,27 @@ def run_voice_case(
         _write_artifacts(artifacts_root, case, scenario, outcome, dial_record, bundle)
     )
     return case
+
+
+def _most_complete(browser: list[dict], vendor: list[dict]) -> list[dict]:
+    """Pick the fuller of the two transcripts of the same call.
+
+    Neither source is reliably complete. The vendor's stored copy truncates the final
+    utterance; the browser's live copy sometimes stops updating when the call ends
+    mid-sentence, and which one wins varies run to run. Both describe the same call,
+    so taking whichever holds more spoken text is safe and strictly better than
+    trusting either alone.
+
+    This affects only what was *said*. Action state is untouched by it, and remains
+    the thing that decides whether a caller was helped.
+    """
+
+    def spoken(segments: list[dict]) -> int:
+        return sum(len(str(s.get("text") or "")) for s in segments)
+
+    return browser if spoken(browser) >= spoken(vendor) else [
+        {"speaker": s.get("speaker"), "text": s.get("text")} for s in vendor
+    ]
 
 
 def _read_dial(vogent: VogentClient, dial_id: str, *, attempts: int = 8) -> dict:

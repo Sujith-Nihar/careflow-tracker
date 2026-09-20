@@ -1,0 +1,307 @@
+[
+  {
+    "t": 1789866575007,
+    "type": "ready",
+    "value": true
+  },
+  {
+    "t": 1789866576938,
+    "type": "audio_connected",
+    "value": true
+  },
+  {
+    "t": 1789866577091,
+    "type": "status",
+    "value": "in-progress"
+  },
+  {
+    "t": 1789866577703,
+    "type": "transcript",
+    "value": {
+      "speaker": "AI",
+      "text": "Thanks for calling Demo Surgical Associates. Are you calling to schedule a routine appointment, or about a concern after a recent surgery?"
+    }
+  },
+  {
+    "t": 1789866579751,
+    "type": "caller_clip",
+    "value": "http://127.0.0.1:58204/clips/9907b0360c01650c.wav"
+  },
+  {
+    "t": 1789866581026,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "I had surgery on"
+    }
+  },
+  {
+    "t": 1789866581030,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "I had surgery on"
+    }
+  },
+  {
+    "t": 1789866581862,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "I had surgery on Tuesday."
+    }
+  },
+  {
+    "t": 1789866581863,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "I had surgery on Tuesday."
+    }
+  },
+  {
+    "t": 1789866582284,
+    "type": "transcript",
+    "value": {
+      "speaker": "AI",
+      "text": ""
+    }
+  },
+  {
+    "t": 1789866582670,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "My surgery Monday"
+    }
+  },
+  {
+    "t": 1789866583464,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "My surgery went this bleeding."
+    }
+  },
+  {
+    "t": 1789866583485,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "My surgery went this bleeding."
+    }
+  },
+  {
+    "t": 1789866584091,
+    "type": "transcript",
+    "value": {
+      "speaker": "AI",
+      "text": ""
+    }
+  },
+  {
+    "t": 1789866584092,
+    "type": "transcript",
+    "value": {
+      "speaker": "AI",
+      "text": ""
+    }
+  },
+  {
+    "t": 1789866584657,
+    "type": "transcript",
+    "value": {
+      "speaker": "AI",
+      "text": ""
+    }
+  },
+  {
+    "t": 1789866584659,
+    "type": "transcript",
+    "value": {
+      "speaker": "AI",
+      "text": ""
+    }
+  },
+  {
+    "t": 1789866585288,
+    "type": "transcript",
+    "value": {
+      "speaker": "AI",
+      "text": "What's the best number to reach you on?"
+    }
+  },
+  {
+    "t": 1789866587262,
+    "type": "transcript",
+    "value": {
+      "speaker": "AI",
+      "text": "What's the best number to reach you on?"
+    }
+  },
+  {
+    "t": 1789866587402,
+    "type": "caller_clip",
+    "value": "http://127.0.0.1:58204/clips/cd30dfda596e4c23.wav"
+  },
+  {
+    "t": 1789866588580,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "It started this"
+    }
+  },
+  {
+    "t": 1789866588976,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "It started this morning."
+    }
+  },
+  {
+    "t": 1789866588984,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "It started this morning."
+    }
+  },
+  {
+    "t": 1789866589934,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "You can reach me at"
+    }
+  },
+  {
+    "t": 1789866590965,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "You can reach me at 5 5 5"
+    }
+  },
+  {
+    "t": 1789866592099,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "You can reach me at 5 5 5 5 5 5"
+    }
+  },
+  {
+    "t": 1789866593428,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "You can reach me at 5 5 5 5 5 5 0 1 0"
+    }
+  },
+  {
+    "t": 1789866595086,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "You can reach me at 5 5 5 5 5 5 0 1 0 3."
+    }
+  },
+  {
+    "t": 1789866595108,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "It started this morning. You can reach me at 5 5 5 5 5 5 0 1 0 3."
+    }
+  },
+  {
+    "t": 1789866595917,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "You can reach me at 5 5 5 5 5 5 0 1 0 3."
+    }
+  },
+  {
+    "t": 1789866595938,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "You can reach me at 5 5 5 5 5 5 0 1 0 3."
+    }
+  },
+  {
+    "t": 1789866595950,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "You can reach me at 5 5 5 5 5 5 0 1 0 3."
+    }
+  },
+  {
+    "t": 1789866595951,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "You can reach me at 5 5 5 5 5 5 0 1 0 3."
+    }
+  },
+  {
+    "t": 1789866596966,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "You can reach me at 5 5 5 5 5 5 0 1 0 3."
+    }
+  },
+  {
+    "t": 1789866597913,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "You can reach me at 5 5 5 5 5 5 0 1 0 3."
+    }
+  },
+  {
+    "t": 1789866598895,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "You can reach me at 5 5 5 5 5 5 0 1 0 3."
+    }
+  },
+  {
+    "t": 1789866599494,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "You can reach me at 5 5 5 5 5 5 0 1 0 3."
+    }
+  },
+  {
+    "t": 1789866599585,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "You can reach me at 5 5 5 5 5 5 0 1 0 3."
+    }
+  },
+  {
+    "t": 1789866603995,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "You can reach me at 5 5 5 5 5 5 0 1 0 3."
+    }
+  },
+  {
+    "t": 1789866604411,
+    "type": "transcript",
+    "value": {
+      "speaker": "AI",
+      "text": "You\u2019re now connected with the triage nurse, and they\u2019ll take it from here. Take care."
+    }
+  }
+]

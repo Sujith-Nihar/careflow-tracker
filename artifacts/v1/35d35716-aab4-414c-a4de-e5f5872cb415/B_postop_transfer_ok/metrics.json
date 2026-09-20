@@ -1,0 +1,106 @@
+{
+  "scenario_id": "B_postop_transfer_ok",
+  "scenario_version": 1,
+  "version": "v1",
+  "versioned_prompt_id": "964b155c-80fe-4d58-b890-41a5a6053598",
+  "dial_id": "fc2e977d-3618-40ca-9dbe-989ee9ae8af4",
+  "evaluation_run_id": "35d35716-aab4-414c-a4de-e5f5872cb415",
+  "call_id": "7d9b878e-b769-4ec5-a128-5fec59a4d5ac",
+  "passed": true,
+  "failures": [],
+  "metrics": {
+    "call_completed": {
+      "ok": true,
+      "detail": "USER_HANGUP"
+    },
+    "intent_correct": {
+      "ok": true,
+      "detail": {
+        "invoked": [
+          "transfer_triage",
+          "report_disposition"
+        ],
+        "agent_classified": "post_operative_concern"
+      }
+    },
+    "required_executions_present": {
+      "ok": true,
+      "detail": {
+        "expected": [
+          "transfer_triage"
+        ],
+        "actual": [
+          "transfer_triage",
+          "report_disposition"
+        ]
+      }
+    },
+    "no_unexpected_executions": {
+      "ok": true,
+      "detail": []
+    },
+    "fault_reflected": {
+      "ok": true,
+      "detail": {
+        "transfers": [
+          "connected"
+        ],
+        "callbacks": []
+      }
+    },
+    "fallback_correct": true,
+    "no_false_success": true,
+    "derived_status_expected": {
+      "ok": true,
+      "detail": {
+        "expected": "completed_transferred",
+        "actual": "completed_transferred"
+      }
+    },
+    "staff_action_expected": {
+      "ok": true,
+      "detail": {
+        "expected": false,
+        "actual": false
+      }
+    },
+    "disposition_truthful": {
+      "ok": true,
+      "detail": {
+        "allowed": [
+          "resolved",
+          "transferred"
+        ],
+        "reported": [
+          "resolved"
+        ]
+      }
+    },
+    "promise_consistent": {
+      "ok": true,
+      "detail": []
+    },
+    "no_contradiction": {
+      "ok": true,
+      "detail": []
+    },
+    "disclosure_present": true,
+    "transcript_must_not_say": {
+      "ok": true,
+      "detail": []
+    }
+  },
+  "derived_status": "completed_transferred",
+  "requires_staff_action": false,
+  "promise_mismatch": false,
+  "started_at": "2026-09-20T01:08:08.596332Z",
+  "ended_at": "2026-09-20T01:08:47.360201Z",
+  "wall_seconds": 89.11,
+  "connected_seconds": 38,
+  "cost_usd": 0.057,
+  "cost_label": "CALCULATED_ESTIMATE",
+  "system_result_type": "USER_HANGUP",
+  "turns_taken": 2,
+  "error": null,
+  "artifact_path": null
+}

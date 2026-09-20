@@ -1,0 +1,187 @@
+[
+  {
+    "t": 1789866081812,
+    "type": "ready",
+    "value": true
+  },
+  {
+    "t": 1789866083788,
+    "type": "audio_connected",
+    "value": true
+  },
+  {
+    "t": 1789866083953,
+    "type": "status",
+    "value": "in-progress"
+  },
+  {
+    "t": 1789866084567,
+    "type": "transcript",
+    "value": {
+      "speaker": "AI",
+      "text": "Thanks for calling Demo Surgical Associates. Are you calling to schedule a routine appointment, or about a concern after a recent surgery?"
+    }
+  },
+  {
+    "t": 1789866093225,
+    "type": "transcript",
+    "value": {
+      "speaker": "AI",
+      "text": "Thanks for calling Demo Surgical Associates. Are you calling to schedule a routine appointment, or about a concern after a recent surgery?"
+    }
+  },
+  {
+    "t": 1789866094002,
+    "type": "caller_clip",
+    "value": "http://127.0.0.1:57326/clips/1788a3588fcd4c60.wav"
+  },
+  {
+    "t": 1789866094521,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "I would"
+    }
+  },
+  {
+    "t": 1789866095502,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "I would like to make a"
+    }
+  },
+  {
+    "t": 1789866096536,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "I would like to make a routine appointment, please."
+    }
+  },
+  {
+    "t": 1789866096893,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "I would like to make a routine appointment, please."
+    }
+  },
+  {
+    "t": 1789866096911,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "I would like to make a routine appointment, please."
+    }
+  },
+  {
+    "t": 1789866097898,
+    "type": "transcript",
+    "value": {
+      "speaker": "AI",
+      "text": ""
+    }
+  },
+  {
+    "t": 1789866097900,
+    "type": "transcript",
+    "value": {
+      "speaker": "AI",
+      "text": ""
+    }
+  },
+  {
+    "t": 1789866098507,
+    "type": "transcript",
+    "value": {
+      "speaker": "AI",
+      "text": "Which day would you like to come in?"
+    }
+  },
+  {
+    "t": 1789866100423,
+    "type": "caller_clip",
+    "value": "http://127.0.0.1:57326/clips/ff88424ca21f9c70.wav"
+  },
+  {
+    "t": 1789866100548,
+    "type": "transcript",
+    "value": {
+      "speaker": "AI",
+      "text": "Which day would you like to come in?"
+    }
+  },
+  {
+    "t": 1789866100816,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "Next"
+    }
+  },
+  {
+    "t": 1789866101913,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "Next Tuesday would work"
+    }
+  },
+  {
+    "t": 1789866102659,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "Next Tuesday would work well for me."
+    }
+  },
+  {
+    "t": 1789866102679,
+    "type": "transcript",
+    "value": {
+      "speaker": "HUMAN",
+      "text": "Next Tuesday would work well for me."
+    }
+  },
+  {
+    "t": 1789866103238,
+    "type": "transcript",
+    "value": {
+      "speaker": "AI",
+      "text": ""
+    }
+  },
+  {
+    "t": 1789866103751,
+    "type": "transcript",
+    "value": {
+      "speaker": "AI",
+      "text": ""
+    }
+  },
+  {
+    "t": 1789866103757,
+    "type": "transcript",
+    "value": {
+      "speaker": "AI",
+      "text": ""
+    }
+  },
+  {
+    "t": 1789866105973,
+    "type": "transcript",
+    "value": {
+      "speaker": "AI",
+      "text": ""
+    }
+  },
+  {
+    "t": 1789866106617,
+    "type": "transcript",
+    "value": {
+      "speaker": "AI",
+      "text": "Booked for Tuesday 29 September at 10:00 AM. Goodbye."
+    }
+  }
+]
