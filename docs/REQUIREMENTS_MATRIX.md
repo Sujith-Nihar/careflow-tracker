@@ -32,11 +32,11 @@ intent; last reconciled against the finished system on 2026-09-19.
 | R24 | Save dial IDs, agent/version IDs, timestamps, traces, function results, final state | MUST | evals | 5–7 | artifact layout | `EVALUATION_PLAN.md §7` | done |
 | R25 | Never publish workspace credentials | MUST | repo | all | secret scan | `make secret-scan` output | done |
 | R26 | AI-usage account: delegated, verified, rejected, own decision | MUST | docs | 10 | review | `SUBMISSION.md §10` | done |
-| R26b | Time log ≤ 16 h, coarse by workstream | MUST | docs | 10 | file | `TIME_LOG.md`, maintained by the candidate | pending |
+| R26b | Time log ≤ 16 h, coarse by workstream | MUST | docs | 10 | file | `TIME_LOG.md`, 15.9 h across 12 workstreams | done |
 | R27 | Deterministic replay; version scenarios/flows | MAY | evals | 3, 5 | `make replay` | fixtures | done |
 | R28 | Human review / override (mark callback completed) | MAY | backend, frontend | 2, 8 | UI action | `staff_actions` | done |
 | R29 | Judgment-based evaluator with rubric | MAY | — | — | — | not attempted, declared in `SUBMISSION.md §5` | deferred |
 | R30 | Organization tokens for both external surfaces | MAY | backend api | 2 | isolation tests | `api/auth.py`, `test_api_isolation.py` | done |
 | R31 | Continuous integration | MAY | repo | 10 | workflow run | `.github/workflows/ci.yml` | done |
 | R32 | User authentication, accessibility audit, live AWS deploy | MAY | — | — | — | out of scope, stated in `SUBMISSION.md §5` and `RISKS.md` | deferred |
-| R33 | Single-take walkthrough video ≤ 8 min | MUST | docs | 10 | link in `SUBMISSION.md` | recorded by the candidate | pending |
+| R33 | Single-take walkthrough video ≤ 8 min | MUST | docs | 10 | link in `SUBMISSION.md` | linked at the top of `SUBMISSION.md` | done |

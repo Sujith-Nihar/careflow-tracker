@@ -6,9 +6,9 @@ Last verified 2026-09-19 by running each gate.
 | # | Deliverable | Where | Done |
 |---|-------------|-------|------|
 | 1 | Two-minute setup and run commands | `README.md`, `SUBMISSION.md §1` | ☑ |
-| 2 | End-to-end trace: scenario → dial → functions → DB → evaluator → UI | `SUBMISSION.md §2`, `artifacts/v2/febdde6d.../C_*/`, screens in `artifacts/ui/` | ☑ |
+| 2 | End-to-end trace: scenario → dial → functions → DB → evaluator → UI | `SUBMISSION.md §2`, `artifacts/efficiency/baseline/febdde6d.../C_*/`, screens in `artifacts/ui/` | ☑ |
 | 3 | Initial plan + practice-manager update | `docs/PROJECT_PLAN.md §1`, `docs/MANAGER_UPDATE.md` | ☑ |
-| 4 | Time log ≤ 16 h | `TIME_LOG.md` — entries for phases 4 to 10 still to be added by the candidate | ☐ |
+| 4 | Time log ≤ 16 h | `TIME_LOG.md` — 15.9 h across 12 workstreams | ☑ |
 | 5 | Works / mocked / incomplete | `SUBMISSION.md §5` (mirrors `ARCHITECTURE.md §11`) | ☑ |
 | 6 | Scenarios, baseline and optimized artifacts, per-case outcomes, time and dollar comparison | `evals/scenarios/`, `artifacts/efficiency/`, `SUBMISSION.md §6` | ☑ |
 | 7 | AWS design, IaC, job evidence, teardown | `docs/ASYNC_INFRA_PLAN.md`, `infra/terraform/`, `artifacts/worker/` | ☑ |
@@ -16,7 +16,7 @@ Last verified 2026-09-19 by running each gate.
 | 9 | Security, privacy, reliability, production risks | `docs/RISKS.md`, `SUBMISSION.md §9` | ☑ |
 | 10 | AI usage and personal verification | `SUBMISSION.md §10` | ☑ |
 | 11 | Next steps | `SUBMISSION.md §11` | ☑ |
-| — | Walkthrough video ≤ 8 min, single take | link in `SUBMISSION.md` | ☐ |
+| — | Walkthrough video ≤ 8 min, single take | link at the top of `SUBMISSION.md` | ☑ |
 
 ## Evidence gates (from the priority directive)
 

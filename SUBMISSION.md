@@ -7,14 +7,24 @@ downstream-system evidence says so, never because the agent said so.
 
 Everything is synthetic: no real patients, phone numbers, EHRs or production systems.
 
+**Walkthrough video** (single take, unedited):
+https://drive.google.com/file/d/1ECUwREK_7O3eHXD1Jec1m4CweCHPa5uu/view?usp=share_link
+
 ---
 
 ## 1. Setup and run
 
+**Nothing here needs a third-party API key.** You supply three values: a `DATABASE_URL` you
+control, and two random org tokens you generate yourself (`openssl rand -hex 24`). `make seed`
+prints the third, `DEMO_ORGANIZATION_ID`, to paste back. Vogent and ngrok credentials appear
+only in the voice block below.
+
 ```bash
-cp .env.example .env          # fill in per docs/HUMAN_SETUP.md
+cp .env.example .env          # DATABASE_URL + two tokens, per docs/HUMAN_SETUP.md
 make setup                    # python deps
 make migrate && make seed     # schema + the two synthetic practices
+#                               seed prints the practice ids: copy the demo one into
+#                               .env as DEMO_ORGANIZATION_ID before starting the UI
 make test                     # 98 backend tests against real PostgreSQL
 make api                      # evidence API on :5055
 make ui-install && make ui    # staff dashboard on :3000
@@ -33,6 +43,7 @@ make lint          # ruff, strict ruleset, clean
 With a Vogent workspace and a tunnel (`make tunnel`):
 
 ```bash
+make setup-evals                          # Playwright + Chromium, not part of `make setup`
 make eval VERSION=v2                      # naive baseline: a voice call per scenario
 make eval VERSION=v2 STRATEGY=optimized   # risk-based mix
 make eval VERSION=v1                      # the baseline flow, for comparison
@@ -192,10 +203,13 @@ boundary, so it runs there.
 
 ### Metrics
 
-Fourteen metrics computed from the evidence bundle. Twelve are required for a pass and all
-of them read persisted function results and system state. Transcript-derived checks are used
-for exactly one thing: whether the caller was told the truth. No transcript check can make a
-scenario pass on action state. Full list: `docs/EVALUATION_PLAN.md §4`.
+Fourteen metrics computed from the evidence bundle; twelve decide a pass. Nine of those read
+only persisted function results and downstream state. The other three — `promise_consistent`,
+`no_contradiction`, `disclosure_present` — read the agent statements, because whether the
+caller was told the truth is a question about speech and nothing else can answer it. They can
+only fail a case, never rescue one: no transcript check can make a scenario pass on action
+state, which is why scenario D's action state is right on every run while its disclosure check
+is the one thing that wobbles. Full list: `docs/EVALUATION_PLAN.md §4`.
 
 ### Experiment 1 — agent quality
 
