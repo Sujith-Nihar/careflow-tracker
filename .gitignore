@@ -47,3 +47,6 @@ infra/terraform/.terraform.lock.hcl
 infra/terraform/*.tfstate*
 infra/terraform/terraform.tfvars
 frontend/tsconfig.tsbuildinfo
+
+# The worker log is evidence: the dead-letter summary tells a reviewer to grep it.
+!artifacts/worker/worker.log

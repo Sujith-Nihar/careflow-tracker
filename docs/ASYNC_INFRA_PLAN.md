@@ -45,8 +45,8 @@ then moved to the dead-letter queue by the redrive policy:
 
 ```
 dead-letter queue: 1 message(s)
-  job_id=job-b709bd5d1b  scenarios=Z_does_not_exist  receives=4
-    find the logs with: grep '"job_id": "job-b709bd5d1b"' <worker log>
+  job_id=job-396217a9b5  scenarios=Z_does_not_exist  receives=4
+    find the logs with: grep '"job_id": "job-396217a9b5"' <worker log>
 ```
 
 **Finding the logs.** `python -m worker.dlq_inspect` prints the grep for the local log,

@@ -52,7 +52,8 @@ bleeding surgical wound, the transfer to triage fails, an urgent callback must c
 | Scenario definition | `evals/scenarios/C_postop_transfer_fail_callback.yaml` |
 | Agent version | `dfc9502a-073c-42f0-b8f2-77afe4a35123` (V2), exported at `vogent/export/v2.json` |
 | Voice call | dial `d02456d4`, run `febdde6d-33a7-40e1-a18b-f530bbe6e65a` |
-| Synthetic caller audio → recognition | "I had surgery on Tuesday. My surgery wound is bleeding." |
+| Synthetic caller audio, as scripted | "I had surgery on Tuesday. My surgery wound is bleeding." |
+| What recognition actually produced | "I had surgery on Tuesday." / "My surgery went this bleeding." |
 | Function call 1 | `transfer_triage` → `failed`, reason `no_answer` |
 | Function call 2 | `create_callback` → `created`, priority `urgent` |
 | Simulated system state | transfer session `failed`; callback request `created` |
@@ -72,9 +73,9 @@ the absence of a connected transfer session and the absence of a callback row, i
 of anything the agent said.
 
 Artifacts for every case: `dial.json`, `transcript.json`, `timeline.json`, `evidence.json`,
-`metrics.json` under `artifacts/`. The final screen for both of the calls above is captured in
-`artifacts/ui/`: the call list, the V1 call that claimed a connection it never made, and the
-V2 call with its callback waiting.
+`metrics.json` under `artifacts/`. Three screens are captured in `artifacts/ui/`: the call
+list, the V2 call traced above with its callback waiting, and a V1 call on scenario D
+showing the same false claim of a connection.
 
 ---
 
@@ -119,7 +120,8 @@ front-loaded deliberately, which is why the later phases moved quickly.
 - Staff dashboard on persisted data, with a working "callback completed" action.
 - Async evaluation path: queue → worker → persisted run, poisoned job → dead-letter queue.
 - 98 backend tests; `make lint` clean under a strict ruleset; lint, type-check, the
-  database-free tests, the frontend build and the secret scan run in CI on every push.
+  database-free tests, the frontend build and the secret scan run in CI on pushes to `main`
+  and on every pull request.
 
 **Simulated, deliberately**
 
@@ -190,7 +192,7 @@ boundary, so it runs there.
 
 ### Metrics
 
-Fourteen metrics computed from the evidence bundle. Eleven are required for a pass and all
+Fourteen metrics computed from the evidence bundle. Twelve are required for a pass and all
 of them read persisted function results and system state. Transcript-derived checks are used
 for exactly one thing: whether the caller was told the truth. No transcript check can make a
 scenario pass on action state. Full list: `docs/EVALUATION_PLAN.md §4`.
@@ -230,8 +232,9 @@ other metered service was used: speech synthesis is local, the tunnel is free ti
 
 ### Investigations
 
-Six, in `docs/INVESTIGATIONS.md`, each with before and after dial ids. The most
-consequential, INV-4, found that Vogent function nodes cannot branch on their own result,
+Seven, in `docs/INVESTIGATIONS.md`. Four cite the dial ids or artifact paths that prove
+them; the other three cite the versioned prompts they compare. The most consequential,
+INV-4, found that Vogent function nodes cannot branch on their own result,
 which invalidated V2's original design and moved the escalation decision into the backend.
 
 One metric is unstable and I report it as such: scenario D's disclosure check passed 2 of 3
@@ -257,8 +260,8 @@ the redrive policy:
 
 ```
 dead-letter queue: 1 message(s)
-  job_id=job-b709bd5d1b  scenarios=Z_does_not_exist  receives=4
-    find the logs with: grep '"job_id": "job-b709bd5d1b"' <worker log>
+  job_id=job-396217a9b5  scenarios=Z_does_not_exist  receives=4
+    find the logs with: grep '"job_id": "job-396217a9b5"' <worker log>
 ```
 
 **Defined for AWS.** `infra/terraform/`: work queue and dead-letter queue with redrive after
@@ -326,7 +329,7 @@ the Flask endpoints, the simulators, the derivation function, the evaluation har
 flow JSON, the dashboard, and the documentation drafts.
 
 **What I verified, and where I rejected the output.** I treated nothing about Vogent as true
-until it ran. That mattered: the documentation is wrong or silent on thirteen points I had
+until it ran. That mattered: the documentation is wrong or silent on fifteen points I had
 to establish by experiment. I also rejected several confident conclusions along the way.
 
 - When silent calls were blamed on the flow's entry node type, I was not convinced and had
